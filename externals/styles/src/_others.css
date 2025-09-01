@@ -1,0 +1,83 @@
+:root {
+  /**
+     *
+     *
+     *
+     * VARIABLE LAYOUT PADDING X
+     */
+  --px-desktop: 1.5rem;
+  --px-mobile: 0rem;
+}
+
+.px-section,
+section {
+  @apply px-[var(--px-mobile)] sm:px-[var(--px-desktop)];
+}
+
+/**
+ *
+ *
+ *
+ * SCROLL BAR 
+ */
+.scrollbar-mini::-webkit-scrollbar {
+  @apply w-[7px];
+}
+
+.scrollbar-mini::-webkit-scrollbar-thumb {
+  @apply bg-gray-200/50 hover:bg-gray-200 rounded-full;
+}
+
+/**
+   *
+   *
+   *
+   * HEADER ICON 
+   */
+.header-icon-square,
+.header-icon {
+  @apply flex items-center justify-center cursor-pointer;
+}
+
+.header-icon-square {
+  @apply w-[2.5rem] aspect-square rounded-full;
+  @apply hover:bg-primary/10 hover:text-primary;
+}
+
+/**
+ *
+ *
+ *
+ * BACKGROUND IMAGE 
+ */
+.bg-image,
+.bg-profile {
+  background-position: center 0;
+  @apply bg-no-repeat bg-cover;
+}
+
+.bg-profile {
+  @apply rounded-[50%] aspect-square block bg-gray-600/50 h-[1.75rem] text-center;
+}
+
+/**
+ *
+ *
+ *
+ * MARK
+ */
+.mark {
+  @apply w-[18px] aspect-square rounded-full flex items-center justify-center;
+  @apply text-[10px] text-white font-semibold truncate;
+  @apply bg-primary;
+}
+
+/**
+ *
+ *
+ *
+ * BADGE
+ */
+.badge {
+  @apply inline rounded-full px-2 py-1 text-xs font-semibold;
+}

@@ -1,0 +1,1 @@
+- externals/layout/_partials/GradeaSidebar.tsx

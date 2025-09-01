@@ -1,0 +1,135 @@
+/**
+ *
+ *
+ *
+ * TABLE 
+ */
+.table {
+  @apply w-full text-sm;
+}
+
+.table th {
+  @apply capitalize text-left;
+}
+
+/**
+ *
+ *
+ *
+ * TABLE CARDED 
+ */
+.table .row-selector {
+  @apply pr-0 w-0;
+}
+
+.table .row-selector>input {
+  @apply opacity-0 cursor-pointer;
+}
+
+.table .row-selector>input:checked,
+.table tr:hover .row-selector>input {
+  @apply opacity-100;
+}
+
+/**
+ *
+ *
+ *
+ * TABLE CARDED 
+ */
+.table-carded {
+  border-spacing: 0 12px;
+  border-collapse: separate;
+  text-indent: 0;
+}
+
+.table-carded>tbody>tr:not(.empty-row) {
+  @apply relative z-[1] shadow rounded-xl overflow-hidden;
+  transition: box-shadow 200ms ease-in-out;
+}
+
+.table-carded>tbody>tr:not(.empty-row):hover {
+  @apply shadow-md;
+}
+
+.table-carded>tbody>tr:not(.empty-row)::after {
+  content: "";
+  @apply absolute z-[-1] inset-0 rounded-xl border border-gray-200 bg-white;
+}
+
+.table-carded>thead>tr>th,
+.table-carded>tbody>tr>td {
+  @apply whitespace-nowrap px-5;
+}
+
+.table-carded>tbody>tr>td {
+  @apply py-4 min-h-[60px];
+}
+
+/**
+ *
+ *
+ *
+ * TABLE STRIPED 
+ */
+
+.table-striped tr {
+  @apply border-b;
+}
+
+.table-striped tbody tr:not(.empty-row):hover {
+  @apply bg-slate-50;
+}
+
+.table-striped th,
+.table-striped td {
+  @apply whitespace-nowrap px-4;
+}
+
+.table-striped th {
+  @apply py-1.5;
+}
+
+.table-striped td {
+  @apply py-2;
+}
+
+.table-striped th:first-of-type,
+.table-striped td:first-of-type {
+  @apply pl-[calc(var(--px-mobile)+0.5rem)] lg:pl-[calc(var(--px-desktop)+0.5rem)];
+}
+
+.table-striped th:last-of-type,
+.table-striped td:last-of-type {
+  @apply pr-[calc(var(--px-mobile)+0.5rem)] lg:pr-[calc(var(--px-desktop)+0.5rem)];
+}
+
+/**
+ *
+ *
+ *
+ * SECTION TABLE
+ */
+.section-table {
+  @apply px-[calc(var(--px-mobile)+0.5rem)];
+  @apply md:px-[calc(var(--px-desktop)+0.25rem)];
+}
+
+.section-table table {
+  @apply mt-[-24px];
+}
+
+.section-table table thead {
+  @apply relative z-[1];
+}
+
+.section-table table thead tr {
+  @apply h-[36px];
+}
+
+.section-table table thead::before {
+  content: "";
+  @apply absolute z-[-1] bottom-0 top-[12px] inset-x-[calc((var(--px-mobile)+0.5rem)*-1)];
+  @apply md:inset-x-[calc((var(--px-desktop)+0.25rem)*-1)];
+  @apply bg-white shadow;
+}

@@ -1,0 +1,81 @@
+/**
+ *
+ *
+ *
+ * BUTTON 
+ */
+/* px-2 h-8 text-xs font-medium border-black/10 rounded-md shadow-sm */
+.btn-flat,
+.btn-outline,
+.btn {
+  @apply inline-flex items-center justify-center cursor-pointer gap-1 px-4;
+  @apply rounded-lg capitalize whitespace-nowrap tracking-wide;
+  @apply h-10 text-sm;
+}
+
+.btn-outline,
+.btn {
+  @apply border;
+}
+
+.btn {
+  @apply shadow-sm bg-primary hover:bg-primary/90 text-contras-primary;
+}
+
+.btn-outline {
+  @apply font-medium border-primary text-primary;
+}
+
+.btn-sm {
+  @apply h-9 text-xs rounded-md font-medium;
+}
+
+.btn-disabled,
+.btn:disabled,
+button:disabled {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-color: transparent;
+  cursor: not-allowed;
+}
+
+
+
+/**
+ *
+ *
+ *
+ * BTN LOADING 
+ */
+.btn-loading {
+  @apply relative overflow-hidden;
+}
+
+.btn-loading::before {
+  content: "";
+  @apply absolute inset-[0] bg-black/20;
+}
+
+.btn-loading::after {
+  content: "";
+  @apply absolute w-[16px] aspect-square border rounded-full shadow-md;
+  border-width: 3px;
+  border-color: #fff #fff #fff transparent;
+  animation: rotate-360 1.2s linear infinite;
+}
+
+@keyframes rotate-360 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (width < 40rem) {
+  .btn-auto-floating {
+    @apply h-[3.25rem] aspect-square rounded-full p-0 fixed z-5 right-6 bottom-8 shadow-xl;
+    @apply [&>*:not(svg)]:hidden;
+  }
+}

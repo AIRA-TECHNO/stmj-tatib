@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@layer components {
+  @import "../externals/styles/index.css";
+  @import "react-day-picker/style.css";
+}
+
+@layer base {
+  * {
+    /* border-color: #e5e7eb; */
+    @apply border-slate-300;
+  }
+}
+
+@theme {
+  --color-primary: #2c595a;
+  /* --color-primary: #073a3b; */
+  --color-contras-primary: #fff;
+
+  --color-secondary: #fd6300;
+  /* --color-secondary: #ff4a00; */
+  --color-contras-secondary: #fff;
+
+  --color-hovered: #00a6f4;
+  --color-contras-hovered: #fcf9fa;
+
+  --color-success: #0E9F6E;
+  --color-warning: #E3A008;
+  --color-danger: #C81E1E;
+}
+
+@theme {
+  --text-4xs: 0.5625rem;
+  --text-3xs: 0.625rem;
+  --text-2xs: 0.6875rem;
+
+  --text-xs--line-height: 1rem;
+  --text-sm--line-height: 1.125rem;
+  --text-base--line-height: 1.25rem;
+  --text-lg--line-height: 1.375rem;
+  --text-xl--line-height: 1.5rem;
+  --text-2xl--line-height: 1.75rem;
+  --text-3xl--line-height: 2.125rem;
+  --text-4xl--line-height: 2.5rem;
+
+  --font-inter: var(--font-inter);
+  --font-roboto: var(--font-roboto);
+}
+
+/* @theme {
+  --text-5xs: 0.625rem;
+  --text-4xs: 0.6875rem;
+  --text-3xs: 0.75rem;
+  --text-2xs: 0.8125rem;
+  --text-xs: 0.875rem;
+  --text-sm: 0.9375rem;
+  --text-base--line-height: 1.25rem;
+  --text-lg--line-height: 1.375rem;
+  --text-xl--line-height: 1.5rem;
+  --text-2xl--line-height: 1.75rem;
+  --text-3xl--line-height: 2.125rem;
+  --text-4xl--line-height: 2.5rem;
+} */
+/* @import "../externals/styles/src/panel_headerles.css"; */
+/* @source "../externals/styles/src/panel_headerles.css"; */

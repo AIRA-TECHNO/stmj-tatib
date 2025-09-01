@@ -1,0 +1,4 @@
+export const appConfig = {
+    COOKIE_AUTH_TOKEN: 'SIMBAH_SSO_TOKEN',
+    COOKIE_USER_PROFILE: 'SIMBAH_USER_PROFILE',
+}

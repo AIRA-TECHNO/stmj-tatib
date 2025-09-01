@@ -1,0 +1,48 @@
+{
+  "name": "tatib",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@phosphor-icons/react": "^2.1.7",
+    "@sinclair/typebox": "^0.34.33",
+    "ajv": "^8.17.1",
+    "ajv-errors": "^3.0.0",
+    "ajv-formats": "^3.0.1",
+    "bcryptjs": "^3.0.2",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
+    "elysia": "^1.2.14",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "next": "15.1.7",
+    "nextjs-toploader": "^3.7.15",
+    "pg": "^8.13.3",
+    "react": "^19.0.0",
+    "react-day-picker": "^9.7.0",
+    "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.3",
+    "sutando": "^1.7.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.7",
+    "postcss": "^8.5.6",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.12",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

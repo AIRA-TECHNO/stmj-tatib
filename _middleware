@@ -1,0 +1,112 @@
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { appConfig } from "./externals/configs/app";
+import { checkEnabledMenu } from "./externals/utils/internal";
+
+/**
+ * Middleware function to check if a route is valid or should be blocked.
+ * Redirects to an error page if invalid.
+ */
+function checkIsActiveRoute(request: NextRequest) {
+  const { pathname, origin } = request.nextUrl;
+
+  // Check if the path contains a file extension
+  const isFile = pathname.includes(".");
+
+  // Check if the path contains an underscore
+  const containsUnderscore = pathname.includes("_");
+
+  // Block paths with underscores that are not file paths
+  if (!isFile && containsUnderscore) {
+    const errorUrl = new URL("/error", origin);
+    errorUrl.searchParams.set(
+      "message",
+      "Underscores are only allowed in file paths."
+    );
+
+    return NextResponse.redirect(errorUrl);
+  }
+
+  return null;
+}
+
+
+
+/**
+ * Middleware function to check user access and authentication.
+ * Redirects based on the user's authentication status and route access.
+ */
+function checkAccess(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const prefix = String(pathname).split('/')[1]; // Extract the first part of the path
+  const userToken = request.cookies.get(appConfig.COOKIE_AUTH_TOKEN ?? "userToken")?.value;
+
+  // Helper function to log the user out and redirect to the login page
+  function logout() {
+    request.cookies.delete(appConfig.COOKIE_USER_PROFILE ?? "userAuthed");
+    request.cookies.delete(appConfig.COOKIE_AUTH_TOKEN ?? "userToken");
+    request.cookies.delete(appConfig.COOKIE_REFRESH_TOKEN ?? "userRefreshToken");
+    request.cookies.delete(appConfig.COOKIE_USER_MENU ?? "userMenu");
+    request.cookies.delete(appConfig.COOKIE_USER_ACCESS ?? "userAccess");
+    return NextResponse.redirect(new URL('/signin', request.url));
+  }
+
+  // Helper function to redirect to the homepage
+  function abort() {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  // Route-specific access control
+  if (['signin'].includes(prefix)) { // <-- Routes accessible to unauthenticated users
+    if (userToken) {
+      return NextResponse.redirect(new URL('/', request.url)); // Redirect authenticated users to the homepage
+    }
+  } else { // <-- Protected routes
+    if (!userToken) {
+      return logout(); // <-- Redirect unauthenticated users to the login page
+    } else {
+      // check user access menu
+      let menus: any = [];
+      try {
+        const cookieUserMenu = request.cookies.get(appConfig.COOKIE_USER_MENU ?? "userMenu")?.value ?? '';
+        menus = JSON.parse(cookieUserMenu);
+      } catch (error) { }
+      if (!checkEnabledMenu(menus, pathname)) abort();
+    }
+  }
+
+  return null;
+}
+
+
+/**
+ * Main middleware function that orchestrates route validation and access control.
+ */
+export function middleware(request: NextRequest) {
+  // Check for invalid routes
+  const isActiveRoute = checkIsActiveRoute(request);
+  if (isActiveRoute) return isActiveRoute;
+
+  // // Check for access permissions
+  const isAccessableRoute = checkAccess(request);
+  if (isAccessableRoute) return isAccessableRoute;
+
+  // Allow the request to proceed if no conditions are met
+  return NextResponse.next();
+}
+
+/**
+ * Middleware configuration object to specify matched routes.
+ */
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|public|favicon.ico).*)',
+  ],
+};

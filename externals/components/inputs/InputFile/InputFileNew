@@ -1,0 +1,261 @@
+import React, { useEffect, useRef, useState } from "react";
+// import CropImage from './CropImage';
+import { typeInputProps } from "../Input";
+import {
+  ArrowDownTrayIcon,
+  ArrowUpTrayIcon,
+} from "@heroicons/react/24/solid";
+import { cn, inputValidator } from "@/externals/utils/frontend";
+import { XCircleIcon } from "@heroicons/react/24/outline";
+// import { changeAttr } from '@/externals/utils/frontend';
+
+export default function InputFile({
+  validations,
+  stateHandler,
+  noLabel,
+  aspectRatio = 0,
+  isCleanup,
+  noUnset,
+
+  disabled,
+  readOnly,
+  className,
+  onChange,
+  required,
+  accept,
+  label,
+  value,
+  type,
+  name,
+  id,
+
+  ...props
+}: Omit<
+  typeInputProps,
+  "options" | "path" | "onSearch" | "noSearch"
+>) {
+  const refInput = useRef<HTMLInputElement>(null);
+  const [getter, setter] = stateHandler ?? useState<typeStateForm>({});
+  // const [ShowModal, setShowModal] = useState(false);
+
+
+
+  useEffect(() => {
+    const currentValue = getter?.values?.[name];
+
+    // adjust list uncompleteds column
+    const isAddUncompleteds = validations?.required && !currentValue && !getter?.uncompleteds?.includes(name);
+    const isRemoveUncompleteds = validations?.required && currentValue && getter?.uncompleteds?.includes(name);
+
+    // adjust invalid
+    const invalidMessages: string[] = inputValidator({ validations, fieldName: name, formControl: getter })
+    const isChangeInvalidMessages = JSON.stringify(invalidMessages) != JSON.stringify(getter?.invalids?.[name])
+
+    // sync value props component
+    const isChangeValue = ![undefined, currentValue].includes(value)
+
+    // push to state & element
+    if (isAddUncompleteds || isRemoveUncompleteds || isChangeInvalidMessages || isChangeValue) {
+      setter((prev: typeStateForm) => {
+        const uncompleteds = (prev?.uncompleteds ?? []).filter((uncompleted) => (uncompleted != name))
+        if (isAddUncompleteds) uncompleteds.push(name)
+
+        const values = { ...(prev?.values ?? {}) }
+        if (isChangeValue) values[name] = value
+
+        return ({
+          ...(prev ?? {}), uncompleteds, values, invalids: {
+            ...(prev?.invalids ?? {}),
+            [name]: [...(prev?.invalids?.[name] ?? []), ...invalidMessages]
+          },
+        })
+      })
+
+      if (refInput.current) {
+        if (isChangeValue) {
+          if (refInput.current?.files?.[0] != value) {
+            if (value instanceof File) {
+              const dataTransfer = new DataTransfer();
+              dataTransfer.items.add(value);
+              refInput.current.files = dataTransfer.files;
+            } else {
+              const valueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype, "value"
+              )?.set;
+              valueSetter?.call(refInput.current, null);
+              const eventTrigger = new Event("change", { bubbles: true });
+              refInput.current.dispatchEvent(eventTrigger);
+            }
+          }
+        } else {
+          if (currentValue instanceof File) {
+            const container = new DataTransfer();
+            container.items.add(currentValue);
+            refInput.current.files = container.files;
+          } else {
+            const valueSetter = Object.getOwnPropertyDescriptor(
+              window.HTMLInputElement.prototype, "value"
+            )?.set;
+            valueSetter?.call(refInput.current, null);
+            const eventTrigger = new Event("change", { bubbles: true });
+            refInput.current.dispatchEvent(eventTrigger);
+          }
+        }
+      }
+    }
+  }, [getter?.values?.[name], value]);
+
+  useEffect(() => () => {
+    if (isCleanup) {
+      setter((prev) => {
+        const result = { ...prev };
+        delete result?.invalids?.[name];
+        delete result?.labels?.[name];
+        delete result?.values?.[name];
+        result.uncompleteds = (result.uncompleteds ?? []).filter(
+          (res) => res != name
+        );
+        return result;
+      });
+    }
+  }, []);
+
+  return (
+    <>
+      <div className={cn(`input-group`, { "input-group-invalid": getter?.invalids?.[name]?.length })}>
+        {!noLabel && (
+          <div
+            className="label-input-form"
+            onClick={() => {
+              // (type == 'imageCrop') ? setShowModal(true) : refInput?.current?.click()
+              refInput?.current?.click()
+            }}
+          >{label ?? name}</div>
+        )}
+        <div>
+          <input
+            ref={refInput}
+            type="file"
+            name={name}
+            id={id ?? name}
+            onChange={(e) => {
+              const blobFile = e.target.files?.[0];
+
+              setter((prev: typeStateForm) => {
+                const invalids: string[] = [];
+                if (accept && blobFile) {
+                  const rule = accept
+                    .replaceAll(" ", "")
+                    .replaceAll(",", "|")
+                    .replaceAll("/*", "[/*]");
+                  const extName = blobFile.name.split(".").pop() ?? "";
+                  if (
+                    !(
+                      new RegExp(rule).test(blobFile.type) ||
+                      new RegExp(rule).test(`.${extName}`)
+                    )
+                  ) {
+                    invalids.push(`File harus bertipe ${accept}`);
+                  }
+                }
+
+                return {
+                  ...(prev ?? {}),
+                  values: { ...(prev?.values ?? {}), [name]: blobFile },
+                  invalids: { ...(prev?.invalids ?? {}), [name]: invalids },
+                  uncompleteds: (prev?.uncompleteds ?? []).filter(
+                    (uncompleted) => uncompleted != name
+                  ),
+                };
+              });
+              if (onChange) onChange(e);
+            }}
+            style={{ display: "none" }}
+            accept={accept}
+            required={required}
+            disabled={disabled}
+            readOnly={readOnly}
+            {...props}
+          />
+          {!getter?.values?.[name] ? (
+            <div
+              onClick={() => {
+                // if (!(disabled || readOnly)) {
+                //     (type == 'imageCrop') ? setShowModal(true) : refInput?.current?.click()
+                // }
+                refInput?.current?.click()
+              }}
+              className={cn(
+                'input-form flex items-center gap-1 px-2',
+                { 'cursor-pointer': !(disabled || readOnly) },
+                className
+              )}
+            >
+              <div className="h-3/4 aspect-square flex items-center justify-center">
+                <ArrowUpTrayIcon className="text-xl h-[calc(100%-10px)]" />
+              </div>
+              <div>Pilih file</div>
+            </div>
+          ) : (
+            <div className={cn('input-form flex items-center px-2', className)}>
+              <div className="flex items-center gap-1 h-full">
+                <a
+                  className={cn(
+                    "h-3/4 aspect-square flex items-center justify-center",
+                    "rounded-full hover:bg-primary/10 hover:text-primary"
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  href={
+                    getter?.values?.[name] instanceof File
+                      ? URL.createObjectURL(getter?.values?.[name])
+                      : getter?.values?.[name]
+                  }
+                >
+                  <ArrowDownTrayIcon className="h-[calc(100%-10px)]" />
+                </a>
+                <div className="truncate block max-w-[12rem]">
+                  {getter?.values?.[name]?.name ?? getter?.values?.[name]}
+                </div>
+              </div>
+              {!(noUnset || disabled || readOnly) && (
+                <div className="ml-auto h-full flex items-center justify-center">
+                  <XCircleIcon
+                    className="h-[calc(75%-6px)] cursor-pointer hover:text-danger"
+                    onClick={() => {
+                      if (refInput.current) {
+                        const valueSetter = Object.getOwnPropertyDescriptor(
+                          window.HTMLInputElement.prototype, "value"
+                        )?.set;
+                        valueSetter?.call(refInput.current, null);
+                        const eventTrigger = new Event("change", { bubbles: true });
+                        refInput.current.dispatchEvent(eventTrigger);
+                      }
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        {Boolean(getter?.invalids?.[name]?.length) && (
+          <div className="invalid-message">{getter?.invalids?.[name][0]}</div>
+        )}
+      </div>
+      {/* {(type == 'imageCrop') && (
+        <CropImage
+          show={ShowModal}
+          onSelect={(fileCropped) => {
+            let container = new DataTransfer();
+            container.items.add(fileCropped);
+            changeAttr(refInput.current, 'files', container.files)
+            setShowModal(false)
+          }}
+          onCancel={() => setShowModal(false)}
+          defaultValue={getter?.values?.[name]}
+          aspectRatio={aspectRatio}
+        />
+      )} */}
+    </>
+  );
+}

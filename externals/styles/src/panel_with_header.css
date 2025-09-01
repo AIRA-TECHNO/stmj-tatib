@@ -1,0 +1,50 @@
+/**
+ *
+ *
+ *
+ * PANEL 
+ */
+@reference "../../../styles/globals.css";
+
+body:not(.sidebar-show):not(:has(#btn-toggle-sidebar:hover)) aside#sidebar:not(:hover) {
+  @apply -ml-[17rem];
+}
+
+@media (width<40rem) {
+  aside#sidebar {
+    @apply -ml-[17rem];
+  }
+}
+
+.sidebar-brand-section {
+  @apply w-full flex items-center gap-2 h-16 px-3 border-b;
+  @apply lg:absolute lg:mt-[-4rem];
+  /* @apply bg-primary [&>.header-icon-square]:hover:text-white [&>.header-icon-square]:hover:bg-white/20; */
+  /*<-- Choice one*/
+  @apply [&>*:not(.header-icon-square)]: !hidden [&>.header-icon-square]:lg:text-black [&>.header-icon-square]:max-lg:hover:text-white [&>.header-icon-square]:max-lg:hover:bg-white/20;
+  /* <-- Or choice this one */
+}
+
+.sidebar-show .sidebar-brand-section {
+  @apply border-black/30;
+}
+
+.sidebar-show .overlay-sidebar {
+  @apply max-lg:sm:fixed;
+}
+
+.app-content {
+  @apply max-w-[100%] overflow-auto;
+}
+
+body:not(.sidebar-show):not(.full-screen) .app-content {
+  @apply max-w-[96rem];
+}
+
+body:not(.sidebar-show) .app-content {
+  @apply overflow-visible;
+}
+
+.scrollbar-mini::-webkit-scrollbar-thumb {
+  @apply bg-gray-200/50 hover:bg-gray-200 rounded-full;
+}
