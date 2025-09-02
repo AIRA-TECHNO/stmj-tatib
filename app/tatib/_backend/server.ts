@@ -2,7 +2,12 @@ import { Elysia } from 'elysia'
 import { HookOnError } from '@/externals/utils/backend';
 import config from "../../../sutando.config";
 import { sutando } from 'sutando';
-import AuthedRoutes from './routes/authed';
+import AuthController from './controllers/Auth/AuthController';
+import UserController from './controllers/User/UserController';
+import RuleSchoolController from './controllers/RuleSchool/RuleSchoolController';
+import StudentViolationController from './controllers/StudentViolation/StudentViolationController';
+import AchievementController from './controllers/Achievement/AchievementController';
+import StudentAchievementController from './controllers/StudentAchievement/StudentAchievementController';
 
 
 
@@ -16,7 +21,7 @@ sutando.addConnection(config);
 /**
  * Instance server
  */
-const server = new Elysia({ prefix: '/api', });
+const server = new Elysia({ prefix: '/tatib/api', });
 
 
 
@@ -30,7 +35,12 @@ server.onError(HookOnError as any)
 /**
  * Register routes
  */
-server.use(AuthedRoutes)
+server.use(AuthController);
+server.use(UserController);
+server.use(RuleSchoolController);
+server.use(StudentViolationController);
+server.use(AchievementController);
+server.use(StudentAchievementController);
 
 
 // // Testing sutando => (GET) http://localhost:3000/api/test

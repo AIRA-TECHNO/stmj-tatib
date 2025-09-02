@@ -5,11 +5,10 @@ module.exports = class extends Migration {
     * Run the migrations.
     */
   async up(schema) {
-    await schema.createTable('users', (table) => {
+    await schema.createTable('rule_schools', (table) => {
       table.increments()
-      table.string('name')
-      table.string('email')
-      table.string('password')
+      table.string('rule')
+      table.string('point')
       table.timestamps(true, true)
     });
   }
@@ -18,6 +17,6 @@ module.exports = class extends Migration {
     * Reverse the migrations.
     */
   async down(schema) {
-    await schema.dropTableIfExists('users')
+    await schema.dropTableIfExists('rule_schools');
   }
 };

@@ -1,20 +1,23 @@
 import { Elysia, t } from "elysia"
 import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
-import User from "../../models/User";
+import { Algorithm, sign, verify } from "jsonwebtoken"
+import { sutando } from "sutando";
 
 const AuthController = new Elysia();
 
 const authSchema = t.Object({
-  email: t.String({ format: "email" }),
+  username: t.String(),
   password: t.String()
 })
 
 AuthController.group('/auth', (app) => {
   app.post('/login', async ({ body, set }) => {
-    const { email, password } = body;
+    const { username, password } = body;
 
-    const user = await User.query().where({ email }).first()
+    const user = await sutando.table('view_data_users')
+      .select('id', 'username', 'password')
+      .where({ username })
+      .first()
 
     if (!user) {
       set.status = 422
@@ -27,35 +30,38 @@ AuthController.group('/auth', (app) => {
       return { message: 'Login failed. Wrong password.' }
     }
 
+    delete user.password;
     const secretKey = process.env.JWT_SECRET || 'secretKey'
-    const token = jwt.sign(
-      { userId: user.id },
-      secretKey,
-      { expiresIn: '1d' }
-    )
+    const algorithm = (process.env.JWT_ALGORITHM || 'HS256') as Algorithm;
+    const token = sign(user, secretKey, { algorithm })
 
-    return {
-      message: 'success login',
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name
-      }
-    }
+    return { message: 'Login berhasil!', token, user }
   }, { body: authSchema })
 
   app.get('/test', async ({ headers, set }) => {
+    // Check exist token
     const authHeader = headers.authorization
     if (!authHeader) {
       set.status = 401
       return { message: 'No token provided' }
     }
 
-    const token = authHeader.split(' ')[1]
-    const secretKey = process.env.JWT_SECRET || 'secretKey'
-    const decoded: any = jwt.verify(token, secretKey)
+    // Check type token
+    const [tokenType, tokenValue] = authHeader.split(' ')[1];
+    if (tokenType !== 'Bearer' || !tokenValue) {
+      set.status = 401;
+      return ({ message: "Auth header authorization must a bearer token!" });
+    }
 
+    // Check valid token
+    const secretKey = process.env.JWT_SECRET || 'secretKey';
+    const decoded: any = verify(tokenValue, secretKey);
+    if (!decoded?.id) {
+      set.status = 401;
+      return ({ message: "Token invalid!" });
+    }
+
+    // Response
     return {
       message: 'You are authorized',
       userId: decoded.userId
