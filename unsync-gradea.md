@@ -1,1 +1,8 @@
-- externals/layout/_partials/GradeaSidebar.tsx
+- externals/layout/*
+- remove folder routes @API
+- 
+
+
+
+plan:
+- multiconnection database

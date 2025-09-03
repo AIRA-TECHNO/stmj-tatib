@@ -55,6 +55,7 @@ export default function Page() {
   return (
     <>
       <HeaderApp
+        className='sm:mt-2'
         rightElements={[
           <div className='flex' key="1">
             <Button varian={`btn-flat`} className='max-sm:text-xs font-semibold hover:text-primary'>
@@ -66,68 +67,77 @@ export default function Page() {
         ]}
       />
       <section className="sm:pt-4">
-        <div className="card">
-          <div className='card-body sm:py-6'>
-            <Table
-              stateSelectedRows={[SelectedRows, setSelectedRows]}
-              // showAdvanceSearch={true}
-              actions={() => (["edit", "delete"])}
-              noNumber
-              prototypeTable={[
-                {
-                  title: "nama", keyData: (data) => {
-                    if (ScreenWidth >= 640) return data.name;
-                    return (
-                      <div className='py-1'>
-                        <div className='text-base font-semibold'>{data.name}</div>
-                        <div className='text-sm font-semibold text-gray-500'>{data.nisn}</div>
-                        <div className='mt-2 text-sm'>{data.school_name}</div>
-                      </div>
-                    )
-                  }
-                },
-                ...(ScreenWidth >= 640 ? [
-                  { title: "NISN", keyData: "nisn" },
-                  {
-                    title: "sekolah",
-                    keyData: "school_name",
-                    advanceFilter: { name: '' }
-                  },
-                ] : [])
-              ]}
-              stateDataTable={[DataTables, setDataTables]}
-              // noAdvanceFilter={true}
-              // noSearch
-              leftElement={<div>
-                <Button href='/tatib/panel/portofolio/form' className='btn-sm btn-auto-floating'>
-                  <PlusIcon weight='bold' className='text-sm' />
-                  <span>Tambah Data</span>
-                </Button>
-                <div className={cn('card border mt-2 text-xs font-semibold p-0.5 opacity-0 transition-all ease-out duration-200 w-0', { 'opacity-100 w-auto': SelectedRows?.length })}>
-                  <div className='flex items-center'>
-                    <div className='text-sm pl-3 pr-2'>{SelectedRows.length} item terpilih : </div>
-                    <div className='flex items-center'>
-                      <div
-                        className='flex items-center gap-1 py-1.5 px-4 rounded-md text-red-600 cursor-pointer hover:bg-red-500 hover:text-white'
-                        onClick={() => setSelectedRows([])}
-                      >
-                        <TrashIcon weight="bold" />
-                        <span>Hapus</span>
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-full xl:col-span-8">
+            <div className="card">
+              <div className='card-body sm:py-6'>
+                <Table
+                  stateSelectedRows={[SelectedRows, setSelectedRows]}
+                  // showAdvanceSearch={true}
+                  actions={() => (["edit", "delete"])}
+                  noNumber
+                  prototypeTable={[
+                    {
+                      title: "nama", keyData: (data) => {
+                        if (ScreenWidth >= 640) return data.name;
+                        return (
+                          <div className='py-1'>
+                            <div className='text-base font-semibold'>{data.name}</div>
+                            <div className='text-sm font-semibold text-gray-500'>{data.nisn}</div>
+                            <div className='mt-2 text-sm'>{data.school_name}</div>
+                          </div>
+                        )
+                      }
+                    },
+                    ...(ScreenWidth >= 640 ? [
+                      { title: "NISN", keyData: "nisn" },
+                      {
+                        title: "sekolah",
+                        keyData: "school_name",
+                        advanceFilter: { name: '' }
+                      },
+                    ] : [])
+                  ]}
+                  stateDataTable={[DataTables, setDataTables]}
+                  // noAdvanceFilter={true}
+                  // noSearch
+                  leftElement={<div>
+                    <Button href='/tatib/panel/portofolio/form' className='btn-sm btn-auto-floating'>
+                      <PlusIcon weight='bold' className='text-sm' />
+                      <span>Tambah Data</span>
+                    </Button>
+                    <div className={cn('card border mt-2 text-xs font-semibold p-0.5 opacity-0 transition-all ease-out duration-200 w-0', { 'opacity-100 w-auto': SelectedRows?.length })}>
+                      <div className='flex items-center'>
+                        <div className='text-sm pl-3 pr-2'>{SelectedRows.length} item terpilih : </div>
+                        <div className='flex items-center'>
+                          <div
+                            className='flex items-center gap-1 py-1.5 px-4 rounded-md text-red-600 cursor-pointer hover:bg-red-500 hover:text-white'
+                            onClick={() => setSelectedRows([])}
+                          >
+                            <TrashIcon weight="bold" />
+                            <span>Hapus</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>}
-              rightElement={<div className='sm:flex items-center gap-2 text-sm [&_.input-form]:h-10 [&_.input-form]:border-primary/70'>
-                <div className='min-w-[10rem] '>
-                  <Select
-                    noLabel={true}
-                    placeholder="Filter Tahun Ajaran"
-                    options={["2021-2022", "2022-2023"]}
-                  />
-                </div>
-              </div>}
-            />
+                  </div>}
+                  rightElement={<div className='sm:flex items-center gap-2 text-sm [&_.input-form]:h-10 [&_.input-form]:border-primary/70'>
+                    <div className='min-w-[10rem] '>
+                      <Select
+                        noLabel={true}
+                        placeholder="Filter Tahun Ajaran"
+                        options={["2021-2022", "2022-2023"]}
+                      />
+                    </div>
+                  </div>}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="col-span-full xl:col-span-4">
+            <div className="card">
+              <div>okok</div>
+            </div>
           </div>
         </div>
       </section>

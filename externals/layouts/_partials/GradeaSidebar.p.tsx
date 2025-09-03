@@ -14,7 +14,10 @@ import Image from 'next/image';
 
 
 
-export default function GradeaSidebar({ sidebarItems = menuApps }: { sidebarItems?: typeMenuApps; }) {
+export default function GradeaSidebar({ sidebarItems = menuApps, hideOnCollapse }: {
+  sidebarItems?: typeMenuApps;
+  hideOnCollapse?: boolean;
+}) {
   const pathName = usePathname();
   const splitedPathNames = pathName.split('/');
   const refSearchMenu = useRef<any>(null);
@@ -66,15 +69,15 @@ export default function GradeaSidebar({ sidebarItems = menuApps }: { sidebarItem
    */
   return (
     <>
-      <div className={cn('w-[4rem] transition-all duration-300 ease-in-out', { 'xl:w-[17rem]': IsShowSidebar })}></div>
-      <div className={cn('inset-0 bg-black/20 z-[7]', { 'max-xl:fixed': IsShowSidebar })} onClick={() => (window as any).gradea.toggleSidebar()} />
+      {!hideOnCollapse && (<div className={cn('max-sm:hidden w-[4rem] transition-all duration-300 ease-in-out', { 'xl:w-[17rem]': IsShowSidebar })} />)}
+      <div className={cn('inset-0 bg-black/20 z-[7]', { 'fixed': IsShowSidebar && hideOnCollapse, 'max-xl:fixed': IsShowSidebar })} onClick={() => (window as any).gradea.toggleSidebar()} />
       <aside id='sidebar' className={cn(
-        "fixed z-10 bg-primary text-contras-primary h-screen",
+        "fixed inset-y-0 z-10 bg-primary text-contras-primary",
         "transition-all duration-300 ease-in-out w-[4rem]",
-        IsShowSidebar ? 'sidebar-active' : '[&:not(:hover)_.sidebar-search-menu]:text-transparent fixed'
+        IsShowSidebar ? 'sidebar-active' : `[&:not(:hover)_.sidebar-search-menu]:text-transparent fixed max-sm:hidden ${hideOnCollapse ? '-ml-[4rem]' : 'sidebar-active-on-hover'}`
       )}>
         <div className='h-full mx-[2px] flex flex-col'>
-          <div className='hide-when-has-header'>
+          <div className='sidebar-header'>
             <div className='flex p-2'>
               <div
                 className='w-[2.5rem] aspect-square flex rounded-md cursor-pointer hover:bg-white/10 mr-auto'
@@ -166,8 +169,8 @@ export default function GradeaSidebar({ sidebarItems = menuApps }: { sidebarItem
               const isActive = sidebarItem.checkIsActive?.(splitedPathNames);
               if (!sidebarItem.href) {
                 return (
-                  <div key={indexSidebarItem} className={`mx-5 pt-2 ${indexSidebarItem ? 'pt-6' : ''}`}>
-                    <div className='text-xs text-gray-300/80 font-bold'>{sidebarItem.label}</div>
+                  <div key={indexSidebarItem} className={`mx-5 ${indexSidebarItem ? 'pt-6 h-[2.5rem]' : 'pt-2 h-[1.5rem]'}`}>
+                    <div className='text-xs text-gray-300/80 font-bold sidebar-hide-on-collapse'>{sidebarItem.label}</div>
                   </div>
                 )
               }

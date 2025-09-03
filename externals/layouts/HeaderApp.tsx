@@ -8,9 +8,10 @@ import React, { ReactNode } from 'react'
 
 export type typeRightElements = Array<ReactNode>
 
-export default function HeaderApp({ breadcumbs, rightElements }: {
+export default function HeaderApp({ breadcumbs, rightElements, className }: {
   breadcumbs?: typeBreadcumbProps;
   rightElements?: typeRightElements;
+  className?: string
 }) {
   const pathname = usePathname();
   const breadcumbItems = breadcumbs?.length ? breadcumbs : pathToBreadcumbItems(pathname);
@@ -19,7 +20,8 @@ export default function HeaderApp({ breadcumbs, rightElements }: {
   return (
     <header className={cn(
       "grid grid-cols-3 items-center text-nowrap",
-      "px-4 sm:px-6 pt-3 pb-2 sm:pt-4 sm:pb-2 max-sm:border-b sticky top-0 z-5 max-sm:bg-white/90 backdrop-blur-xs"
+      "px-4 sm:px-6 pt-4 pb-2 sm:pt-6 sm:pb-2 max-sm:border-b sticky top-0 max-sm:bg-white/90 backdrop-blur-xs",
+      className
     )}>
       <div className='col-span-2 grid grid-cols-2 sm:flex items-center gap-2'>
         {Boolean(prevItem) && (
