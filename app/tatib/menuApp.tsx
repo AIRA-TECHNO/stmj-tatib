@@ -4,7 +4,7 @@ import { CrosshairIcon, ListStarIcon, MedalIcon, NotebookIcon, TrophyIcon } from
 export default [
   {
     href: '/tatib/panel/portofolio',
-    label: 'Portofolio Non Akademik',
+    label: 'Portofolio Siswa',
     icon: (<TrophyIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
@@ -13,7 +13,7 @@ export default [
   },
   {
     href: '/tatib/panel/pelanggaran',
-    label: 'Pelanggaran Siswa',
+    label: 'Pelanggaran',
     icon: (<CrosshairIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
@@ -22,7 +22,7 @@ export default [
   },
   {
     href: '/tatib/panel/penghargaan',
-    label: 'Penghargaan Siswa',
+    label: 'Penghargaan',
     icon: (<MedalIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,

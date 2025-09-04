@@ -11,10 +11,6 @@
   @apply w-[17rem];
 }
 
-.sidebar-config-icon {
-  @apply w-0 opacity-0;
-}
-
 .sidebar-hide-on-collapse {
   @apply w-0 opacity-0 absolute duration-300 transition-[width];
 }
@@ -25,9 +21,13 @@
   position: unset;
 }
 
+.sidebar-config-icon {
+  @apply w-0 opacity-0;
+}
+
 #sidebar.sidebar-active-on-hover:hover .sidebar-config-icon,
 #sidebar.sidebar-active .sidebar-config-icon {
-  @apply w-[2.5rem] opacity-100 aspect-square cursor-pointer duration-300 hover:bg-white/10;
+  @apply opacity-100 cursor-pointer hover:bg-white/10 aspect-square w-[2.5rem] duration-300;
 }
 
 .sidebar-brand-section {
@@ -47,15 +47,6 @@
 #sidebar.sidebar-active-on-hover:hover .sidebar-brand-section>.sidebar-brand-logo,
 #sidebar.sidebar-active .sidebar-brand-section>.sidebar-brand-logo {
   @apply m-0 h-[3rem];
-}
-
-.sidebar-brand-section>.sidebar-brand-title {
-  @apply hidden;
-}
-
-#sidebar.sidebar-active-on-hover:hover .sidebar-brand-section>.sidebar-brand-title,
-#sidebar.sidebar-active .sidebar-brand-section>.sidebar-brand-title {
-  @apply opacity-100 block;
 }
 
 .sidebar-link {

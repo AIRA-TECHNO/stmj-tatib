@@ -74,7 +74,7 @@ export default function GradeaSidebar({ sidebarItems = menuApps, hideOnCollapse 
       <aside id='sidebar' className={cn(
         "fixed inset-y-0 z-10 bg-primary text-contras-primary",
         "transition-all duration-300 ease-in-out w-[4rem]",
-        IsShowSidebar ? 'sidebar-active' : `[&:not(:hover)_.sidebar-search-menu]:text-transparent fixed max-sm:hidden ${hideOnCollapse ? '-ml-[4rem]' : 'sidebar-active-on-hover'}`
+        IsShowSidebar ? 'sidebar-active' : `[&:not(:hover)_.sidebar-search-menu]:text-transparent fixed ${hideOnCollapse ? '-ml-[4rem]' : 'sidebar-active-on-hover'}`
       )}>
         <div className='h-full mx-[2px] flex flex-col'>
           <div className='sidebar-header'>
@@ -124,7 +124,7 @@ export default function GradeaSidebar({ sidebarItems = menuApps, hideOnCollapse 
             <div>
               <div className={"pt-2 pb-4 flex items-center gap-3 sidebar-brand-section"}>
                 <div className={`sidebar-brand-logo`} style={{ backgroundImage: `URL(/public/images/main-logo.png)` }} />
-                <div className="sidebar-brand-title">
+                <div className="sidebar-hide-on-collapse">
                   <div className="text-base tracking-[0.075em]">SMKN 1 JENANGAN</div>
                   <div className="font-light text-2xs mt-1">SEKOLAH PUSAT KEUNGGULAN</div>
                 </div>

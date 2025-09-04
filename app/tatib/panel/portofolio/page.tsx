@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import Select from '@/externals/components/inputs/Select'
 import { DownloadSimpleIcon, PlusIcon, TrashIcon } from '@phosphor-icons/react'
 import { cn } from '@/externals/utils/frontend'
+import SubMenuNav from '@/externals/components/SubMenuNav'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
@@ -66,6 +67,9 @@ export default function Page() {
           </div>,
         ]}
       />
+      <SubMenuNav navigations={[
+        { label: 'Pelanggaran', isActive: true }, { label: 'Peraturan' }
+      ]} />
       <section className="sm:pt-4">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-full xl:col-span-8">
@@ -136,7 +140,14 @@ export default function Page() {
           </div>
           <div className="col-span-full xl:col-span-4">
             <div className="card">
-              <div>okok</div>
+              <div className="card-header">
+                <div className="card-title">Chart Siswa Dengan Jumlah pelanggaran/Leaderboard</div>
+                {/* <div className="card-title">Chart Peraturan Dengan Jumlah pelanggaran</div> */} {/* <-- ini ditaruh pada menu peraturan */}
+              </div>
+              <div className="card-body">
+                <div>okok</div>
+              </div>
+              <div className="card-footer"></div>
             </div>
           </div>
         </div>

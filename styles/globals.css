@@ -12,6 +12,10 @@
   }
 }
 
+@utility container {
+  margin-inline: auto;
+}
+
 @theme {
   --color-primary: #2c595a;
   /* --color-primary: #073a3b; */
