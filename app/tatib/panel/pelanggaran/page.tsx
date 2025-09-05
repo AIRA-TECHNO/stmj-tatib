@@ -23,26 +23,26 @@ export default function Page() {
   useEffect(() => {
     setDataTables({
       data: [
-        { id: 1, name: "Yuda Ismail", nisn: 20222, school_name: "SMKN 1 Solo" },
-        { id: 2, name: "Yudi Akbar", nisn: 20223, school_name: "SMKN 1 Sambit" },
-        { id: 3, name: "Yanti Rahayu", nisn: 20224, school_name: "SMKN 1 Jenangan" },
-        { id: 4, name: "Rizky Maulana", nisn: 20225, school_name: "SMKN 2 Madiun" },
-        { id: 5, name: "Siti Nurhaliza", nisn: 20226, school_name: "SMKN 1 Ponorogo" },
-        { id: 6, name: "Dwi Ananda", nisn: 20227, school_name: "SMKN 3 Magetan" },
-        { id: 7, name: "Agus Prasetyo", nisn: 20228, school_name: "SMKN 1 Balong" },
-        { id: 8, name: "Intan Permata", nisn: 20229, school_name: "SMKN 1 Slahung" },
-        { id: 9, name: "Fajar Nugroho", nisn: 20230, school_name: "SMKN 1 Kauman" },
-        { id: 10, name: "Nia Ramadhani", nisn: 20231, school_name: "SMKN 1 Bungkal" },
-        { id: 11, name: "Andi Setiawan", nisn: 20232, school_name: "SMKN 2 Ponorogo" },
-        { id: 12, name: "Lia Marlina", nisn: 20233, school_name: "SMKN 1 Jetis" },
-        { id: 13, name: "Bayu Saputra", nisn: 20234, school_name: "SMKN 1 Badegan" },
-        { id: 14, name: "Salsa Amelia", nisn: 20235, school_name: "SMKN 1 Ngadirojo" },
-        { id: 15, name: "Rian Hidayat", nisn: 20236, school_name: "SMKN 1 Sooko" },
-        { id: 16, name: "Wulan Sari", nisn: 20237, school_name: "SMKN 1 Pulung" },
-        { id: 17, name: "Teguh Ariyanto", nisn: 20238, school_name: "SMKN 2 Sambit" },
-        { id: 18, name: "Maya Fitriani", nisn: 20239, school_name: "SMKN 1 Mlarak" },
-        { id: 19, name: "Ilham Fauzi", nisn: 20240, school_name: "SMKN 1 Siman" },
-        { id: 20, name: "Nadya Ayu", nisn: 20241, school_name: "SMKN 1 Sawoo" },
+        { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "SMKN 1 Solo", point: -10, rule: 'Membolos' },
+        { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "SMKN 1 Sambit", point: -10, rule: 'Membolos' },
+        { id: 3, name: "Yanti Rahayu", nisn: 20224, class_full_name: "SMKN 1 Jenangan", point: -10, rule: 'Membolos' },
+        { id: 4, name: "Rizky Maulana", nisn: 20225, class_full_name: "SMKN 2 Madiun", point: -10, rule: 'Membolos' },
+        { id: 5, name: "Siti Nurhaliza", nisn: 20226, class_full_name: "SMKN 1 Ponorogo", point: -10, rule: 'Membolos' },
+        { id: 6, name: "Dwi Ananda", nisn: 20227, class_full_name: "SMKN 3 Magetan", point: -10, rule: 'Membolos' },
+        { id: 7, name: "Agus Prasetyo", nisn: 20228, class_full_name: "SMKN 1 Balong", point: -10, rule: 'Membolos' },
+        { id: 8, name: "Intan Permata", nisn: 20229, class_full_name: "SMKN 1 Slahung", point: -10, rule: 'Membolos' },
+        { id: 9, name: "Fajar Nugroho", nisn: 20230, class_full_name: "SMKN 1 Kauman", point: -10, rule: 'Membolos' },
+        { id: 10, name: "Nia Ramadhani", nisn: 20231, class_full_name: "SMKN 1 Bungkal", point: -10, rule: 'Membolos' },
+        { id: 11, name: "Andi Setiawan", nisn: 20232, class_full_name: "SMKN 2 Ponorogo", point: -10, rule: 'Membolos' },
+        { id: 12, name: "Lia Marlina", nisn: 20233, class_full_name: "SMKN 1 Jetis", point: -10, rule: 'Membolos' },
+        { id: 13, name: "Bayu Saputra", nisn: 20234, class_full_name: "SMKN 1 Badegan", point: -10, rule: 'Membolos' },
+        { id: 14, name: "Salsa Amelia", nisn: 20235, class_full_name: "SMKN 1 Ngadirojo", point: -10, rule: 'Membolos' },
+        { id: 15, name: "Rian Hidayat", nisn: 20236, class_full_name: "SMKN 1 Sooko", point: -10, rule: 'Membolos' },
+        { id: 16, name: "Wulan Sari", nisn: 20237, class_full_name: "SMKN 1 Pulung", point: -10, rule: 'Membolos' },
+        { id: 17, name: "Teguh Ariyanto", nisn: 20238, class_full_name: "SMKN 2 Sambit", point: -10, rule: 'Membolos' },
+        { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "SMKN 1 Mlarak", point: -10, rule: 'Membolos' },
+        { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "SMKN 1 Siman", point: -10, rule: 'Membolos' },
+        { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "SMKN 1 Sawoo", point: -10, rule: 'Membolos' },
       ],
       paginate: { per_page: 5 }
     });
@@ -67,13 +67,11 @@ export default function Page() {
           </div>,
         ]}
       />
-      <SubMenuNav navigations={[
-        { label: 'Pelanggaran', isActive: true }, { label: 'Peraturan' }
-      ]} />
-      <section className="sm:pt-4">
+      <SubMenuNav navigations={[{ label: 'pelanggaran', isActive: true }, { label: 'peraturan', link: '/tatib/panel/peraturan' }]} />
+      <section className="sm:pt-6">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-full xl:col-span-8">
-            <div className="card">
+            <div className="card border">
               <div className='card-body sm:py-6'>
                 <Table
                   stateSelectedRows={[SelectedRows, setSelectedRows]}
@@ -94,17 +92,12 @@ export default function Page() {
                       }
                     },
                     ...(ScreenWidth >= 640 ? [
-                      { title: "NISN", keyData: "nisn" },
-                      {
-                        title: "sekolah",
-                        keyData: "school_name",
-                        advanceFilter: { name: '' }
-                      },
+                      { title: "kelas", keyData: "class_full_name" },
+                      { title: "pelanggaran", keyData: "rule" },
+                      { title: "poin pelanggaran", keyData: "point" },
                     ] : [])
                   ]}
                   stateDataTable={[DataTables, setDataTables]}
-                  // noAdvanceFilter={true}
-                  // noSearch
                   leftElement={<div>
                     <Button href='/tatib/panel/portofolio/form' className='btn-sm btn-auto-floating'>
                       <PlusIcon weight='bold' className='text-sm' />
@@ -115,7 +108,7 @@ export default function Page() {
                         <div className='text-sm pl-3 pr-2'>{SelectedRows.length} item terpilih : </div>
                         <div className='flex items-center'>
                           <div
-                            className='flex items-center gap-1 py-1.5 px-4 rounded-md text-red-600 cursor-pointer hover:bg-red-500 hover:text-white'
+                            className='flex items-center gap-1 py-1.5 px-4 rounded-md text-red-600 bg-red-100 cursor-pointer hover:bg-red-500 hover:text-white'
                             onClick={() => setSelectedRows([])}
                           >
                             <TrashIcon weight="bold" />
@@ -139,7 +132,7 @@ export default function Page() {
             </div>
           </div>
           <div className="col-span-full xl:col-span-4">
-            <div className="card">
+            <div className="card border">
               <div className="card-header">
                 <div className="card-title">Chart Siswa Dengan Jumlah pelanggaran/Leaderboard</div>
                 {/* <div className="card-title">Chart Peraturan Dengan Jumlah pelanggaran</div> */} {/* <-- ini ditaruh pada menu peraturan */}

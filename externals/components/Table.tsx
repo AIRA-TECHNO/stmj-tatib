@@ -551,7 +551,7 @@ export default function Table({
                 value={perPage}
                 onChange={(e) => { fmParams?.setValues((prev) => ({ ...prev, page: 1, per_page: e.target.value })); }}
               >
-                {[10, 50, 100, 500, 1000].map((count) => (<option key={count} className="pl-0" value={count}>{count} Data</option>))}
+                {[50, 100, 500, 1000].map((count) => (<option key={count} className="pl-0" value={count}>{count} Data</option>))}
               </select>
             </div>
           )}

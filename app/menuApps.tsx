@@ -8,6 +8,7 @@ const menuApps: typeMenuApps = [
     icon: (<HouseIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
+    isHeaderItem: true,
     checkIsActive: (pathNames: string[]) => [undefined, '', 'akun'].includes(pathNames[3]),
   }
 ];

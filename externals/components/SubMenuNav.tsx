@@ -26,7 +26,7 @@ export default function SubMenuNav({ navigations, rightElement }: typeSubMenuNav
               }}
             >
               <div className={(isActive) ? 'text-primary border-b-2 border-primary font-semibold' : 'font-medium'}>
-                <div className={`pt-4 pb-2 px-6 min-w-[5rem] capitalize text-xs`}>
+                <div className={`pt-4 pb-3 px-6 min-w-[5rem] capitalize text-sm`}>
                   {label}
                 </div>
               </div>

@@ -7,6 +7,7 @@ declare global {
     label?: string;
     icon?: ReactNode;
     backroundColor?: string;
+    isHeaderItem?: boolean;
     isSidebarItem?: boolean;
     type?: 'general' | 'personal';
     checkIsActive?: (pathNames: string[]) => boolean;

@@ -3,13 +3,14 @@ import { CrosshairIcon, ListStarIcon, MedalIcon, NotebookIcon, TrophyIcon } from
 
 export default [
   {
-    href: '/tatib/panel/portofolio',
+    href: '/tatib/panel/portofolio-non-akademik',
     label: 'Portofolio Siswa',
     icon: (<TrophyIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
+    isHeaderItem: true,
     type: 'general',
-    checkIsActive: (pathNames: string[]) => 'portofolio' == pathNames[3],
+    checkIsActive: (pathNames: string[]) => 'portofolio-non-akademik' == pathNames[3],
   },
   {
     href: '/tatib/panel/pelanggaran',
@@ -17,6 +18,7 @@ export default [
     icon: (<CrosshairIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
+    isHeaderItem: true,
     type: 'general',
     checkIsActive: (pathNames: string[]) => 'pelanggaran' == pathNames[3],
   },
@@ -26,6 +28,7 @@ export default [
     icon: (<MedalIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
+    isHeaderItem: true,
     type: 'general',
     checkIsActive: (pathNames: string[]) => 'penghargaan' == pathNames[3],
   },
@@ -39,6 +42,7 @@ export default [
     icon: (<NotebookIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
+    isHeaderItem: false,
     type: 'general',
     checkIsActive: (pathNames: string[]) => 'peraturan' == pathNames[3],
   },
@@ -48,6 +52,7 @@ export default [
     icon: (<ListStarIcon weight='regular' className='text-3xl sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
+    isHeaderItem: false,
     type: 'general',
     checkIsActive: (pathNames: string[]) => 'jenis-penghargaan' == pathNames[3],
   },

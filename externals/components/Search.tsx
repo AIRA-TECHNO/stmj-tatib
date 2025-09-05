@@ -36,7 +36,7 @@ export default function Search({
 					if (onSubmit) onSubmit(refSearch.current?.value ?? '', refSearch.current);
 					if (refDelay.current) clearTimeout(refDelay.current);
 				}}
-				className='my-auto ml-[-2rem] w-[1.5rem] cursor-pointer text-[1.25rem] text-gray-400 hover:text-white'
+				className='my-auto ml-[-2rem] w-[1.5rem] cursor-pointer text-[1.25rem] text-gray-400'
 			>
 				<MagnifyingGlassIcon className="text-xl" />
 			</div>

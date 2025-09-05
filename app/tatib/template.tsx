@@ -6,8 +6,10 @@ import Link from 'next/link';
 import React from 'react'
 import menuApps from '../menuApps';
 import { ListIcon } from '@phosphor-icons/react';
+import { usePathname } from 'next/navigation';
 
 export default function Template({ children }: { children: React.ReactNode }) {
+  const pathNames = usePathname().split('/');
   return (
     <GradeaPanel sidebarHideOnCollapse={true}>
       <header className='[&_#top-bar-simbah>.grid]:max-w-[110rem] [&_#top-bar-simbah>.grid]:mx-auto'>
@@ -27,9 +29,13 @@ export default function Template({ children }: { children: React.ReactNode }) {
                   <div className="text-sm">SMKN 1 JENANGAN</div>
                 </div>
               </div>
-              <div className={`flex items-center gap-8 text-sm ${true ? 'absolute top-1/2 left-1/2 -translate-1/2' : ''}`}>
+              <div className={`hidden sm:flex items-center gap-8 text-sm ${true ? 'absolute top-1/2 left-1/2 -translate-1/2' : ''}`}>
                 {menuApps.map((menuApp, indexMenuApp) => (
-                  menuApp.href ? <Link key={indexMenuApp} href="">{menuApp.label}</Link> : null
+                  (menuApp.href && menuApp.isHeaderItem) ? <Link
+                    key={indexMenuApp}
+                    href={menuApp.href}
+                    className={menuApp?.checkIsActive?.(pathNames) ? 'font-bold border-b-2 border-secondary/80 pb-0.5 -mb-1' : 'hover:text-primary'}
+                  >{menuApp.label}</Link> : null
                 ))}
               </div>
             </div>
