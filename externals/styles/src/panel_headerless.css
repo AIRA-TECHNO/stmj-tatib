@@ -11,7 +11,7 @@
   @apply w-[17rem];
 }
 
-.sidebar-hide-on-collapse {
+/* .sidebar-hide-on-collapse {
   @apply w-0 opacity-0 absolute duration-300 transition-[width];
 }
 
@@ -19,6 +19,10 @@
 #sidebar.sidebar-active .sidebar-hide-on-collapse {
   @apply w-[calc(100%-3rem)] opacity-100;
   position: unset;
+} */
+
+#sidebar:not(.sidebar-active):not(.sidebar-active-on-hover:hover) .sidebar-hide-on-collapse {
+  @apply hidden;
 }
 
 .sidebar-config-icon {

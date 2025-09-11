@@ -167,7 +167,7 @@ input:read-only {
  * SEGMENT CONTROL
  */
 .radio-switch {
-  @apply h-[3rem] p-[.2rem] flex items-center bg-gray-100 rounded-lg text-black/80;
+  @apply h-[3rem] p-[.2rem] flex items-center bg-gray-200 rounded-lg text-black/80;
 }
 
 .radio-switch>* {

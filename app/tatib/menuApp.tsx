@@ -5,7 +5,7 @@ export default [
   {
     href: '/tatib/panel/portofolio-non-akademik',
     label: 'Portofolio Siswa',
-    icon: (<TrophyIcon weight='regular' className='text-3xl sm:text-xl' />),
+    icon: (<TrophyIcon weight='regular' className='text-[22px] sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
     isHeaderItem: true,
@@ -15,7 +15,7 @@ export default [
   {
     href: '/tatib/panel/pelanggaran',
     label: 'Pelanggaran',
-    icon: (<CrosshairIcon weight='regular' className='text-3xl sm:text-xl' />),
+    icon: (<CrosshairIcon weight='regular' className='text-[22px] sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
     isHeaderItem: true,
@@ -25,7 +25,7 @@ export default [
   {
     href: '/tatib/panel/penghargaan',
     label: 'Penghargaan',
-    icon: (<MedalIcon weight='regular' className='text-3xl sm:text-xl' />),
+    icon: (<MedalIcon weight='regular' className='text-[22px] sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
     isHeaderItem: true,
@@ -39,7 +39,7 @@ export default [
   {
     href: '/tatib/panel/peraturan',
     label: 'Peraturan Sekolah',
-    icon: (<NotebookIcon weight='regular' className='text-3xl sm:text-xl' />),
+    icon: (<NotebookIcon weight='regular' className='text-[22px] sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
     isHeaderItem: false,
@@ -49,7 +49,7 @@ export default [
   {
     href: '/tatib/panel/jenis-penghargaan',
     label: 'Jenis Penghargaan',
-    icon: (<ListStarIcon weight='regular' className='text-3xl sm:text-xl' />),
+    icon: (<ListStarIcon weight='regular' className='text-[22px] sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
     isHeaderItem: false,

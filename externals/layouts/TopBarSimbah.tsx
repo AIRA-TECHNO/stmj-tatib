@@ -1,121 +1,33 @@
 'use client'
 
-import { CaretDownIcon, ListIcon, PowerIcon, UserCircleIcon } from '@phosphor-icons/react/dist/ssr'
-import Image from 'next/image'
-import React, { ReactNode, useEffect } from 'react'
+import { CaretRightIcon, CaretUpDownIcon, DotsNineIcon, HouseIcon } from '@phosphor-icons/react';
+import { UserCircleIcon } from '@phosphor-icons/react/dist/ssr'
 
-export default function TopBarSimbah({ forcedShow, leftElement, centerElement }: {
-  forcedShow?: boolean;
-  leftElement?: ReactNode
-  centerElement?: ReactNode
-}) {
-
-  useEffect(() => {
-    setTimeout(() => {
-      const sidebarElement = document.querySelector('#sidebar') as (HTMLElement | null);
-      if (sidebarElement && forcedShow) {
-        sidebarElement.style.top = '64px';
-        sidebarElement.style.paddingTop = '1rem';
-        document.querySelectorAll('#sidebar .sidebar-header')?.forEach((hideElement: any) => hideElement.style.display = 'none');
-      } else {
-        let iteration = 0;
-        let timeout = setInterval(() => {
-          iteration++;
-          const sidebarElement = document.querySelector('#sidebar') as (HTMLElement | null);
-          if (forcedShow) {
-            if (sidebarElement) {
-              sidebarElement.style.top = '64px';
-              sidebarElement.style.paddingTop = '1rem';
-            }
-            document.querySelectorAll('#sidebar .sidebar-header')?.forEach((hideElement: any) => hideElement.style.display = 'none');
-          }
-          if (sidebarElement || (iteration >= (60 * 5))) clearInterval(timeout);
-        }, 1000);
-      }
-    }, 0);
-  }, []);
-
+export default function TopBarSimbah() {
   return (
-    <>
-      {Boolean(forcedShow) && <div className='h-16' />}
-      <div id='top-bar-simbah' className={`bg-white/90 backdrop-blur-xs border-b top-0 inset-x-0 ${forcedShow ? 'fixed z-[7]' : 'sticky'}`}>
-        <div className={'grid grid-cols-12 items-center px-3 h-16'}>
-          <div className='col-span-4'>
-            {leftElement ?? (
-              <div className='flex items-center'>
-                <div
-                  id='btn-toggle-sidebar'
-                  className='header-icon-square'
-                  onClick={() => ((window as any)?.gradea?.toggleSidebar?.())}
-                >
-                  <ListIcon className='text-xl m-auto' />
-                </div>
-                <div className="hidden lg:flex items-center gap-2 px-2 font-medium">
-                  <div className={`bg-profile h-[2rem]`} style={{ backgroundImage: `URL(/public/images/main-logo.png)` }} />
-                  <div className="text-sm">SMKN 1 JENANGAN</div>
-                </div>
-              </div>
-            )}
+    <header className={`bg-primary/10 h-[2.5rem] text-sm flex items-center sm:px-4`}>
+      <div className='flex items-center'>
+        <div className='flex items-center'>
+          <div className='h-[2rem] aspect-square rounded-full flex justify-center items-center cursor-pointer hover:bg-white/80 hover:text-secondary'>
+            <HouseIcon className='text-xl mb-[1px]' weight='bold' />
           </div>
-          <div className='col-span-4'>
-            {/* <div className='flex justify-center items-center gap-3 py-4 text-lg tracking-wider'> */}
-            {centerElement ?? (
-              <div className='max-sm:[&>div]:hidden flex justify-center items-center gap-2 text-lg tracking-widest font-medium'>
-                <Image src={`/public/images/logo-simbah.png`} width={100} height={100} className='w-[2.5rem]' alt='' />
-                <div>SIMBAH</div>
-                <div>•</div>
-                <div>SIKAP</div>
-              </div>
-            )}
-          </div>
-          <div className='col-span-4'>
-            <div className='flex justify-end'>
-              <div className="relative">
-                <div
-                  className="flex items-center gap-2 cursor-pointer"
-                  onClick={(event) => {
-                    const cardProfile = event.currentTarget.nextElementSibling as HTMLElement | null;
-                    if (cardProfile) {
-                      cardProfile.style.display = 'block';
-                      if (!(window as any)?.gradea?.handleClickProfile) {
-                        if (!(window as any)?.gradea) (window as any).gradea = {};
-                        (window as any).gradea.handleClickProfile = (e: MouseEvent) => {
-                          if (!cardProfile.contains(e.target as Node)) {
-                            cardProfile.style.display = 'none';
-                            (document as any).removeEventListIconener('click', (window as any)?.gradea?.handleClickProfile);
-                          }
-                        }
-                      }
-                      (document as any).addEventListIconener('click', (window as any)?.gradea?.handleClickProfile);
-                    }
-                  }}
-                >
-                  <UserCircleIcon className="text-3xl" />
-                  <div className="text-sm font-medium max-lg:hidden max-w-sm truncate">Dwiki I. P. M</div>
-                  <CaretDownIcon className='-mt-[2px]' />
-                </div>
-                <div
-                  id='topbar-card-profile'
-                  className="absolute z-50 bg-white border rounded-lg overflow-hidden w-xs right-0 text-center"
-                  style={{ display: 'none' }}
-                >
-                  <div className="py-4">
-                    <UserCircleIcon className='text-[4.5rem] mx-auto' />
-                    <div className="text-lg truncate mt-1">Dwiki I. P. M</div>
-                    <div className="text-xs text-gray-600 mt-1">Admin</div>
-                  </div>
-                  <div className="py-3 border-t cursor-pointer text-red-500 hover:bg-red-500 hover:text-white">
-                    <div className="flex items-center justify-center gap-1">
-                      <PowerIcon weight='bold' />
-                      <span>Logout</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CaretRightIcon className='mt-[2px]' />
+          <div className='mt-[2px] ml-1 tracking-widest font-medium font-roboto'>SiKAP</div>
         </div>
-      </div >
-    </>
+      </div>
+      <div className='ml-auto flex items-center gap-2'>
+        <div className='h-[2rem] aspect-square rounded-full flex justify-center items-center cursor-pointer hover:bg-white/80 hover:text-secondary'>
+          <DotsNineIcon className='text-2xl ml-[1px] mt-[1px]' weight='bold' />
+        </div>
+        <div className='flex items-center gap-1 hover:bg-white/80 rounded-full px-1 cursor-pointer'>
+          <UserCircleIcon className='text-3xl mt-[2px]' />
+          <div className='max-sm:hidden'>
+            <div className='text-xs font-semibold leading-3 mb-[2px]'>Dwiki</div>
+            <div className='text-xs leading-2'>guru@01992999</div>
+          </div>
+          <CaretUpDownIcon weight='bold' />
+        </div>
+      </div>
+    </header>
   )
 }

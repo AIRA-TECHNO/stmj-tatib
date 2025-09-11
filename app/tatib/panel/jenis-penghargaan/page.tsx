@@ -57,7 +57,7 @@ export default function Page() {
     <>
       <HeaderApp
         className='sm:mt-2'
-        rightElements={[
+        rightElement={[
           <div className='flex' key="1">
             <Button varian={`btn-flat`} className='max-sm:text-xs font-semibold hover:text-primary'>
               <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />

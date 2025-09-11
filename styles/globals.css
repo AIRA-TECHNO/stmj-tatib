@@ -28,6 +28,9 @@
   --color-hovered: #00a6f4;
   --color-contras-hovered: #fcf9fa;
 
+  --color-accent: #2b7fff;
+  --color-contras-accent: #fff;
+  --color-muted: #e2e8f0;
   --color-success: #0E9F6E;
   --color-warning: #E3A008;
   --color-danger: #C81E1E;

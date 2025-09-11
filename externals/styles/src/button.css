@@ -75,7 +75,7 @@ button:disabled {
 
 @media (width < 40rem) {
   .btn-auto-floating {
-    @apply h-[3.25rem] aspect-square rounded-full p-0 fixed z-5 right-6 bottom-8 shadow-xl;
+    @apply h-[3rem] aspect-square rounded-full p-0 fixed z-5 right-6 bottom-[5rem] shadow-lg border-transparent shadow-gray-400;
     @apply [&>*:not(svg)]:hidden;
   }
 }

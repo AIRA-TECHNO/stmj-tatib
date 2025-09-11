@@ -5,7 +5,7 @@ const menuApps: typeMenuApps = [
   {
     href: '/tatib/panel',
     label: 'Home',
-    icon: (<HouseIcon weight='regular' className='text-3xl sm:text-xl' />),
+    icon: (<HouseIcon weight='regular' className='text-[22px] sm:text-xl' />),
     backroundColor: 'bg-sky-500/10',
     isSidebarItem: true,
     isHeaderItem: true,

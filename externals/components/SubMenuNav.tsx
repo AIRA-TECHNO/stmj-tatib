@@ -9,11 +9,12 @@ interface typeSubMenuNavProps {
     onClick?: (event: MouseEvent) => any;
     isActive?: boolean
   }>;
-  rightElement?: ReactNode
+  rightElement?: ReactNode;
+  className?: string;
 }
-export default function SubMenuNav({ navigations, rightElement }: typeSubMenuNavProps) {
+export default function SubMenuNav({ navigations, rightElement, className }: typeSubMenuNavProps) {
   return (
-    <section>
+    <section className={className}>
       <div className="flex items-center border-b border-gray-300">
         <div className='flex items-center'>
           {navigations.map(({ label, isActive, link, onClick }, indexNav) => (

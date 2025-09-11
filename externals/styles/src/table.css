@@ -5,7 +5,7 @@
  * TABLE 
  */
 .table {
-  @apply w-full text-sm;
+  @apply w-full;
 }
 
 .table th {

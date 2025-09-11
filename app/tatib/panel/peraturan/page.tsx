@@ -10,6 +10,7 @@ import { DownloadSimpleIcon, PlusIcon, TrashIcon } from '@phosphor-icons/react'
 import { cn } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import InputCheck from '@/externals/components/inputs/InputCheck'
+import RadioSwitch from '@/externals/components/inputs/RadioSwitch'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
@@ -26,26 +27,58 @@ export default function Page() {
       data: [
         { id: 1, rule: 'Membolos', point: 10 },
         { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Membolos', point: 10 },
-        { id: 4, rule: 'Membolos', point: 10 },
-        { id: 5, rule: 'Membolos', point: 10 },
-        { id: 6, rule: 'Membolos', point: 10 },
-        { id: 7, rule: 'Membolos', point: 10 },
-        { id: 8, rule: 'Membolos', point: 10 },
-        { id: 9, rule: 'Membolos', point: 10 },
-        { id: 10, rule: 'Membolos', point: 10 },
-        { id: 11, rule: 'Membolos', point: 10 },
-        { id: 12, rule: 'Membolos', point: 10 },
-        { id: 13, rule: 'Membolos', point: 10 },
-        { id: 14, rule: 'Membolos', point: 10 },
-        { id: 15, rule: 'Membolos', point: 10 },
-        { id: 16, rule: 'Membolos', point: 10 },
-        { id: 17, rule: 'Membolos', point: 10 },
-        { id: 18, rule: 'Membolos', point: 10 },
-        { id: 19, rule: 'Membolos', point: 10 },
-        { id: 20, rule: 'Membolos', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
+        { id: 1, rule: 'Membolos', point: 10 },
+        { id: 2, rule: 'Berkelahi', point: 10 },
+        { id: 3, rule: 'Terlambat', point: 10 },
+        { id: 4, rule: 'Hamil', point: 10 },
       ],
-      paginate: { per_page: 5 }
+      paginate: { per_page: 50 }
     });
   }, []);
 
@@ -58,7 +91,7 @@ export default function Page() {
     <>
       <HeaderApp
         className='sm:mt-2'
-        rightElements={[
+        rightElement={[
           <div className='flex' key="1">
             <Button varian={`btn-flat`} className='max-sm:text-xs font-semibold hover:text-primary'>
               <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />
@@ -68,11 +101,14 @@ export default function Page() {
           </div>,
         ]}
       />
-      <SubMenuNav navigations={[{ label: 'pelanggaran', link: '/tatib/panel/pelanggaran' }, { label: 'peraturan', isActive: true }]} />
-      <section className="sm:pt-6">
+      <div className='px-6 pt-4 sm:w-[20rem]'>
+        <RadioSwitch options={["Pelanggaran", "Peraturan"]} />
+      </div>
+      {/* <SubMenuNav className="sm:pb-2" navigations={[{ label: 'pelanggaran', link: '/tatib/panel/pelanggaran' }, { label: 'peraturan', isActive: true }]} /> */}
+      <section className='mt-4'>
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-full xl:col-span-8">
-            <div className="card border">
+            <div className="card ">
               <div className='card-body sm:py-6'>
                 <div className='flex sm:justify-end items-center sm:mb-4 max-sm:mt-4'>
                   <div className='min-w-[10rem] mr-2 text-sm'>
@@ -130,7 +166,7 @@ export default function Page() {
             </div>
           </div>
           <div className="col-span-full xl:col-span-4">
-            <div className="card border overflow-auto">
+            <div className="card  overflow-auto">
               <div className="card-header">
                 <div className="card-title">Chart Peraturan Dengan Jumlah pelanggaran</div>
               </div>

@@ -12,3 +12,8 @@ unsync gradea:
 
 plan:
 - multiconnection database @API
+
+
+
+problem:
+- sidebar keep show when collapse
