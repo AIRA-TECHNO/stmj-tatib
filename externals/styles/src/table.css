@@ -91,7 +91,7 @@
 }
 
 .table-striped td {
-  @apply py-2;
+  @apply py-4;
 }
 
 .table-striped th:first-of-type,

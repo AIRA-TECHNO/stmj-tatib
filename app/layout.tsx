@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${roboto.variable} bg-slate-50`}>
+    <html lang="en" className={`${inter.variable} ${roboto.variable}`}>
       <body className="font-inter">
         {/* <TopBarSimbah /> */}
         {children}

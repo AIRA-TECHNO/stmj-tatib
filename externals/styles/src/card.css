@@ -20,7 +20,7 @@
 .card-header,
 .card-body,
 .card-footer {
-    @apply px-4;
+    @apply max-sm:px-4;
 }
 
 .card-footer {

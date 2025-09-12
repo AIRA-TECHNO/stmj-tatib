@@ -2,14 +2,14 @@
 
 import { cn, pathToBreadcumbItems } from '@/externals/utils/frontend';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { ReactNode } from 'react'
 
-export default function HeaderApp({ breadcumbs, rightElement, bottomElement, className }: {
+export default function HeaderApp({ breadcumbs, rightElement, className }: {
   breadcumbs?: typeBreadcumbProps;
   rightElement?: ReactNode;
-  bottomElement?: ReactNode;
   className?: string;
 }) {
   const pathname = usePathname();
@@ -17,12 +17,17 @@ export default function HeaderApp({ breadcumbs, rightElement, bottomElement, cla
   const lastItem = breadcumbItems?.slice(-1)?.[0];
   const prevItem = breadcumbItems?.slice(-2)?.[0];
   return (
-    <header className='max-sm:border-b max-sm:bg-white/90'>
-      <div className={cn(
-        "grid sm:flex grid-cols-3 items-center text-nowrap",
-        "px-4 sm:px-6 pt-2 pb-1 sm:pt-6 sm:pb-2 max-sm:sticky top-0 z-[5] max-sm:backdrop-blur-xs",
-        className
-      )}>
+    <header className={cn('max-sm:border-b max-sm:bg-white/90 max-sm:sticky top-0 z-[5] max-sm:backdrop-blur-xs', className)}>
+      <div className='relative'>
+        <Image
+          src={`/public/images/top-hero.webp`}
+          alt=''
+          height={80000}
+          width={20000}
+          className='absolute z-[-1] right-[1rem] w-[500px] xl:w-[700px] max-lg:hidden'
+        />
+      </div>
+      <div className={"grid sm:flex grid-cols-3 items-center text-nowrap px-4 sm:px-6 pt-2 pb-1 sm:pt-4 sm:pb-2"}>
         <div className='col-span-2 grid grid-cols-2 sm:flex items-center gap-2'>
           {Boolean(prevItem) && (
             <Link href={prevItem?.url} className={(!breadcumbs && (breadcumbItems?.length ?? 0) <= 2) ? 'sm:hidden' : ''}>
@@ -51,7 +56,6 @@ export default function HeaderApp({ breadcumbs, rightElement, bottomElement, cla
         </div>
         <div className='ml-auto lg:ml-12 flex items-center gap-2 max-sm:mr-[-1rem]'>{rightElement}</div>
       </div>
-      {bottomElement}
     </header>
   )
 }

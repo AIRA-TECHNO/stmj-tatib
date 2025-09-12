@@ -5,7 +5,16 @@ import { UserCircleIcon } from '@phosphor-icons/react/dist/ssr'
 
 export default function TopBarSimbah() {
   return (
-    <header className={`bg-primary/10 h-[2.5rem] text-sm flex items-center sm:px-4`}>
+    <header
+      className={`text-white h-[2.5rem] text-sm flex items-center sm:px-4`}
+      style={{
+        // background: `#1d291e`,
+        // background: `#083033`,
+        // background: `#304544`,
+        // background: `#083c3c`,
+        background: `#0b2c2c`
+      }}
+    >
       <div className='flex items-center'>
         <div className='flex items-center'>
           <div className='h-[2rem] aspect-square rounded-full flex justify-center items-center cursor-pointer hover:bg-white/80 hover:text-secondary'>

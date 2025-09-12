@@ -8,9 +8,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
     <GradeaPanel sidebarHideOnCollapse={true}>
       <TopBarSimbah />
       <NavBar />
-      <main
-      // className='max-w-[110rem] mx-auto'
-      >
+      <main className='max-w-9xl mx-auto'>
         {children}
       </main>
     </GradeaPanel>

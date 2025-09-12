@@ -137,6 +137,7 @@ export default function Page() {
   return (
     <>
       <HeaderApp
+        className='border-none'
         rightElement={[
           <div className='flex' key="1">
             <Button varian={`btn-flat`} className='max-sm:text-2xs font-semibold hover:text-primary'>
@@ -146,15 +147,15 @@ export default function Page() {
             </Button>
           </div>,
         ]}
-        bottomElement={
-          <div className='sm:px-6 sm:pt-16 pt-1 sm:w-[20rem]'>
-            {/* !!! HERE: Sesuaikan responsive dari component SubNavmenu lalu pakai disini !!! */}
-            <RadioSwitch options={["Pelanggaran", "Peraturan"]} />
-          </div>
-        }
       />
-      {/* <SubMenuNav navigations={[{ label: 'pelanggaran', isActive: true }, { label: 'peraturan', link: '/tatib/panel/peraturan' }]} /> */}
-      <section className="sm:mt-4">
+      <SubMenuNav
+        className='sm:pt-12 sm:w-[20rem]'
+        navigations={[
+          { label: 'pelanggaran', isActive: true },
+          { label: 'peraturan', link: '/tatib/panel/peraturan' }
+        ]}
+      />
+      <section className="sm:mt-2">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-full xl:col-span-8">
             <div className="card">
