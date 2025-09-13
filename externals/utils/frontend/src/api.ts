@@ -36,30 +36,29 @@ export function onRelogin({ redirectTo } = { redirectTo: '/tatib/panel' }) {
  * Base function for fetching api
  */
 export type typeApiProps = {
-  path: string;
+  url: string;
   objParams?: Record<string, any>;
   body?: FormData | Record<string, any> | string;
   method?: string;
   headers?: Record<string, string>;
-  host?: string;
   staleTime?: number;
 }
 
 export async function api({
-  path,
+  url,
   objParams,
   body,
   method,
   headers = {},
-  host = (process.env.BFF_HOST ?? ''),
   staleTime = 0
 }: typeApiProps) {
   // Setup var
-  path = path + (path.includes('?') ? '&' : '?') + (objParams ? objectToQueryUrl(objParams) : '');
+  if (process.env.BFF_HOST && /^https?:\/\//i.test(url)) url = `${process.env.BFF_HOST}${url}`;
+  url = url + (url.includes('?') ? '&' : '?') + (objParams ? objectToQueryUrl(objParams) : '');
 
   // Check cache
   if (staleTime > 0) {
-    const cacheResponse = await apiGetCache(path);
+    const cacheResponse = await apiGetCache(url);
     if (cacheResponse) return cacheResponse;
   }
 
@@ -77,9 +76,7 @@ export async function api({
   }
 
   // Fething server
-  const response = fetch((host + path), {
-    method: (method ?? 'get'), body, headers
-  });
+  const response = fetch(url, { method: (method ?? 'get'), body, headers });
 
   // Pre return
   response.then(async (res) => {
@@ -89,9 +86,9 @@ export async function api({
       onRelogin();
     } else if (res.status == 200) {
       if (staleTime > 0) {
-        await apiSetCache(path, res.clone(), staleTime);
+        await apiSetCache(url, res.clone(), staleTime);
       } else {
-        await apiClearCache(path);
+        await apiClearCache(url);
       }
     }
   });

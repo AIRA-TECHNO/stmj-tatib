@@ -15,7 +15,7 @@ interface typeSubMenuNavProps {
 }
 export default function SubMenuNav({ navigations, rightElement, className }: typeSubMenuNavProps) {
   return (
-    <section className={cn(`max-sm:border-b max-sm:sticky top-[-2px] pb-[1px] max-sm:pt-2 `, className)}>
+    <section className={cn(`max-sm:border-b max-sm:sticky top-[-2px] pb-[1px] max-sm:pt-2`, className)}>
       <div className="flex items-center">
         <div className='inline-flex items-center sm:rounded-lg sm:p-[.2rem] sm:bg-gray-200'>
           {navigations.map(({ label, isActive, link, onClick }, indexNav) => (
@@ -27,8 +27,8 @@ export default function SubMenuNav({ navigations, rightElement, className }: typ
                 if (onClick) onClick(e);
               }}
             >
-              <div className={`py-3 sm:py-2 px-6 min-w-[5rem] capitalize ${(isActive) ? 'sm:rounded-lg text-primary bg-white max-sm:border-b-2 border-primary font-bold' : ''}`}>
-                <div className={`pt-0.5 max-sm:text-sm`}>{label}</div>
+              <div className={`py-3 sm:py-2 px-6 sm:px-4 min-w-[5rem] capitalize ${(isActive) ? 'sm:rounded-md text-primary bg-white max-sm:border-b-2 border-primary font-bold' : ''}`}>
+                <div className={`pt-0.5 text-sm`}>{label}</div>
               </div>
             </Link>
           ))}

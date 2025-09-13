@@ -5,7 +5,7 @@
  * TABLE 
  */
 .table {
-  @apply w-full;
+  @apply w-full text-sm;
 }
 
 .table th {
@@ -16,20 +16,20 @@
  *
  *
  *
- * TABLE CARDED 
+ * ROW SELECTOR 
  */
-.table .row-selector {
+/* .table .row-selector {
   @apply pr-0 w-0;
-}
+} */
 
-.table .row-selector>input {
+/* .table .row-selector>input {
   @apply opacity-0 cursor-pointer;
 }
 
 .table .row-selector>input:checked,
 .table tr:hover .row-selector>input {
   @apply opacity-100;
-}
+} */
 
 /**
  *

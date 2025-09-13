@@ -1,5 +1,11 @@
 todo:
-- action table just from bulk checklist. add btn mode editor at right of title card detail item 
+# table
+- action table just from bulk checklist✅
+- bulk action adjust to float✅
+
+#form
+- btn mode editor at right of title card detail item. 
+- modal for form
 
 
 
@@ -12,8 +18,5 @@ unsync gradea:
 
 plan:
 - multiconnection database @API
-
-
-
-problem:
-- sidebar keep show when collapse
+- action show when mouse click right
+- adjust table component with div/a element

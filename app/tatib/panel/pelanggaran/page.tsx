@@ -5,16 +5,14 @@ import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
 import { useEffect, useState } from 'react'
-import Select from '@/externals/components/inputs/Select'
-import { DownloadSimpleIcon, PlusIcon, TrashIcon } from '@phosphor-icons/react'
-import { cn } from '@/externals/utils/frontend'
+import { DownloadSimpleIcon, PencilSimpleIcon, PlusIcon } from '@phosphor-icons/react'
+import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
-import RadioSwitch from '@/externals/components/inputs/RadioSwitch'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
-  const [DataTables, setDataTables] = useState<typeDataTable>({});
-  const [SelectedRows, setSelectedRows] = useState<any>([]);
+  const [DataTable, setDataTable] = useState<typeDataTable>({});
+  const fmParams = useFormManager();
 
 
 
@@ -22,7 +20,7 @@ export default function Page() {
    * Use effect
    */
   useEffect(() => {
-    setDataTables({
+    setDataTable({
       data: [
         { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "SMKN 1 Solo", point: -10, rule: 'Membolos' },
         { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "SMKN 1 Sambit", point: -10, rule: 'Membolos' },
@@ -44,88 +42,7 @@ export default function Page() {
         { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "SMKN 1 Mlarak", point: -10, rule: 'Membolos' },
         { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "SMKN 1 Siman", point: -10, rule: 'Membolos' },
         { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "SMKN 1 Sawoo", point: -10, rule: 'Membolos' },
-        { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "SMKN 1 Solo", point: -10, rule: 'Membolos' },
-        { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "SMKN 1 Sambit", point: -10, rule: 'Membolos' },
-        { id: 3, name: "Yanti Rahayu", nisn: 20224, class_full_name: "SMKN 1 Jenangan", point: -10, rule: 'Membolos' },
-        { id: 4, name: "Rizky Maulana", nisn: 20225, class_full_name: "SMKN 2 Madiun", point: -10, rule: 'Membolos' },
-        { id: 5, name: "Siti Nurhaliza", nisn: 20226, class_full_name: "SMKN 1 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 6, name: "Dwi Ananda", nisn: 20227, class_full_name: "SMKN 3 Magetan", point: -10, rule: 'Membolos' },
-        { id: 7, name: "Agus Prasetyo", nisn: 20228, class_full_name: "SMKN 1 Balong", point: -10, rule: 'Membolos' },
-        { id: 8, name: "Intan Permata", nisn: 20229, class_full_name: "SMKN 1 Slahung", point: -10, rule: 'Membolos' },
-        { id: 9, name: "Fajar Nugroho", nisn: 20230, class_full_name: "SMKN 1 Kauman", point: -10, rule: 'Membolos' },
-        { id: 10, name: "Nia Ramadhani", nisn: 20231, class_full_name: "SMKN 1 Bungkal", point: -10, rule: 'Membolos' },
-        { id: 11, name: "Andi Setiawan", nisn: 20232, class_full_name: "SMKN 2 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 12, name: "Lia Marlina", nisn: 20233, class_full_name: "SMKN 1 Jetis", point: -10, rule: 'Membolos' },
-        { id: 13, name: "Bayu Saputra", nisn: 20234, class_full_name: "SMKN 1 Badegan", point: -10, rule: 'Membolos' },
-        { id: 14, name: "Salsa Amelia", nisn: 20235, class_full_name: "SMKN 1 Ngadirojo", point: -10, rule: 'Membolos' },
-        { id: 15, name: "Rian Hidayat", nisn: 20236, class_full_name: "SMKN 1 Sooko", point: -10, rule: 'Membolos' },
-        { id: 16, name: "Wulan Sari", nisn: 20237, class_full_name: "SMKN 1 Pulung", point: -10, rule: 'Membolos' },
-        { id: 17, name: "Teguh Ariyanto", nisn: 20238, class_full_name: "SMKN 2 Sambit", point: -10, rule: 'Membolos' },
-        { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "SMKN 1 Mlarak", point: -10, rule: 'Membolos' },
-        { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "SMKN 1 Siman", point: -10, rule: 'Membolos' },
-        { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "SMKN 1 Sawoo", point: -10, rule: 'Membolos' },
-        { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "SMKN 1 Solo", point: -10, rule: 'Membolos' },
-        { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "SMKN 1 Sambit", point: -10, rule: 'Membolos' },
-        { id: 3, name: "Yanti Rahayu", nisn: 20224, class_full_name: "SMKN 1 Jenangan", point: -10, rule: 'Membolos' },
-        { id: 4, name: "Rizky Maulana", nisn: 20225, class_full_name: "SMKN 2 Madiun", point: -10, rule: 'Membolos' },
-        { id: 5, name: "Siti Nurhaliza", nisn: 20226, class_full_name: "SMKN 1 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 6, name: "Dwi Ananda", nisn: 20227, class_full_name: "SMKN 3 Magetan", point: -10, rule: 'Membolos' },
-        { id: 7, name: "Agus Prasetyo", nisn: 20228, class_full_name: "SMKN 1 Balong", point: -10, rule: 'Membolos' },
-        { id: 8, name: "Intan Permata", nisn: 20229, class_full_name: "SMKN 1 Slahung", point: -10, rule: 'Membolos' },
-        { id: 9, name: "Fajar Nugroho", nisn: 20230, class_full_name: "SMKN 1 Kauman", point: -10, rule: 'Membolos' },
-        { id: 10, name: "Nia Ramadhani", nisn: 20231, class_full_name: "SMKN 1 Bungkal", point: -10, rule: 'Membolos' },
-        { id: 11, name: "Andi Setiawan", nisn: 20232, class_full_name: "SMKN 2 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 12, name: "Lia Marlina", nisn: 20233, class_full_name: "SMKN 1 Jetis", point: -10, rule: 'Membolos' },
-        { id: 13, name: "Bayu Saputra", nisn: 20234, class_full_name: "SMKN 1 Badegan", point: -10, rule: 'Membolos' },
-        { id: 14, name: "Salsa Amelia", nisn: 20235, class_full_name: "SMKN 1 Ngadirojo", point: -10, rule: 'Membolos' },
-        { id: 15, name: "Rian Hidayat", nisn: 20236, class_full_name: "SMKN 1 Sooko", point: -10, rule: 'Membolos' },
-        { id: 16, name: "Wulan Sari", nisn: 20237, class_full_name: "SMKN 1 Pulung", point: -10, rule: 'Membolos' },
-        { id: 17, name: "Teguh Ariyanto", nisn: 20238, class_full_name: "SMKN 2 Sambit", point: -10, rule: 'Membolos' },
-        { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "SMKN 1 Mlarak", point: -10, rule: 'Membolos' },
-        { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "SMKN 1 Siman", point: -10, rule: 'Membolos' },
-        { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "SMKN 1 Sawoo", point: -10, rule: 'Membolos' },
-        { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "SMKN 1 Solo", point: -10, rule: 'Membolos' },
-        { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "SMKN 1 Sambit", point: -10, rule: 'Membolos' },
-        { id: 3, name: "Yanti Rahayu", nisn: 20224, class_full_name: "SMKN 1 Jenangan", point: -10, rule: 'Membolos' },
-        { id: 4, name: "Rizky Maulana", nisn: 20225, class_full_name: "SMKN 2 Madiun", point: -10, rule: 'Membolos' },
-        { id: 5, name: "Siti Nurhaliza", nisn: 20226, class_full_name: "SMKN 1 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 6, name: "Dwi Ananda", nisn: 20227, class_full_name: "SMKN 3 Magetan", point: -10, rule: 'Membolos' },
-        { id: 7, name: "Agus Prasetyo", nisn: 20228, class_full_name: "SMKN 1 Balong", point: -10, rule: 'Membolos' },
-        { id: 8, name: "Intan Permata", nisn: 20229, class_full_name: "SMKN 1 Slahung", point: -10, rule: 'Membolos' },
-        { id: 9, name: "Fajar Nugroho", nisn: 20230, class_full_name: "SMKN 1 Kauman", point: -10, rule: 'Membolos' },
-        { id: 10, name: "Nia Ramadhani", nisn: 20231, class_full_name: "SMKN 1 Bungkal", point: -10, rule: 'Membolos' },
-        { id: 11, name: "Andi Setiawan", nisn: 20232, class_full_name: "SMKN 2 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 12, name: "Lia Marlina", nisn: 20233, class_full_name: "SMKN 1 Jetis", point: -10, rule: 'Membolos' },
-        { id: 13, name: "Bayu Saputra", nisn: 20234, class_full_name: "SMKN 1 Badegan", point: -10, rule: 'Membolos' },
-        { id: 14, name: "Salsa Amelia", nisn: 20235, class_full_name: "SMKN 1 Ngadirojo", point: -10, rule: 'Membolos' },
-        { id: 15, name: "Rian Hidayat", nisn: 20236, class_full_name: "SMKN 1 Sooko", point: -10, rule: 'Membolos' },
-        { id: 16, name: "Wulan Sari", nisn: 20237, class_full_name: "SMKN 1 Pulung", point: -10, rule: 'Membolos' },
-        { id: 17, name: "Teguh Ariyanto", nisn: 20238, class_full_name: "SMKN 2 Sambit", point: -10, rule: 'Membolos' },
-        { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "SMKN 1 Mlarak", point: -10, rule: 'Membolos' },
-        { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "SMKN 1 Siman", point: -10, rule: 'Membolos' },
-        { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "SMKN 1 Sawoo", point: -10, rule: 'Membolos' },
-        { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "SMKN 1 Solo", point: -10, rule: 'Membolos' },
-        { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "SMKN 1 Sambit", point: -10, rule: 'Membolos' },
-        { id: 3, name: "Yanti Rahayu", nisn: 20224, class_full_name: "SMKN 1 Jenangan", point: -10, rule: 'Membolos' },
-        { id: 4, name: "Rizky Maulana", nisn: 20225, class_full_name: "SMKN 2 Madiun", point: -10, rule: 'Membolos' },
-        { id: 5, name: "Siti Nurhaliza", nisn: 20226, class_full_name: "SMKN 1 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 6, name: "Dwi Ananda", nisn: 20227, class_full_name: "SMKN 3 Magetan", point: -10, rule: 'Membolos' },
-        { id: 7, name: "Agus Prasetyo", nisn: 20228, class_full_name: "SMKN 1 Balong", point: -10, rule: 'Membolos' },
-        { id: 8, name: "Intan Permata", nisn: 20229, class_full_name: "SMKN 1 Slahung", point: -10, rule: 'Membolos' },
-        { id: 9, name: "Fajar Nugroho", nisn: 20230, class_full_name: "SMKN 1 Kauman", point: -10, rule: 'Membolos' },
-        { id: 10, name: "Nia Ramadhani", nisn: 20231, class_full_name: "SMKN 1 Bungkal", point: -10, rule: 'Membolos' },
-        { id: 11, name: "Andi Setiawan", nisn: 20232, class_full_name: "SMKN 2 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 12, name: "Lia Marlina", nisn: 20233, class_full_name: "SMKN 1 Jetis", point: -10, rule: 'Membolos' },
-        { id: 13, name: "Bayu Saputra", nisn: 20234, class_full_name: "SMKN 1 Badegan", point: -10, rule: 'Membolos' },
-        { id: 14, name: "Salsa Amelia", nisn: 20235, class_full_name: "SMKN 1 Ngadirojo", point: -10, rule: 'Membolos' },
-        { id: 15, name: "Rian Hidayat", nisn: 20236, class_full_name: "SMKN 1 Sooko", point: -10, rule: 'Membolos' },
-        { id: 16, name: "Wulan Sari", nisn: 20237, class_full_name: "SMKN 1 Pulung", point: -10, rule: 'Membolos' },
-        { id: 17, name: "Teguh Ariyanto", nisn: 20238, class_full_name: "SMKN 2 Sambit", point: -10, rule: 'Membolos' },
-        { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "SMKN 1 Mlarak", point: -10, rule: 'Membolos' },
-        { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "SMKN 1 Siman", point: -10, rule: 'Membolos' },
-        { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "SMKN 1 Sawoo", point: -10, rule: 'Membolos' },
       ],
-      paginate: { per_page: 50 }
     });
   }, []);
 
@@ -134,6 +51,8 @@ export default function Page() {
   /**
    * Render JSX
    */
+  // console.log(fmParams.values);
+  
   return (
     <>
       <HeaderApp
@@ -149,7 +68,7 @@ export default function Page() {
         ]}
       />
       <SubMenuNav
-        className='sm:pt-12 sm:w-[20rem]'
+        className='sm:pt-[4rem] sm:w-[20rem]'
         navigations={[
           { label: 'pelanggaran', isActive: true },
           { label: 'peraturan', link: '/tatib/panel/peraturan' }
@@ -159,12 +78,14 @@ export default function Page() {
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-full xl:col-span-8">
             <div className="card">
-              <div className='card-body sm:py-6'>
+              <div className='card-body sm:py-4'>
                 <Table
-                  stateSelectedRows={[SelectedRows, setSelectedRows]}
-                  // showAdvanceSearch={true}
-                  actions={() => (["edit", "delete"])}
-                  noNumber
+                  stateDataTable={[DataTable, setDataTable]}
+                  actions={[{ icon: <PencilSimpleIcon weight="bold" className='text-base' />, label: 'Edit' }, 'delete']}
+                  fmParams={fmParams}
+                  onClickRow={(dataRow) => {
+                    console.log(dataRow);
+                  }}
                   prototypeTable={[
                     {
                       title: "nama", keyData: (data) => {
@@ -184,36 +105,12 @@ export default function Page() {
                       { title: "poin pelanggaran", keyData: "point" },
                     ] : [])
                   ]}
-                  stateDataTable={[DataTables, setDataTables]}
                   leftElement={<div>
                     <Button href='/tatib/panel/portofolio/form' className='btn-sm btn-auto-floating'>
                       <PlusIcon weight='bold' className='text-sm' />
                       <span>Tambah Data</span>
                     </Button>
-                    <div className={cn('card mt-2 text-xs font-semibold p-0.5 opacity-0 transition-all ease-out duration-200 w-0', { 'opacity-100 w-auto': SelectedRows?.length })}>
-                      <div className='flex items-center'>
-                        <div className='text-sm pl-3 pr-2'>{SelectedRows.length} item terpilih : </div>
-                        <div className='flex items-center'>
-                          <div
-                            className='flex items-center gap-1 py-1.5 px-4 rounded-md text-red-600 bg-red-100 cursor-pointer hover:bg-red-500 hover:text-white'
-                            onClick={() => setSelectedRows([])}
-                          >
-                            <TrashIcon weight="bold" />
-                            <span>Hapus</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>}
-                // rightElement={<div className='sm:flex items-center gap-2 text-sm [&_.input-form]:h-10 [&_.input-form]:border-primary/70'>
-                //   <div className='min-w-[10rem] '>
-                //     <Select
-                //       noLabel={true}
-                //       placeholder="Filter Tahun Ajaran"
-                //       options={["2021-2022", "2022-2023"]}
-                //     />
-                //   </div>
-                // </div>}
                 />
               </div>
             </div>

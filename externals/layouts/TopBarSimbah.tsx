@@ -12,7 +12,7 @@ export default function TopBarSimbah() {
         // background: `#083033`,
         // background: `#304544`,
         // background: `#083c3c`,
-        background: `#0b2c2c`
+        background: `#0b2c2c`, // seattle
       }}
     >
       <div className='flex items-center'>
