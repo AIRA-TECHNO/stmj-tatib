@@ -101,17 +101,15 @@ export default function Modal({ children, show, toHide, justHidden, className, t
           className
         )}
       >
-        <div className="sm:opacity-0 py-2" onTouchStart={(e) => {
+        <div className="sm:opacity-0 py-2 sm:py-1" onTouchStart={(e) => {
           startY.current = e.touches[0].clientY;
           currentY.current = startY.current;
           isDragging.current = true;
         }}><div className="w-[3rem] h-1 mx-auto bg-gray-400 rounded-full" /></div>
         {!noHeader && (
-          <div className="flex px-4 pb-4 border-b">
-            <div className="font-bold text-xl">{title}</div>
-            <div className="ml-auto">
-              <XIcon weight="bold" className="text-xl cursor-pointer" onClick={onHide} />
-            </div>
+          <div className="flex items-center px-4 pb-4 sm:pb-2 border-b font-bold text-xl">
+            <XIcon weight="bold" className="text-xl cursor-pointer mr-2" onClick={onHide} />
+            {title}
           </div>
         )}
         {children}

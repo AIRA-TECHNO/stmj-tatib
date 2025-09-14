@@ -5,7 +5,7 @@ import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
 import { useEffect, useState } from 'react'
-import { DownloadSimpleIcon, NotePencilIcon, PencilSimpleIcon, PlusIcon } from '@phosphor-icons/react'
+import { DownloadSimpleIcon, FloppyDiskIcon, NotePencilIcon, PencilSimpleIcon, PlusIcon, TrashSimpleIcon, XIcon } from '@phosphor-icons/react'
 import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
@@ -76,6 +76,47 @@ export default function Page() {
         ]}
       />
       <section className="sm:mt-2">
+        <Modal
+          show={fmDetail.show} toHide={fmDetail.setShow}
+          title={<>
+            <div>Detail Siswa</div>
+            {fmDetail.readOnly ? (<>
+              <Button varian='btn-flat' className='p-1 h-auto hover:text-warning ml-auto' onClick={() => fmDetail.setReadOnly(false)}>
+                <NotePencilIcon weight='bold' className='text-base' />
+                <div>Edit</div>
+              </Button>
+              <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-1' onClick={() => DataTable.showConfirmDelete?.([fmDetail.defaultValue.current])}>
+                <TrashSimpleIcon weight='bold' className='text-base' />
+                <div>Hapus</div>
+              </Button>
+            </>) : (<>
+              <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-auto' onClick={() => fmDetail.setReadOnly(true)}>
+                <XIcon weight='bold' className='text-base' />
+                <div>Batal</div>
+              </Button>
+              <Button varian='btn-flat' className='p-1 h-auto hover:text-success ml-1' onClick={() => fmDetail.formElement.current?.submit()}>
+                <FloppyDiskIcon weight='bold' className='text-base' />
+                <div>Simpan</div>
+              </Button>
+            </>)}
+          </>}
+        >
+          <div className='px-4 pb-4'>
+            <Form
+              fm={fmDetail}
+              fields={[
+                { name: 'name', label: 'siswa', parentProps: { className: 'lg:col-span-6' } },
+                { name: 'rule', label: 'peraturan yang dilanggar', parentProps: { className: 'lg:col-span-6' } },
+                { name: 'note', label: 'catatan', type: 'textarea' },
+              ]}
+              noSubmit
+            // footerElement={fmDetail.readOnly ? undefined : <Button varian='btn-flat' className='bg-gray-100' onClick={() => {
+            //   fmDetail.setReadOnly(true);
+            //   fmDetail.setValues(fmDetail.defaultValue.current);
+            // }}>Batal</Button>}
+            />
+          </div>
+        </Modal>
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-full xl:col-span-8">
             <div className="card">
@@ -131,30 +172,6 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <Modal
-          show={fmDetail.show} toHide={fmDetail.setShow}
-          title={<div className='flex items-center gap-2'>
-            <span>Detail Siswa</span>
-            {fmDetail.readOnly && (
-              <NotePencilIcon weight='bold' className='text-primary cursor-pointer' onClick={() => fmDetail.setReadOnly(false)} />
-            )}
-          </div>}
-        >
-          <div className='px-4'>
-            <Form
-              fm={fmDetail}
-              fields={[
-                { name: 'name', label: 'siswa', parentProps: { className: 'lg:col-span-6' } },
-                { name: 'rule', label: 'peraturan yang dilanggar', parentProps: { className: 'lg:col-span-6' } },
-                { name: 'note', label: 'catatan', type: 'textarea' },
-              ]}
-              footerElement={fmDetail.readOnly ? undefined : <Button varian='btn-flat' className='ml-auto bg-gray-100' onClick={() => {
-                fmDetail.setReadOnly(true);
-                fmDetail.setValues(fmDetail.defaultValue.current);
-              }}>Batal</Button>}
-            />
-          </div>
-        </Modal>
       </section>
     </>
   )

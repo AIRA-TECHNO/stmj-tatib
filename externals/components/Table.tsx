@@ -41,6 +41,7 @@ export interface typeDataTable {
   selectedRows?: Array<Record<string, any>>;
   statusCode?: number;
   loadDataTable?: () => any;
+  showConfirmDelete?: (dataRow?: any) => any;
 }
 
 export default function Table({
@@ -96,7 +97,7 @@ export default function Table({
 }) {
   const { ScreenWidth } = useContextGlobal();
   const refTimeOutAdvanceSearch = useRef<NodeJS.Timeout[]>([]);
-  const [ShowConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [ConfirmDeleteRows, setConfirmDeleteRows] = useState<any[]>([]);
   const [DataTable, setDataTable] = stateDataTable ?? useState<typeDataTable>({});
   const fmFilters = useFormManager();
   if (!fmParams) fmParams = useFormManager();
@@ -122,20 +123,20 @@ export default function Table({
   function handleDelete() {
     if (onDelete) {
       onDelete((noReload) => {
-        setShowConfirmDelete(false);
+        setConfirmDeleteRows([]);
         if (!noReload) loadDataTable();
       });
     } else if (url) {
-      api({ method: 'DELETE', url: `${url}/${DataTable.selectedRows?.join(',')}`, }).then(async (res) => {
+      api({ method: 'DELETE', url: `${url}/${DataTable.selectedRows?.map((sr) => sr[primaryKey])?.join(',')}`, }).then(async (res) => {
         if (res.status == 200) {
-          setShowConfirmDelete(false);
+          setConfirmDeleteRows([]);
           loadDataTable();
           const { message } = await res.json();
           toast.success(message)
         }
       });
     } else {
-      setShowConfirmDelete(false);
+      setConfirmDeleteRows([]);
     }
   };
 
@@ -158,8 +159,8 @@ export default function Table({
   useEffect(loadDataTable, [url, fmParams?.values]);
 
   useEffect(() => {
-    if (stateDataTable && !DataTable.loadDataTable) {
-      setDataTable((prev) => ({ ...prev, loadDataTable }));
+    if (stateDataTable && (!DataTable.loadDataTable || !DataTable.showConfirmDelete)) {
+      setDataTable((prev) => ({ ...prev, loadDataTable, showConfirmDelete: setConfirmDeleteRows }));
     }
   }, [stateDataTable]);
 
@@ -394,10 +395,10 @@ export default function Table({
 
       {/* Action */}
       <Confirm
-        show={ShowConfirmDelete}
-        toHide={() => setShowConfirmDelete(false)}
+        show={Boolean(ConfirmDeleteRows.length)}
+        toHide={() => setConfirmDeleteRows([])}
         onApproved={handleDelete}
-        question={`${DataTable.selectedRows?.length} baris data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
+        question={`${ConfirmDeleteRows.length} baris data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
       />
       <div className={cn(
         'fixed z-[-1] bottom-14 sm:bottom-4 left-1/2 -translate-1/2 max-w-7xl max-sm:w-[calc(100vw-1rem)] h-[3rem] opacity-0 duration-200',
@@ -408,7 +409,7 @@ export default function Table({
         {actions?.map((action, indexAction) => {
           if (action == 'delete') {
             return (
-              <div key={indexAction} onClick={() => setShowConfirmDelete(true)} className='flex items-center gap-1 mx-2.5 cursor-pointer hover:text-secondary'>
+              <div key={indexAction} onClick={() => setConfirmDeleteRows(DataTable.selectedRows ?? [])} className='flex items-center gap-1 mx-2.5 cursor-pointer hover:text-secondary'>
                 <TrashSimpleIcon weight="bold" className='text-base' />
                 <span>Hapus</span>
               </div>

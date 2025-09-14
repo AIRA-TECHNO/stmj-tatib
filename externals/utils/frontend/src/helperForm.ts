@@ -34,6 +34,7 @@ export function useFormManager<T extends Record<string, any>>() {
   const [disable, setDisable] = useState(false);
   const validations = useRef<Record<string, TAnySchema>>({});
   const defaultValue = useRef<T>({} as T);
+  const formElement = useRef<HTMLFormElement>(null)
 
   const setValue = useCallback(<K extends keyof T>(name: string, newValue: T[K] | ((prevValue: T[K]) => T[K])) => {
     if (!name) return;
@@ -61,7 +62,7 @@ export function useFormManager<T extends Record<string, any>>() {
     readOnly, setReadOnly,
     disable, setDisable,
     validations, setValue,
-    defaultValue: defaultValue
+    defaultValue, formElement
   };
 }
 

@@ -117,7 +117,10 @@ export default function Form({
    */
   const Wrapper: ElementType = noSubmit ? 'div' : 'form';
   return (
-    <Wrapper onSubmit={handleSubmit} encType={encType} id={id} className={cn('grid grid-cols-12 gap-x-4 pb-4', className)}>
+    <Wrapper
+      onSubmit={handleSubmit} encType={encType} ref={fm.formElement as any}
+      id={id} className={cn('grid grid-cols-12 gap-x-4 pb-4', className)}
+    >
       {(fields as typeFormInputProps[]).map((field, indexField) => {
         if (isValidElement(field)) {
           return (<Fragment key={indexField}>{field}</Fragment>);
@@ -134,8 +137,7 @@ export default function Form({
         }
       })}
       {(!(noSubmit || fm.disable || fm.readOnly) || footerElement) && (
-        <div className='col-span-full flex justify-between gap-2 mt-8 pt-4 border-t'>
-          {footerElement}
+        <div className='col-span-full flex gap-2 mt-8 pt-4 border-t'>
           {!(noSubmit || fm.disable) && (
             <Button
               id={id ? `btn-submit-${id}` : undefined}
@@ -143,6 +145,7 @@ export default function Form({
               isLoading={fm?.statusCode == 202}
             />
           )}
+          {footerElement}
         </div>
       )}
     </Wrapper>
