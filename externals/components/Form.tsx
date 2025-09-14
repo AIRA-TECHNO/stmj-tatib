@@ -1,6 +1,6 @@
 'use client'
 
-import { DetailedHTMLProps, FormEvent, FormEventHandler, Fragment, HTMLAttributes, HTMLInputTypeAttribute, ReactNode, isValidElement, useEffect } from 'react'
+import { DetailedHTMLProps, ElementType, FormEventHandler, Fragment, HTMLAttributes, HTMLInputTypeAttribute, ReactNode, isValidElement, useEffect } from 'react'
 import Button from './Button'
 import Input, { typeInputProps } from './inputs/Input'
 import { useContextGlobal } from '../contexts/ContextGlobal'
@@ -22,19 +22,17 @@ interface typeFormProps {
   id?: string;
   className?: string;
   encType?: 'text/plain' | 'multipart/form-data' | 'application/x-www-form-urlencoded';
-  disabled?: boolean;
   noSubmit?: boolean;
   onSubmit?: FormEventHandler<HTMLFormElement>;
   submitConfig?: {
-    path: string;
-    host?: string;
+    url: string;
     method?: string;
     onSuccess: (responseJson: Record<string, any>) => any;
     customBodyRequest?: (formData: FormData) => any;
   };
   sourceDefaultValue?: {
-    path: string,
-    keyResponseJson?: string
+    url: string;
+    keyResponseJson?: string;
   };
   footerElement?: ReactNode;
 }
@@ -49,7 +47,6 @@ export default function Form({
   fm: fmExternal,
   submitConfig,
   sourceDefaultValue,
-  disabled,
   footerElement
 }: typeFormProps) {
   const { setStatusCode } = useContextGlobal();
@@ -60,7 +57,7 @@ export default function Form({
   /**
    * Function handler
    */
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const handleSubmit: FormEventHandler<any> = (event) => {
     event.preventDefault();
 
     // Recheck invalid field
@@ -69,12 +66,11 @@ export default function Form({
     // On submit
     if (!Object.keys(invalids).length) {
       if (onSubmit) onSubmit(event);
-      if (submitConfig?.path) {
+      if (submitConfig?.url) {
         fm?.setStatusCode(202);
         const formData = new FormData(event.target as HTMLFormElement);
         api({
-          host: submitConfig?.host,
-          path: submitConfig?.path,
+          url: submitConfig?.url,
           method: submitConfig?.method ?? 'POST',
           body: submitConfig.customBodyRequest ? submitConfig.customBodyRequest(formData) : formData
         }).then(async (res) => {
@@ -98,12 +94,12 @@ export default function Form({
    */
   useEffect(() => {
     if (
-      sourceDefaultValue?.path &&
+      sourceDefaultValue?.url &&
       !Object.values(fm.values ?? {})?.filter(Boolean)?.length &&
       fm?.statusCode != 202
     ) {
       fm.setStatusCode(202);
-      api({ path: sourceDefaultValue.path }).then(async (res) => {
+      api({ url: sourceDefaultValue.url }).then(async (res) => {
         if (res.status == 200) {
           fm.setStatusCode(200);
           fm.setValues((await res.json())?.[sourceDefaultValue?.keyResponseJson ?? 'data'] ?? {});
@@ -119,11 +115,9 @@ export default function Form({
   /**
    * Rendered JSX
    */
+  const Wrapper: ElementType = noSubmit ? 'div' : 'form';
   return (
-    <form
-      onSubmit={handleSubmit} id={id} encType={encType}
-      className={cn('grid grid-cols-12 gap-x-4 gap-y-2 pb-4', className)}
-    >
+    <Wrapper onSubmit={handleSubmit} encType={encType} id={id} className={cn('grid grid-cols-12 gap-x-4 pb-4', className)}>
       {(fields as typeFormInputProps[]).map((field, indexField) => {
         if (isValidElement(field)) {
           return (<Fragment key={indexField}>{field}</Fragment>);
@@ -132,26 +126,25 @@ export default function Form({
           return (
             <div
               key={indexField} {...parentProps}
-              className={cn('col-span-12 max-sm:[&_.input-form]:border-2', parentProps?.className)}
+              className={cn('col-span-12', parentProps?.className)}
             >
-              <Input {...fieldProps} fm={fm} readOnly={disabled ?? fieldProps?.readOnly} />
+              <Input {...fieldProps} fm={fm} readOnly={fm.disable || fm.readOnly || fieldProps?.readOnly} />
             </div>
           );
         }
       })}
-      {(!(noSubmit || disabled) || footerElement) && (
-        <div className='col-span-full flex gap-2 mt-2 pt-4 border-t'>
+      {(!(noSubmit || fm.disable || fm.readOnly) || footerElement) && (
+        <div className='col-span-full flex justify-between gap-2 mt-8 pt-4 border-t'>
           {footerElement}
-          {!(noSubmit || disabled) && (
+          {!(noSubmit || fm.disable) && (
             <Button
               id={id ? `btn-submit-${id}` : undefined}
-              className="ml-auto"
               children='Simpan'
               isLoading={fm?.statusCode == 202}
             />
           )}
         </div>
       )}
-    </form>
+    </Wrapper>
   )
 }

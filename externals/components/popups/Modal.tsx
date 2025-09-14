@@ -90,7 +90,7 @@ export default function Modal({ children, show, toHide, justHidden, className, t
     <div
       data-identity="modal"
       onClick={(e) => { if (e.target == e.currentTarget) onHide(); }}
-      className={cn('fixed inset-0 z-20 flex bg-black/30 sm:overflow-auto', { hidden: !show })}
+      className={cn('fixed inset-0 z-20 flex bg-black/30 sm:overflow-auto sm:px-2', { hidden: !show })}
     >
       <div
         ref={modalRef}
@@ -107,10 +107,10 @@ export default function Modal({ children, show, toHide, justHidden, className, t
           isDragging.current = true;
         }}><div className="w-[3rem] h-1 mx-auto bg-gray-400 rounded-full" /></div>
         {!noHeader && (
-          <div className="flex px-4 pb-2">
-            <div className="font-bold text-lg">{title}</div>
+          <div className="flex px-4 pb-4 border-b">
+            <div className="font-bold text-xl">{title}</div>
             <div className="ml-auto">
-              <XIcon className="text-xl" onClick={onHide} />
+              <XIcon weight="bold" className="text-xl cursor-pointer" onClick={onHide} />
             </div>
           </div>
         )}

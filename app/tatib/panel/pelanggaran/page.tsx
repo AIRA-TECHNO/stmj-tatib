@@ -5,7 +5,7 @@ import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
 import { useEffect, useState } from 'react'
-import { DownloadSimpleIcon, PencilSimpleIcon, PlusIcon } from '@phosphor-icons/react'
+import { DownloadSimpleIcon, NotePencilIcon, PencilSimpleIcon, PlusIcon } from '@phosphor-icons/react'
 import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
@@ -25,26 +25,26 @@ export default function Page() {
   useEffect(() => {
     setDataTable({
       data: [
-        { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "SMKN 1 Solo", point: -10, rule: 'Membolos' },
-        { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "SMKN 1 Sambit", point: -10, rule: 'Membolos' },
-        { id: 3, name: "Yanti Rahayu", nisn: 20224, class_full_name: "SMKN 1 Jenangan", point: -10, rule: 'Membolos' },
-        { id: 4, name: "Rizky Maulana", nisn: 20225, class_full_name: "SMKN 2 Madiun", point: -10, rule: 'Membolos' },
-        { id: 5, name: "Siti Nurhaliza", nisn: 20226, class_full_name: "SMKN 1 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 6, name: "Dwi Ananda", nisn: 20227, class_full_name: "SMKN 3 Magetan", point: -10, rule: 'Membolos' },
-        { id: 7, name: "Agus Prasetyo", nisn: 20228, class_full_name: "SMKN 1 Balong", point: -10, rule: 'Membolos' },
-        { id: 8, name: "Intan Permata", nisn: 20229, class_full_name: "SMKN 1 Slahung", point: -10, rule: 'Membolos' },
-        { id: 9, name: "Fajar Nugroho", nisn: 20230, class_full_name: "SMKN 1 Kauman", point: -10, rule: 'Membolos' },
-        { id: 10, name: "Nia Ramadhani", nisn: 20231, class_full_name: "SMKN 1 Bungkal", point: -10, rule: 'Membolos' },
-        { id: 11, name: "Andi Setiawan", nisn: 20232, class_full_name: "SMKN 2 Ponorogo", point: -10, rule: 'Membolos' },
-        { id: 12, name: "Lia Marlina", nisn: 20233, class_full_name: "SMKN 1 Jetis", point: -10, rule: 'Membolos' },
-        { id: 13, name: "Bayu Saputra", nisn: 20234, class_full_name: "SMKN 1 Badegan", point: -10, rule: 'Membolos' },
-        { id: 14, name: "Salsa Amelia", nisn: 20235, class_full_name: "SMKN 1 Ngadirojo", point: -10, rule: 'Membolos' },
-        { id: 15, name: "Rian Hidayat", nisn: 20236, class_full_name: "SMKN 1 Sooko", point: -10, rule: 'Membolos' },
-        { id: 16, name: "Wulan Sari", nisn: 20237, class_full_name: "SMKN 1 Pulung", point: -10, rule: 'Membolos' },
-        { id: 17, name: "Teguh Ariyanto", nisn: 20238, class_full_name: "SMKN 2 Sambit", point: -10, rule: 'Membolos' },
-        { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "SMKN 1 Mlarak", point: -10, rule: 'Membolos' },
-        { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "SMKN 1 Siman", point: -10, rule: 'Membolos' },
-        { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "SMKN 1 Sawoo", point: -10, rule: 'Membolos' },
+        { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 3, name: "Yanti Rahayu", nisn: 20224, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 4, name: "Rizky Maulana", nisn: 20225, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 5, name: "Siti Nurhaliza", nisn: 20226, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 6, name: "Dwi Ananda", nisn: 20227, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 7, name: "Agus Prasetyo", nisn: 20228, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 8, name: "Intan Permata", nisn: 20229, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 9, name: "Fajar Nugroho", nisn: 20230, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 10, name: "Nia Ramadhani", nisn: 20231, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 11, name: "Andi Setiawan", nisn: 20232, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 12, name: "Lia Marlina", nisn: 20233, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 13, name: "Bayu Saputra", nisn: 20234, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 14, name: "Salsa Amelia", nisn: 20235, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 15, name: "Rian Hidayat", nisn: 20236, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 16, name: "Wulan Sari", nisn: 20237, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 17, name: "Teguh Ariyanto", nisn: 20238, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
+        { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
       ],
     });
   }, []);
@@ -85,8 +85,10 @@ export default function Page() {
                   actions={[{ icon: <PencilSimpleIcon weight="bold" className='text-base' />, label: 'Edit' }, 'delete']}
                   fmParams={fmParams}
                   onClickRow={(dataRow) => {
+                    fmDetail.defaultValue.current = dataRow;
                     fmDetail.setValues(dataRow);
                     fmDetail.setShow(true);
+                    fmDetail.setReadOnly(true);
                   }}
                   prototypeTable={[
                     {
@@ -129,14 +131,27 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <Modal show={fmDetail.show} toHide={fmDetail.setShow} title='Detail Siswa'>
-          <div className='px-4 py-2'>
+        <Modal
+          show={fmDetail.show} toHide={fmDetail.setShow}
+          title={<div className='flex items-center gap-2'>
+            <span>Detail Siswa</span>
+            {fmDetail.readOnly && (
+              <NotePencilIcon weight='bold' className='text-primary cursor-pointer' onClick={() => fmDetail.setReadOnly(false)} />
+            )}
+          </div>}
+        >
+          <div className='px-4'>
             <Form
+              fm={fmDetail}
               fields={[
-                { name: 'siswa' },
-                { name: 'peraturan yang dilanggar' },
-                { name: 'catatan' },
+                { name: 'name', label: 'siswa', parentProps: { className: 'lg:col-span-6' } },
+                { name: 'rule', label: 'peraturan yang dilanggar', parentProps: { className: 'lg:col-span-6' } },
+                { name: 'note', label: 'catatan', type: 'textarea' },
               ]}
+              footerElement={fmDetail.readOnly ? undefined : <Button varian='btn-flat' className='ml-auto bg-gray-100' onClick={() => {
+                fmDetail.setReadOnly(true);
+                fmDetail.setValues(fmDetail.defaultValue.current);
+              }}>Batal</Button>}
             />
           </div>
         </Modal>

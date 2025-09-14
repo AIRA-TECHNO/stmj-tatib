@@ -5,8 +5,8 @@ todo:
 - size row on mobile
 
 #form
-- btn mode editor at right of title card detail item. 
-- adjust label input on responsive mobile 
+- btn mode editor at right of title card detail item✅
+- adjust label input on responsive mobile ✅
 
 
 

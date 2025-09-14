@@ -9,8 +9,8 @@
 .btn-outline,
 .btn {
   @apply inline-flex items-center justify-center cursor-pointer gap-1 px-4;
-  @apply rounded-lg capitalize whitespace-nowrap tracking-wide;
-  @apply h-10 text-sm;
+  @apply rounded-md capitalize whitespace-nowrap tracking-wide;
+  @apply h-9 text-xs font-semibold;
 }
 
 .btn-outline,
@@ -24,10 +24,6 @@
 
 .btn-outline {
   @apply font-medium border-primary text-primary;
-}
-
-.btn-sm {
-  @apply h-9 text-xs rounded-md font-medium;
 }
 
 .btn-disabled,

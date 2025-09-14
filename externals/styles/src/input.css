@@ -18,24 +18,18 @@ input {
  * INPUT FORM 
  */
 .input-form {
-  @apply w-full px-2 bg-white rounded-md border;
-  @apply h-[2.25rem];
+  @apply bg-white w-full h-10 rounded;
+  @apply px-3 [&:read-only]:px-0 [&:not(:read-only)]:border [&:read-only]:mb-[-0.5rem];
 }
 
 textarea.input-form {
-  @apply h-[5rem] py-2 md:py-1;
+  @apply h-[5rem] py-2;
 }
 
 .label-input-form {
-  @apply capitalize font-semibold tracking-wide;
-  @apply inline-block cursor-pointer px-0.5;
-  @apply text-sm mb-2;
-  @apply sm:text-xs sm:mb-0.5;
-}
-
-.input-group-float-label .label-input-form,
-.label-float-input-form {
-  @apply ml-[.3rem] translate-y-4 text-xs bg-white;
+  @apply capitalize font-bold tracking-wide text-xs inline-block cursor-pointer translate-y-2.5 bg-white;
+  @apply mx-2 px-1;
+  @apply [&:has(+*:read-only)]:mx-0 [&:has(+*:read-only)]:px-0;
 }
 
 
