@@ -29,7 +29,7 @@ export function useFormManager<T extends Record<string, any>>() {
   const [values, setValues] = useState<T>({} as T);
   const [invalids, setInvalids] = useState<Record<string, string[]>>({});
   const [statusCode, setStatusCode] = useState(200);
-  const [isShow, setIsShow] = useState(false);
+  const [show, setShow] = useState(false);
   const validations = useRef<Record<string, TAnySchema>>({});
 
   const setValue = useCallback(<K extends keyof T>(name: string, newValue: T[K] | ((prevValue: T[K]) => T[K])) => {
@@ -54,7 +54,7 @@ export function useFormManager<T extends Record<string, any>>() {
     values, setValues,
     invalids, setInvalids,
     statusCode, setStatusCode,
-    isShow, setIsShow,
+    show, setShow,
     validations, setValue
   };
 }

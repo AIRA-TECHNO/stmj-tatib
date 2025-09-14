@@ -2,10 +2,11 @@ todo:
 # table
 - action table just from bulk checklist✅
 - bulk action adjust to float✅
+- size row on mobile
 
 #form
 - btn mode editor at right of title card detail item. 
-- modal for form
+- adjust label input on responsive mobile 
 
 
 

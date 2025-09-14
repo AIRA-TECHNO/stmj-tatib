@@ -1,20 +1,17 @@
 'use client'
 
 import { cn } from "@/externals/utils/frontend";
-import { XIcon } from "@phosphor-icons/react";
 import { ReactNode, useEffect, useRef } from "react";
 
 type typeModalProps = {
-  children?: ReactNode;
-  show?: boolean;
-  toHide: (isShow?: any) => any;
-  justHidden?: boolean;
-  className?: string;
-  title?: ReactNode;
-  noHeader?: boolean;
+  children?: ReactNode,
+  show?: boolean,
+  toHide: (isShow?: any) => any,
+  justHidden?: boolean,
+  className?: string,
 }
 
-export default function Modal({ children, show, toHide, justHidden, className, title, noHeader }: typeModalProps) {
+export default function Modal({ children, show, toHide, justHidden, className }: typeModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
   const currentY = useRef(0);
@@ -50,7 +47,7 @@ export default function Modal({ children, show, toHide, justHidden, className, t
     function onTouchEnd() {
       if (!modalRef.current) return;
       const diffY = currentY.current - startY.current;
-      if (diffY < 240) modalRef.current.style.transform = `translateY(0)`;
+      if (diffY < 120) modalRef.current.style.transform = `translateY(0)`;
       else onHide();
       isDragging.current = false;
       startY.current = 0;
@@ -95,26 +92,17 @@ export default function Modal({ children, show, toHide, justHidden, className, t
       <div
         ref={modalRef}
         className={cn(
-          "max-w-2xl w-full mx-auto sm:my-[2rem] max-sm:mt-[4rem] h-max",
+          "max-w-2xl w-full mx-auto my-[2rem] max-sm:mt-[4rem] h-max",
           "transition-transform duration-200 ease-out touch-none sm:transform-[translateY(0)]!",
-          "card max-sm:h-[calc(100vh-4rem)] max-sm:rounded-t-2xl max-sm:overflow-auto",
           className
         )}
       >
-        <div className="sm:opacity-0 py-2" onTouchStart={(e) => {
+        <div className="h-[2.25rem] pt-2 bg-white rounded-t-2xl sm:hidden" onTouchStart={(e) => {
           startY.current = e.touches[0].clientY;
           currentY.current = startY.current;
           isDragging.current = true;
         }}><div className="w-[3rem] h-1 mx-auto bg-gray-400 rounded-full" /></div>
-        {!noHeader && (
-          <div className="flex px-4 pb-2">
-            <div className="font-bold text-lg">{title}</div>
-            <div className="ml-auto">
-              <XIcon className="text-xl" onClick={onHide} />
-            </div>
-          </div>
-        )}
-        {children}
+        <div className="card max-sm:h-[calc(100vh-6rem)] max-sm:overflow-auto">{children}</div>
       </div>
     </div>
   );

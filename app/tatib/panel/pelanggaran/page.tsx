@@ -8,11 +8,14 @@ import { useEffect, useState } from 'react'
 import { DownloadSimpleIcon, PencilSimpleIcon, PlusIcon } from '@phosphor-icons/react'
 import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
+import Modal from '@/externals/components/popups/Modal'
+import Form from '@/externals/components/Form'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
   const [DataTable, setDataTable] = useState<typeDataTable>({});
   const fmParams = useFormManager();
+  const fmDetail = useFormManager();
 
 
 
@@ -51,8 +54,6 @@ export default function Page() {
   /**
    * Render JSX
    */
-  // console.log(fmParams.values);
-  
   return (
     <>
       <HeaderApp
@@ -84,7 +85,8 @@ export default function Page() {
                   actions={[{ icon: <PencilSimpleIcon weight="bold" className='text-base' />, label: 'Edit' }, 'delete']}
                   fmParams={fmParams}
                   onClickRow={(dataRow) => {
-                    console.log(dataRow);
+                    fmDetail.setValues(dataRow);
+                    fmDetail.setShow(true);
                   }}
                   prototypeTable={[
                     {
@@ -119,7 +121,6 @@ export default function Page() {
             <div className="card overflow-auto">
               <div className="card-header">
                 <div className="card-title">Chart Siswa Dengan Jumlah pelanggaran/Leaderboard</div>
-                {/* <div className="card-title">Chart Peraturan Dengan Jumlah pelanggaran</div> */} {/* <-- ini ditaruh pada menu peraturan */}
               </div>
               <div className="card-body">
                 <div className='h-[20rem] bg-gray-200'></div>
@@ -128,6 +129,17 @@ export default function Page() {
             </div>
           </div>
         </div>
+        <Modal show={fmDetail.show} toHide={fmDetail.setShow} title='Detail Siswa'>
+          <div className='px-4 py-2'>
+            <Form
+              fields={[
+                { name: 'siswa' },
+                { name: 'peraturan yang dilanggar' },
+                { name: 'catatan' },
+              ]}
+            />
+          </div>
+        </Modal>
       </section>
     </>
   )

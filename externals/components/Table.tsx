@@ -225,7 +225,7 @@ export default function Table({
                       className='pl-4 py-1.5 rounded-l-full'
                       onClick={() => {
                         fmFilters.setValue('filters', fmParams.values?.filters ?? []);
-                        fmFilters.setIsShow(true);
+                        fmFilters.setShow(true);
                       }}
                     >{filter.join(' ')}</div>
                     <XIcon
@@ -450,13 +450,13 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
   return (<>
     <div
       className={`btn-flat btn-sm bg-primary text-contras-primary px-4 h-10 ${!noSearch ? 'rounded-l-none' : ''}`}
-      onClick={() => fmFilters.setIsShow(true)}
+      onClick={() => fmFilters.setShow(true)}
     ><FadersIcon weight='fill' className='text-base rotate-90' /><span>Filter</span></div>
     <Dropdown
-      show={fmFilters.isShow}
+      show={fmFilters.show}
       toHide={() => {
         fmFilters.setValue('filters', fmParams.values.filters ?? [])
-        fmFilters.setIsShow(false)
+        fmFilters.setShow(false)
       }}
       className='top-12 right-0 sm:min-w-md max-w-xl p-4 z-[5]'
     >
@@ -542,13 +542,13 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
                     className='btn-flat btn-sm bg-gray-100'
                     onClick={() => {
                       fmFilters.setValue('filters', fmParams.values.filters ?? [])
-                      fmFilters.setIsShow(false)
+                      fmFilters.setShow(false)
                     }}>batal</div>
                   <div
                     className='btn btn-sm'
                     onClick={() => {
                       fmParams.setValue('filters', fmFilters.values.filters ?? [])
-                      fmFilters.setIsShow(false)
+                      fmFilters.setShow(false)
                     }}>terapkan</div>
                 </div>
               </td>
