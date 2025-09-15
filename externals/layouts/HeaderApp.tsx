@@ -1,21 +1,45 @@
 'use client'
 
 import { cn, pathToBreadcumbItems } from '@/externals/utils/frontend';
-import { ArrowLeftIcon } from '@phosphor-icons/react';
+import { ArrowLeftIcon, DotsThreeOutlineVerticalIcon } from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { ReactNode } from 'react'
+import React, { Fragment, isValidElement, ReactNode, useRef } from 'react'
+import { UrlObject } from 'url';
+import Button from '../components/Button';
 
-export default function HeaderApp({ breadcumbs, rightElement, className }: {
+export default function HeaderApp({ breadcumbs, rightElements, className }: {
   breadcumbs?: typeBreadcumbProps;
-  rightElement?: ReactNode;
+  rightElements?: Array<ReactNode | {
+    icon?: ReactNode;
+    label?: ReactNode;
+    href?: string | UrlObject;
+    onClick?: (event: MouseEvent) => any;
+  }> | ReactNode;
   className?: string;
 }) {
+  const refDropDown = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const breadcumbItems = breadcumbs?.length ? breadcumbs : pathToBreadcumbItems(pathname);
   const lastItem = breadcumbItems?.slice(-1)?.[0];
   const prevItem = breadcumbItems?.slice(-2)?.[0];
+
+  function onClickOutSide(event: MouseEvent) {
+    if (
+      !refDropDown.current?.contains(event.target as Node) &&
+      !(event.target as HTMLElement).closest("[data-identity='modal']")
+    ) {
+      setTimeout(() => {
+        if (refDropDown.current) {
+          refDropDown.current.style.zIndex = '-1';
+          refDropDown.current.style.opacity = '0';
+        }
+      }, 300);
+      document.removeEventListener('click', onClickOutSide);
+    }
+  }
+
   return (
     <header className={cn('max-sm:border-b max-sm:bg-white/90 max-sm:sticky top-0 z-[5] max-sm:backdrop-blur-xs', className)}>
       <div className='relative'>
@@ -54,7 +78,50 @@ export default function HeaderApp({ breadcumbs, rightElement, className }: {
             <div className={'capitalize font-bold text-xl sm:text-3xl tracking-wide max-sm:text-center'}>{lastItem?.label ?? 'home'}</div>
           </div>
         </div>
-        <div className='ml-auto lg:ml-12 flex items-center gap-2 max-sm:mr-[-1rem]'>{rightElement}</div>
+        <div className='ml-auto lg:ml-12'>
+          {isValidElement(rightElements) ? rightElements : (<>
+            <div
+              className='sm:hidden header-icon-square max-sm:mr-[-.75rem]'
+              onClick={() => {
+                if (!(refDropDown.current && refDropDown.current.style.zIndex)) return;
+                refDropDown.current.style.removeProperty('z-index');
+                refDropDown.current.style.opacity = '100%';
+                document.addEventListener('click', onClickOutSide);
+              }}
+            ><DotsThreeOutlineVerticalIcon weight='fill' className='text-lg' /></div>
+            <div ref={refDropDown} style={{ opacity: 0, zIndex: -1 }} className={cn(
+              `right-4 sm:flex items-center gap-2 bg-white rounded-md transition-opacity`,
+              `max-sm:absolute max-sm:border max-sm:divide-y max-sm:shadow max-sm:w-[11rem] max-sm:-mt-3`
+            )}>
+              {(rightElements as any[]).map((rightElement, indexRightElement) => (
+                isValidElement(rightElement) ? <Fragment key={indexRightElement}>{rightElement}</Fragment> : (
+                  <Button
+                    key={indexRightElement}
+                    varian={`btn-flat`}
+                    className='max-sm:text-2xs max-sm:gap-2 sm:px-2 px-3 font-semibold hover:text-primary max-sm:flex max-sm:w-full max-sm:justify-start max-sm:rounded-none'
+                    onClick={rightElement.onClick}
+                    href={rightElement.href}
+                  >{rightElement.icon} {rightElement.label}</Button>
+                )
+              ))}
+            </div>
+          </>)}
+        </div>
+
+        {/* <div className='ml-auto lg:ml-12 flex items-center gap-2 max-sm:mr-[-1rem]'>
+          {isValidElement(rightElements) ? rightElements : (rightElements as any[]).map((rightElement, indexRightElement) => (
+            isValidElement(rightElement) ? <Fragment key={indexRightElement}>{rightElement}</Fragment> : (
+              <Button
+                key={indexRightElement}
+                varian={`btn-flat`}
+                className='max-sm:text-2xs px-2 font-semibold hover:text-primary'
+                onClick={rightElement.onClick}
+                href={rightElement.href}
+              >{rightElement.icon} {rightElement.label}</Button>
+            )
+          ))}
+        </div> */}
+
       </div>
     </header>
   )

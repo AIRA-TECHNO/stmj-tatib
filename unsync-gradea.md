@@ -2,7 +2,7 @@ todo:
 # table
 - action table just from bulk checklist✅
 - bulk action adjust to float✅
-- size row on mobile
+- size row on mobile✅
 
 #form
 - btn mode editor at right of title card detail item✅
@@ -19,11 +19,10 @@ unsync gradea:
 
 plan:
 - multiconnection database @API
-- action show when mouse click right
-- adjust table component with div/a element
+- handle right click row table (show shorthand action)
 - adjust color success, warning, danger
 
 
 
-bug:
-- onclick checklist table
+uncomfortable:
+- btn action modal (problem: fm required for submit & state DataTable required for delete)

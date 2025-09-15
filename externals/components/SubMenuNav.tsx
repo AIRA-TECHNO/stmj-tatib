@@ -15,13 +15,13 @@ interface typeSubMenuNavProps {
 }
 export default function SubMenuNav({ navigations, rightElement, className }: typeSubMenuNavProps) {
   return (
-    <section className={cn(`max-sm:border-b max-sm:sticky top-[-2px] pb-[1px] max-sm:pt-2`, className)}>
+    <section className={cn(`max-sm:border-b max-sm:sticky top-[-2px] pb-[1px] pt-2 sm:pt-[4rem] sm:w-[20rem]`, className)}>
       <div className="flex items-center">
         <div className='inline-flex items-center sm:rounded-lg sm:p-[.2rem] sm:bg-gray-200'>
           {navigations.map(({ label, isActive, link, onClick }, indexNav) => (
             <Link
               key={indexNav}
-              href={link ?? '#'}
+              href={isActive ? '#' : (link ?? '#')}
               onClick={(e) => {
                 if (isActive) e.preventDefault();
                 if (onClick) onClick(e);
@@ -35,6 +35,6 @@ export default function SubMenuNav({ navigations, rightElement, className }: typ
         </div>
         <div className='ml-auto pr-6'>{rightElement}</div>
       </div>
-    </section>
+    </section >
   )
 }

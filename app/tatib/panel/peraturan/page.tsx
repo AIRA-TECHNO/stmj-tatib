@@ -4,83 +4,18 @@ import HeaderApp from '@/externals/layouts/HeaderApp'
 import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
-import { useEffect, useState } from 'react'
-import Select from '@/externals/components/inputs/Select'
-import { DownloadSimpleIcon, PlusIcon, TrashIcon } from '@phosphor-icons/react'
-import { cn } from '@/externals/utils/frontend'
+import { useState } from 'react'
+import { DownloadSimpleIcon, FloppyDiskIcon, NotePencilIcon, PencilSimpleIcon, PlusIcon, TrashSimpleIcon, UploadSimpleIcon, XIcon } from '@phosphor-icons/react'
+import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
-import InputCheck from '@/externals/components/inputs/InputCheck'
-import RadioSwitch from '@/externals/components/inputs/RadioSwitch'
+import Modal from '@/externals/components/popups/Modal'
+import Form from '@/externals/components/Form'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
-  const [DataTables, setDataTables] = useState<typeDataTable>({});
-  const [SelectedRows, setSelectedRows] = useState<any>([]);
-
-
-
-  /**
-   * Use effect
-   */
-  useEffect(() => {
-    setDataTables({
-      data: [
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-        { id: 1, rule: 'Membolos', point: 10 },
-        { id: 2, rule: 'Berkelahi', point: 10 },
-        { id: 3, rule: 'Terlambat', point: 10 },
-        { id: 4, rule: 'Hamil', point: 10 },
-      ],
-      paginate: { per_page: 50 }
-    });
-  }, []);
+  const [DataTable, setDataTable] = useState<typeDataTable>({});
+  const fmParams = useFormManager();
+  const fmDetail = useFormManager();
 
 
 
@@ -90,93 +25,100 @@ export default function Page() {
   return (
     <>
       <HeaderApp
-        className='sm:mt-2'
-        rightElement={[
-          <div className='flex' key="1">
-            <Button varian={`btn-flat`} className='max-sm:text-xs font-semibold hover:text-primary'>
-              <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />
-              <span>Export</span>
-              <span className='max-sm:hidden'>Excel</span>
-            </Button>
-          </div>,
+        className='border-none'
+        rightElements={[
+          {
+            icon: <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
+            label: 'Export Excel',
+          },
+          {
+            icon: <UploadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
+            label: 'Import Excel',
+          },
         ]}
       />
-      <div className='px-6 pt-4 sm:w-[20rem]'>
-        <RadioSwitch options={["Pelanggaran", "Peraturan"]} />
-      </div>
-      {/* <SubMenuNav className="sm:pb-2" navigations={[{ label: 'pelanggaran', link: '/tatib/panel/pelanggaran' }, { label: 'peraturan', isActive: true }]} /> */}
-      <section className='mt-4'>
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-full xl:col-span-8">
-            <div className="card ">
-              <div className='card-body sm:py-6'>
-                <div className='flex sm:justify-end items-center sm:mb-4 max-sm:mt-4'>
-                  <div className='min-w-[10rem] mr-2 text-sm'>
-                    <InputCheck label="tampilkan peraturan nonaktif" />
-                  </div>
-                </div>
-                <Table
-                  stateSelectedRows={[SelectedRows, setSelectedRows]}
-                  // showAdvanceSearch={true}
-                  actions={() => (["edit", "delete"])}
-                  noNumber
-                  stateDataTable={[DataTables, setDataTables]}
-                  // noAdvanceFilter={true}
-                  // noSearch
-                  leftElement={<div>
-                    <Button href='/tatib/panel/portofolio/form' className='btn-sm btn-auto-floating'>
-                      <PlusIcon weight='bold' className='text-sm' />
-                      <span>Tambah Data</span>
-                    </Button>
-                    <div className='flex mt-2 text-xs font-semibold'>
-                      <div className={`card border p-0.5 opacity-0 transition-all ease-out duration-200 w-0 ${SelectedRows?.length ? 'opacity-100 w-auto' : 'max-sm:hidden'}`}>
-                        <div className='flex items-center'>
-                          <div className='text-sm pl-3 pr-2'>{SelectedRows.length} item terpilih : </div>
-                          <div className='flex items-center'>
-                            <div
-                              className='flex items-center gap-1 py-1.5 px-4 rounded-md text-red-600 cursor-pointer bg-red-100 hover:bg-red-500 hover:text-white'
-                              onClick={() => setSelectedRows([])}
-                            >
-                              <TrashIcon weight="bold" />
-                              <span>Hapus</span>
-                            </div>
-                          </div>
-                        </div>
+      <SubMenuNav navigations={[
+        { label: 'pelanggaran', link: '/tatib/panel/pelanggaran' },
+        { label: 'peraturan', link: '/tatib/panel/peraturan', isActive: true }
+      ]} />
+      <section className="sm:mt-2 max-w-7xl">
+        <div className="card">
+          <div className='card-body sm:py-4'>
+            <Table
+              stateDataTable={[DataTable, setDataTable]}
+              actions={[{ icon: <PencilSimpleIcon weight="bold" className='text-base' />, label: 'Edit' }, 'delete']}
+              fmParams={fmParams}
+              onClickRow={(dataRow) => {
+                fmDetail.setValues(dataRow, true);
+                fmDetail.setShow(true, true);
+              }}
+              prototypeTable={[
+                {
+                  title: "peraturan", keyData: (data) => {
+                    if (ScreenWidth >= 640) return data.rule;
+                    return (
+                      <div>
+                        <div className='text-base font-semibold'>{data.rule}</div>
+                        <div className='text-sm font-semibold text-gray-500'>{data.point}</div>
+                        <div className='mt-2 text-sm'>{data.punishment}</div>
                       </div>
-                    </div>
-                  </div>}
-                  prototypeTable={[
-                    {
-                      title: "nama", keyData: (data) => {
-                        if (ScreenWidth >= 640) return data.rule;
-                        return (
-                          <div className='py-1'>
-                            <div className='text-base font-semibold'>{data.rule}</div>
-                            <div className='text-sm font-semibold text-gray-500'>{data.point}</div>
-                          </div>
-                        )
-                      }
-                    },
-                    ...(ScreenWidth >= 640 ? [
-                      { title: "point", keyData: "point" },
-                    ] : [])
-                  ]}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="col-span-full xl:col-span-4">
-            <div className="card  overflow-auto">
-              <div className="card-header">
-                <div className="card-title">Chart Peraturan Dengan Jumlah pelanggaran</div>
-              </div>
-              <div className="card-body">
-                <div>okok</div>
-              </div>
-              <div className="card-footer"></div>
-            </div>
+                    )
+                  }
+                },
+                ...(ScreenWidth >= 640 ? [
+                  { title: "poin", keyData: "point" },
+                  { title: "sanksi", keyData: "punishment" },
+                ] : [])
+              ]}
+              leftElement={<div>
+                <Button onClick={() => fmDetail.setShow(true, false, true)} className='btn-sm btn-auto-floating'>
+                  <PlusIcon weight='bold' className='text-sm' />
+                  <span>peraturan baru</span>
+                </Button>
+              </div>}
+            />
           </div>
         </div>
+        <Modal
+          show={fmDetail.show} toHide={fmDetail.setShow}
+          title={<>
+            <div className='mr-auto capitalize'>detail peraturan</div>
+            {/* here 2 */}
+            {fmDetail.readOnly ? (<>
+              <Button varian='btn-flat' className='p-1 h-auto hover:text-warning' onClick={() => fmDetail.setReadOnly(false)}>
+                <NotePencilIcon weight='bold' className='text-base' />
+                <div>Edit</div>
+              </Button>
+              <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-1' onClick={() => DataTable.showConfirmDelete?.([fmDetail.defaultValue.current])}>
+                <TrashSimpleIcon weight='bold' className='text-base' />
+                <div>Hapus</div>
+              </Button>
+            </>) : (<>
+              {fmDetail.values.id && (
+                <Button varian='btn-flat' className='p-1 h-auto hover:text-danger' onClick={() => fmDetail.setReadOnly(true)}>
+                  <XIcon weight='bold' className='text-base' />
+                  <div>Batal</div>
+                </Button>
+              )}
+              <Button varian='btn-flat' className='p-1 h-auto hover:text-success ml-1' onClick={() => fmDetail.formElement.current?.submit()}>
+                <FloppyDiskIcon weight='bold' className='text-base' />
+                <div>Simpan</div>
+              </Button>
+            </>)}
+          </>}
+        >
+          <div className='px-4 pb-4'>
+            <Form
+              fm={fmDetail}
+              fields={[
+                { name: 'rule', label: 'peraturan yang dilanggar', parentProps: { className: 'lg:col-span-6' } },
+                { label: "poin", name: "point", type: 'number', parentProps: { className: 'lg:col-span-6' } },
+                { label: "sanksi", name: "punishment", type: 'textarea' },
+              ]}
+              noFooter
+            />
+          </div>
+        </Modal>
       </section>
     </>
   )

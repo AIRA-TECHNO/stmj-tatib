@@ -22,6 +22,7 @@ interface typeFormProps {
   id?: string;
   className?: string;
   encType?: 'text/plain' | 'multipart/form-data' | 'application/x-www-form-urlencoded';
+  noFooter?: boolean;
   noSubmit?: boolean;
   onSubmit?: FormEventHandler<HTMLFormElement>;
   submitConfig?: {
@@ -42,6 +43,7 @@ export default function Form({
   id,
   className,
   encType,
+  noFooter,
   onSubmit,
   noSubmit,
   fm: fmExternal,
@@ -136,7 +138,7 @@ export default function Form({
           );
         }
       })}
-      {(!(noSubmit || fm.disable || fm.readOnly) || footerElement) && (
+      {!noFooter && (!(noSubmit || fm.disable || fm.readOnly) || footerElement) && (
         <div className='col-span-full flex gap-2 mt-8 pt-4 border-t'>
           {!(noSubmit || fm.disable) && (
             <Button

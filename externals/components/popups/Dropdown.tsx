@@ -20,7 +20,7 @@ export default function Dropdown({
   ref,
   ...props
 }: typeDropdownProps) {
-  const refDropdown = useRef<HTMLDivElement>(null);
+  const refDropDown = useRef<HTMLDivElement>(null);
   const eventAdded = useRef(false);
 
 
@@ -29,23 +29,20 @@ export default function Dropdown({
    * Use effect
    */
   useEffect(() => {
-    function onClickOutside(event: MouseEvent) {
+    function onClickOutSide(event: MouseEvent) {
       if (
-        refDropdown.current &&
-        !refDropdown.current.contains(event.target as Node) &&
+        !refDropDown.current?.contains(event.target as Node) &&
         !(event.target as HTMLElement).closest("[data-identity='modal']")
-      ) {
-        setTimeout(() => toHide(false), 300);
-      }
+      ) setTimeout(() => toHide(false), 300);
     }
 
     if (show && !eventAdded.current) {
-      document.addEventListener("mousedown", onClickOutside);
+      document.addEventListener("click", onClickOutSide);
       eventAdded.current = true;
     }
 
     return () => {
-      document.removeEventListener("mousedown", onClickOutside);
+      document.removeEventListener("click", onClickOutSide);
       eventAdded.current = false;
     };
   }, [show]);
@@ -59,7 +56,7 @@ export default function Dropdown({
   return (
     <div
       {...props}
-      ref={refDropdown}
+      ref={refDropDown}
       className={cn(
         `absolute card border shadow bg-white/90 backdrop-blur-xs duration-75`,
         show ? "opacity-100 z-20" : "opacity-0 z-[-1]",
@@ -67,13 +64,4 @@ export default function Dropdown({
       )}
     >{children}</div>
   )
-  // return (
-  //   <div className={cn({ 'hidden': !show })} ref={refDropdown}>
-  //     {!justHidden && (<div className="fixed inset-0 z-20" onClick={() => toHide(false)} />)}
-  //     <div
-  //       {...props}
-  //       className={cn(`absolute card border shadow z-20 bg-white/90 backdrop-blur-xs`, className)}
-  //     >{children}</div>
-  //   </div>
-  // )
 }

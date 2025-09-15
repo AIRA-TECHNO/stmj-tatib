@@ -20,7 +20,7 @@ export default [
     isSidebarItem: true,
     isHeaderItem: true,
     type: 'general',
-    checkIsActive: (pathNames: string[]) => 'pelanggaran' == pathNames[3],
+    checkIsActive: (pathNames: string[]) => ['pelanggaran', 'peraturan'].includes(pathNames[3]),
   },
   {
     href: '/tatib/panel/penghargaan',

@@ -245,7 +245,7 @@ export default function Table({
             {!(noHeader ?? ScreenWidth <= 640) && (
               <tr>
                 {(!noSelectRow && actions?.length) && (
-                  <th className={`w-0`}>
+                  <th className={`w-0 prevent-show`}>
                     <input type="checkbox" checked={DataTable.selectedRows?.length == dataPaginateds?.length}
                       onChange={(event) => setDataTable((prev) => ({ ...(prev), selectedRows: event.target.checked ? (dataPaginateds ?? []) : [] }))} />
                   </th>
@@ -350,7 +350,7 @@ export default function Table({
                   >
                     {/* checkbox select row */}
                     {(!noSelectRow && actions?.length) && (
-                      <td className={`max-sm:hidden`}>
+                      <td className={`max-sm:hidden prevent-show`}>
                         <input
                           type="checkbox"
                           checked={isSelected}
