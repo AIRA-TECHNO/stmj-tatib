@@ -22,3 +22,8 @@ plan:
 - action show when mouse click right
 - adjust table component with div/a element
 - adjust color success, warning, danger
+
+
+
+bug:
+- onclick checklist table

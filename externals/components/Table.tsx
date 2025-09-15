@@ -96,7 +96,8 @@ export default function Table({
   type?: 'carded-section' | 'carded' | 'striped';
 }) {
   const { ScreenWidth } = useContextGlobal();
-  const refTimeOutAdvanceSearch = useRef<NodeJS.Timeout[]>([]);
+  const refTimerAdvanceSearch = useRef<NodeJS.Timeout[]>([]);
+  const refTimerTouchHold = useRef<{ timer: NodeJS.Timeout; isWaiting: boolean; startX?: any; startY?: any; }>({} as any);
   const [ConfirmDeleteRows, setConfirmDeleteRows] = useState<any[]>([]);
   const [DataTable, setDataTable] = stateDataTable ?? useState<typeDataTable>({});
   const fmFilters = useFormManager();
@@ -224,10 +225,7 @@ export default function Table({
                   >
                     <div
                       className='pl-4 py-1.5 rounded-l-full'
-                      onClick={() => {
-                        fmFilters.setValue('filters', fmParams.values?.filters ?? []);
-                        fmFilters.setShow(true);
-                      }}
+                      onClick={() => { fmFilters.setValue('filters', fmParams.values?.filters ?? []); fmFilters.setShow(true); }}
                     >{filter.join(' ')}</div>
                     <XIcon
                       className='mt-[1px] hover:text-red-500 h-full mr-2 cursor-pointer text-sm btn-delete'
@@ -248,11 +246,8 @@ export default function Table({
               <tr>
                 {(!noSelectRow && actions?.length) && (
                   <th className={`w-0`}>
-                    <input
-                      type="checkbox"
-                      checked={DataTable.selectedRows?.length == dataPaginateds?.length}
-                      onChange={(event) => setDataTable((prev) => ({ ...(prev), selectedRows: event.target.checked ? (dataPaginateds ?? []) : [] }))}
-                    />
+                    <input type="checkbox" checked={DataTable.selectedRows?.length == dataPaginateds?.length}
+                      onChange={(event) => setDataTable((prev) => ({ ...(prev), selectedRows: event.target.checked ? (dataPaginateds ?? []) : [] }))} />
                   </th>
                 )}
                 {!noNumber && <th className={`w-0`}>No.</th>}
@@ -268,9 +263,9 @@ export default function Table({
                   if (asConf?.name == "") return <th key={indexCol} />;
                   const fieldName = asConf?.name ?? `as_${typeof col.keyData == "string" ? col.keyData : col.title}`;
                   function onChangeAdvanceSearch(event: ChangeEvent<HTMLInputElement>) {
-                    if (refTimeOutAdvanceSearch.current && fmParams) {
-                      clearTimeout(refTimeOutAdvanceSearch.current[indexCol]);
-                      refTimeOutAdvanceSearch.current[indexCol] = setTimeout(() => fmParams.setValue(fieldName, event.target.value), 1000);
+                    if (refTimerAdvanceSearch.current && fmParams) {
+                      clearTimeout(refTimerAdvanceSearch.current[indexCol]);
+                      refTimerAdvanceSearch.current[indexCol] = setTimeout(() => fmParams.setValue(fieldName, event.target.value), 1000);
                     }
                   }
                   return (
@@ -298,23 +293,71 @@ export default function Table({
                 return (
                   <tr
                     key={indexDataRow}
-                    className={cn({ 'cursor-pointer': onClickRow, 'bg-slate-50': isSelected })}
-                    onClick={(event: any) => {
-                      if (onClickRow && !event.target.closest('.prevent-show') && !(window?.getSelection()?.toString()?.trim() ?? '').length) {
-                        setTimeout(() => onClickRow(dataRow), 0);
+                    className={cn({ 'cursor-pointer': onClickRow, 'bg-primary/10': isSelected })}
+                    onTouchStart={(event) => {
+                      if (ScreenWidth >= 640) return;
+                      // prevent hold touch when scroll
+                      const touch = event.touches[0];
+                      refTimerTouchHold.current.startX = touch.clientX;
+                      refTimerTouchHold.current.startY = touch.clientY;
+                      refTimerTouchHold.current.isWaiting = true;
+
+                      // init hold touch
+                      refTimerTouchHold.current.timer = setTimeout(() => {
+                        refTimerTouchHold.current.isWaiting = false;
+                        setDataTable((prev) => {
+                          const newSelectedRows = (prev.selectedRows ?? []).filter((rowSelected: any) => rowSelected?.[primaryKey] != primaryValue);
+                          if (!isSelected) newSelectedRows.push(dataRow);
+                          return { ...prev, selectedRows: newSelectedRows };
+                        });
+                      }, 500);
+                    }}
+                    onTouchMove={(event) => {
+                      // prevent hold touch
+                      if (!refTimerTouchHold.current.isWaiting || ScreenWidth >= 640) return;
+                      const touch = event.touches[0];
+                      const dx = Math.abs(touch.clientX - refTimerTouchHold.current.startX);
+                      const dy = Math.abs(touch.clientY - refTimerTouchHold.current.startY);
+                      if (dx > 10 || dy > 10) {
+                        clearTimeout(refTimerTouchHold.current.timer);
+                        refTimerTouchHold.current.isWaiting = false;
                       }
+                    }}
+                    onTouchEnd={(event) => {
+                      if (ScreenWidth >= 640) return;
+                      // clear hold touch
+                      clearTimeout(refTimerTouchHold.current.timer);
+                      if (refTimerTouchHold.current.isWaiting) {
+                        refTimerTouchHold.current.isWaiting = false;
+                        if (DataTable.selectedRows?.length) {
+                          setDataTable((prev) => {
+                            const newSelectedRows = (prev.selectedRows ?? []).filter(
+                              (rowSelected: any) => rowSelected?.[primaryKey] != primaryValue
+                            );
+                            if (!isSelected) newSelectedRows.push(dataRow);
+                            return { ...prev, selectedRows: newSelectedRows };
+                          });
+                        } else if (!(event.target as any).closest('.prevent-show') && !window?.getSelection()?.toString()?.trim()?.length)
+                          onClickRow?.(dataRow);
+                      }
+                    }}
+                    onClick={(event) => {
+                      setTimeout(() => {
+                        if (onClickRow && ScreenWidth >= 640 && !(event.target as any).closest('.prevent-show') &&
+                          !window?.getSelection()?.toString()?.trim()?.length) onClickRow(dataRow);
+                      }, 0);
                     }}
                   >
                     {/* checkbox select row */}
                     {(!noSelectRow && actions?.length) && (
-                      <td>
+                      <td className={`max-sm:hidden`}>
                         <input
                           type="checkbox"
                           checked={isSelected}
-                          onChange={(event) => {
+                          onChange={() => {
                             setDataTable((prev) => {
                               const newSelectedRows = (prev.selectedRows ?? []).filter((rowSelected: any) => (rowSelected?.[primaryKey] != primaryValue));
-                              if (event.target.checked) newSelectedRows.push(dataRow);
+                              if (!isSelected) newSelectedRows.push(dataRow);
                               return { ...prev, selectedRows: newSelectedRows };
                             })
                           }}
@@ -331,21 +374,18 @@ export default function Table({
             )}
           </tbody>
         </table>
-      </div>
+      </div >
 
       {/* Pagination */}
-      <div className="grid grid-cols-4 items-center text-xs -mt-10">
+      < div className="grid grid-cols-4 items-center text-xs -mt-10" >
         <div className="col-span-full sm:col-span-2 lg:col-span-1 lg:order-3 order-2">
           {!(noPerPage) && (
             <div className='flex sm:justify-end items-baseline max-sm:mb-3'>
               <div>Limitasi item: </div>
-              <select
-                className="text-sm font-medium cursor-pointer hover:bg-gray-100 rounded-md w-[5.25rem] pl-2 py-1"
-                value={perPage}
+              <select value={perPage}
                 onChange={(e) => { fmParams?.setValues((prev) => ({ ...prev, page: 1, per_page: e.target.value })); }}
-              >
-                {[50, 100, 500, 1000].map((count) => (<option key={count} className="pl-0" value={count}>{count} Data</option>))}
-              </select>
+                className="text-sm font-medium cursor-pointer hover:bg-gray-100 rounded-md w-[5.25rem] pl-2 py-1"
+              >{[50, 100, 500, 1000].map((count) => (<option key={count} className="pl-0" value={count}>{count} Data</option>))}</select>
             </div>
           )}
         </div>
@@ -391,49 +431,40 @@ export default function Table({
             <span>dari {totalItem} data</span>
           </div>
         </div>
-      </div>
+      </div >
 
       {/* Action */}
       <Confirm
-        show={Boolean(ConfirmDeleteRows.length)}
-        toHide={() => setConfirmDeleteRows([])}
-        onApproved={handleDelete}
+        show={Boolean(ConfirmDeleteRows.length)} toHide={() => setConfirmDeleteRows([])} onApproved={handleDelete}
         question={`${ConfirmDeleteRows.length} baris data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
       />
-      <div className={cn(
+      < div className={cn(
         'fixed z-[-1] bottom-14 sm:bottom-4 left-1/2 -translate-1/2 max-w-7xl max-sm:w-[calc(100vw-1rem)] h-[3rem] opacity-0 duration-200',
         'shadow-2xl shadow-gray-950 bg-gray-950 backdrop-blur-xs text-white/80 font-medium px-6 text-xs sm:text-sm flex items-center rounded-lg',
         { 'opacity-100 z-10': DataTable.selectedRows?.length }
       )}>
         <div className='border-r pr-4 mr-2 text-white'>{DataTable.selectedRows?.length} <span className='max-sm:hidden'>Item</span> terpilih</div>
         {actions?.map((action, indexAction) => {
-          if (action == 'delete') {
-            return (
-              <div key={indexAction} onClick={() => setConfirmDeleteRows(DataTable.selectedRows ?? [])} className='flex items-center gap-1 mx-2.5 cursor-pointer hover:text-secondary'>
-                <TrashSimpleIcon weight="bold" className='text-base' />
-                <span>Hapus</span>
-              </div>
-            )
-          } else {
-            return (
-              <Link
-                key={indexAction}
-                className={cn('flex items-center gap-1 mx-1 sm:mx-2.5 cursor-pointer hover:text-secondary', action.className)}
-                onClick={action.onClick}
-                href={action.href ?? ''}
-              >
-                {action.icon}<div>{action.label}</div>
-              </Link>
-            )
-          }
+          if (action == 'delete') return (
+            <div key={indexAction} onClick={() => setConfirmDeleteRows(DataTable.selectedRows ?? [])} className='flex items-center gap-1 mx-2.5 cursor-pointer hover:text-secondary'>
+              <TrashSimpleIcon weight="bold" className='text-base' />
+              <span>Hapus</span>
+            </div>
+          );
+          else return (
+            <Link
+              key={indexAction}
+              className={cn('flex items-center gap-1 mx-1 sm:mx-2.5 cursor-pointer hover:text-secondary', action.className)}
+              onClick={action.onClick}
+              href={action.href ?? ''}
+            >{action.icon}<div>{action.label}</div></Link>
+          );
         })}
         <div className='ml-auto sm:ml-[5rem]'>
-          <div
-            onClick={() => setDataTable((prev) => ({ ...prev, selectedRows: [] }))}
-            className='text-red-500 tracking-wider font-semibold cursor-pointer hover:text-red-500/90'
-          >Batal</div>
+          <div className='text-red-500 tracking-wider font-semibold cursor-pointer hover:text-red-500/90'
+            onClick={() => setDataTable((prev) => ({ ...prev, selectedRows: [] }))}>Batal</div>
         </div>
-      </div>
+      </div >
     </>
   )
 }
@@ -447,12 +478,14 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
   fmFilters: ReturnType<typeof useFormManager>;
   noSearch?: boolean;
 }) {
-
   return (<>
     <div
       className={`btn-flat btn-sm bg-primary text-contras-primary px-4 h-10 ${!noSearch ? 'rounded-l-none' : ''}`}
       onClick={() => fmFilters.setShow(true)}
-    ><FadersIcon weight='fill' className='text-base rotate-90' /><span>Filter</span></div>
+    >
+      <FadersIcon weight='fill' className='text-base rotate-90' />
+      <span>Filter</span>
+    </div>
     <Dropdown
       show={fmFilters.show}
       toHide={() => {

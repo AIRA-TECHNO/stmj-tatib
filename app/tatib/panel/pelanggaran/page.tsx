@@ -136,10 +136,10 @@ export default function Page() {
                       title: "nama", keyData: (data) => {
                         if (ScreenWidth >= 640) return data.name;
                         return (
-                          <div className='py-1'>
+                          <div>
                             <div className='text-base font-semibold'>{data.name}</div>
                             <div className='text-sm font-semibold text-gray-500'>{data.nisn}</div>
-                            <div className='mt-2 text-sm'>{data.school_name}</div>
+                            <div className='mt-2 text-sm'>{data.class_full_name}</div>
                           </div>
                         )
                       }
