@@ -1,6 +1,8 @@
 import { Model } from 'sutando';
 
 export default class ViewDataUser extends Model {
+  connection = 'tatib';
+
   id!: number;
   username!: string;
   password!: string;

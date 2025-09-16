@@ -111,7 +111,7 @@ export default function Table({
     if (url) {
       setDataTable((prev) => ({ ...prev, statusCode: 202 }));
       api({ url, objParams: fmParams?.values }).then(async (res) => {
-        let { data, meta: paginate, message } = await res.json();
+        let { data, paginate, message } = await res.json();
         if (res.status != 200) toast.error(message);
         if (!paginate) paginate = { page: 1, per_page: 10, total: 0, total_pages: 1 };
         if (!data) data = [];

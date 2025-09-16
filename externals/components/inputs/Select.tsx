@@ -8,8 +8,7 @@ export interface typeSelectProps {
   options?: Array<string | number | { label: ReactNode; value: any }>;
   optionFromApi?: {
     primaryKey?: string;
-    host?: string;
-    path: string;
+    url: string;
     render: (data: Record<string, any>[]) => ({ label: ReactNode; value: string | number }[]);
   };
   onSearch?: (value: string) => any;
@@ -74,19 +73,17 @@ export default function Select({
     refRequestId.current[requestKey] = now;
 
     // Fetching new options
-    const resOptions = await api({ host: optionFromApi.host, path: optionFromApi.path, objParams });
+    const resOptions = await api({ url: optionFromApi.url, objParams });
     if ((resOptions.status == 200) && (now >= refRequestId.current[requestKey])) {
-      const { data, meta } = await resOptions.json();
+      const { data, paginate } = await resOptions.json();
       let newOptions: any[] = optionFromApi.render(data || []);
-      refLoadOption.current = { ...refLoadOption.current, ...(meta || {}) };
+      refLoadOption.current = { ...refLoadOption.current, ...(paginate || {}) };
 
       // Fetching options matched with selected option 
       if (selectedOption && ![...((currentPage != 0) ? [...CurrentOptions] : []), ...newOptions]
         .find((opt) => (opt?.value ?? opt) == selectedOption)) {
         const primaryKey = optionFromApi.primaryKey ?? 'id';
-        const resSelectedOption = await api({
-          host: optionFromApi.host, path: optionFromApi.path, objParams: { [primaryKey]: selectedOption }
-        });
+        const resSelectedOption = await api({ url: optionFromApi.url, objParams: { [primaryKey]: selectedOption } });
         if (resSelectedOption.status == 200) {
           newOptions = [...optionFromApi.render((await resSelectedOption.json())?.data || []), ...newOptions];
         }

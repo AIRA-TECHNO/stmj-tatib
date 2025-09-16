@@ -5,7 +5,7 @@ import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
 import { useState } from 'react'
-import { DownloadSimpleIcon, PencilSimpleIcon, PlusIcon, UploadSimpleIcon, XIcon } from '@phosphor-icons/react'
+import { DownloadSimpleIcon, PencilSimpleIcon, PlusIcon, UploadSimpleIcon } from '@phosphor-icons/react'
 import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
@@ -45,6 +45,7 @@ export default function Page() {
         <div className="card">
           <div className='card-body sm:py-4'>
             <Table
+              url='/tatib/api/rule-school'
               stateDataTable={[DataTable, setDataTable]}
               actions={[{ icon: <PencilSimpleIcon weight="bold" className='text-base' />, label: 'Edit' }, 'delete']}
               fmParams={fmParams}
@@ -82,6 +83,9 @@ export default function Page() {
         <Modal fm={fmDetail} title={<div className='mr-auto capitalize'>detail peraturan</div>}>
           <div className='px-4 pb-4'>
             <Form
+              actionApi={{
+                url: '/tatib/api/rule-school',
+              }}
               fm={fmDetail}
               fields={[
                 { name: 'rule', label: 'peraturan yang dilanggar', parentProps: { className: 'lg:col-span-6' } },

@@ -24,8 +24,8 @@ function applyFilters(qb: AnyQueryBuilder, filters: FilterGroup, isOr?: boolean)
   }
 }
 
-export async function paginate(
-  qb: AnyQueryBuilder,
+export async function paginator(
+  qb: any,
   query: {
     filters?: string;
     page?: number;
@@ -39,7 +39,7 @@ export async function paginate(
   if (query.filters) {
     try {
       const filters: FilterGroup = JSON.parse(query.filters);
-      qb.where((subQb) => {
+      qb.where((subQb: any) => {
         applyFilters(subQb, filters)
       })
     } catch (err) {
@@ -49,7 +49,7 @@ export async function paginate(
 
   // Search
   if (query.search && searchableFields) {
-    qb.where((subQb) => {
+    qb.where((subQb: any) => {
       for (const searchableField of searchableFields) {
         subQb.where(searchableField, 'like', `%${query.search}%`)
       }
@@ -82,6 +82,6 @@ export async function paginate(
   let page = Number(query.page);
   if (isNaN(page)) page = 1;
 
-  const { data, ...meta } = (await qb.paginate(page, perPage)).toJSON();
-  return { data, meta }
+  const { data, ...paginate } = (await qb.paginate(page, perPage)).toJSON();
+  return { data, paginate }
 }

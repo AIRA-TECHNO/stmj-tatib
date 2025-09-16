@@ -8,6 +8,8 @@ todo:
 - btn mode editor at right of title card detail item✅
 - adjust label input on responsive mobile ✅
 
+# backend
+- multiconnection database @API✅
 
 
 unsync gradea:
@@ -18,11 +20,5 @@ unsync gradea:
 
 
 plan:
-- multiconnection database @API
 - handle right click row table (show shorthand action)
 - adjust color success, warning, danger
-
-
-
-uncomfortable:
-- btn action modal (problem: fm required for submit & state DataTable required for delete)

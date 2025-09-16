@@ -1,0 +1,20 @@
+require("dotenv").config();
+
+let connections = {};
+for (const modulePath of String(process.env.NEXT_PUBLIC_APP_MODULES).split(",")) {
+  try {
+    connections = { ...connections, ...(require(`./app/${modulePath}/_backend/sutando.config.js`).default?.connections) }
+  } catch (err) { }
+}
+
+module.exports = {
+  // client: 'pg',
+  // connection: {
+  //   host: process.env.DB_HOST,
+  //   port: Number(process.env.DB_PORT),
+  //   user: process.env.DB_USERNAME,
+  //   password: process.env.DB_PASSWORD,
+  //   database: process.env.DB_DATABASE,
+  // },
+  connections,
+};

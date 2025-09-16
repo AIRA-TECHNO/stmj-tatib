@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import { customMessage } from "@/externals/utils/general";
 import RuleSchool from "../../models/RuleSchool";
 import { AuthMiddleware } from "../../middlewares/AuthMiddleware";
+import { paginator } from "@/externals/utils/backend";
 
 const RuleSchoolController = new Elysia().use(AuthMiddleware);
 
@@ -10,19 +11,15 @@ const RuleSchoolController = new Elysia().use(AuthMiddleware);
 const validationSchema = t.Object({
   rule: t.String(),
   point: t.Integer(),
+  punishment: t.String(),
 });
 
 
 
 RuleSchoolController.group('/rule-school', (app) => {
   app.get('/', async ({ query }) => {
-    const { page, per_page, search } = query;
     const qb = RuleSchool.query();
-    if (search) {
-      qb.where('rule', 'ilike', `%${search}%`);
-    }
-    const { data, ...meta } = (await qb.paginate(Number(page ?? 1), Number(per_page ?? 10))).toJSON();
-    return { data, meta };
+    return await paginator(qb, query, ['rule', 'punishment']);
   });
 
 

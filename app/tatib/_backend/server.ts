@@ -14,7 +14,8 @@ import StudentAchievementController from './controllers/StudentAchievement/Stude
 /**
  * Init DB connection
  */
-sutando.addConnection(config);
+sutando.addConnection(config.connections.tatib, 'tatib');
+sutando.addConnection(config.connections.tatib, 'tatib');
 
 
 
@@ -43,10 +44,15 @@ server.use(AchievementController);
 server.use(StudentAchievementController);
 
 
-// // Testing sutando => (GET) http://localhost:3000/api/test
-// server.get("/test", async () => {
-//   const sql = await User.query().get();
-//   return { sql };
+// // Testing sutando => (GET) http://localhost:3000/api/test-env
+// server.get("/test-env", async () => {
+//   return {
+//     host: process.env.TATIB_X_DB_HOST,
+//     port: Number(process.env.TATIB_X_DB_PORT),
+//     user: process.env.TATIB_X_DB_USERNAME,
+//     password: process.env.TATIB_X_DB_PASSWORD,
+//     database: process.env.TATIB_X_DB_DATABASE,
+//   }
 // });
 
 export default server

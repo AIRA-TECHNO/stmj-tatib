@@ -24,8 +24,8 @@ StudentViolationController.group('/student-violation', (app) => {
     if (search) {
       qb.where('StudentViolation', 'ilike', `%${search}%`);
     }
-    const { data, ...meta } = (await qb.paginate(Number(page ?? 1), Number(per_page ?? 10))).toJSON();
-    return { data, meta };
+    const { data, ...paginate } = (await qb.paginate(Number(page ?? 1), Number(per_page ?? 10))).toJSON();
+    return { data, paginate };
   });
 
 

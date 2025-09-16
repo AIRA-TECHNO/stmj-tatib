@@ -9,6 +9,7 @@ module.exports = class extends Migration {
       table.increments()
       table.string('rule')
       table.string('point')
+      table.text('punishment')
       table.timestamps(true, true)
     });
   }

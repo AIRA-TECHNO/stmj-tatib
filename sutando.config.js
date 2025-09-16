@@ -1,30 +1,36 @@
-require("dotenv").config();
+if (!process.env.NEXT_PUBLIC_PRIMARY_APP_MODULE) require("dotenv").config();
+
+const connections = {
+  datainduk: {
+    client: 'pg',
+    connection: {
+      host: process.env.DATAINDUK_DB_HOST,
+      port: Number(process.env.DATAINDUK_DB_PORT),
+      user: process.env.DATAINDUK_DB_USERNAME,
+      password: process.env.DATAINDUK_DB_PASSWORD,
+      database: process.env.DATAINDUK_DB_DATABASE,
+    },
+  },
+  tatib: {
+    client: 'pg',
+    connection: {
+      host: process.env.TATIB_DB_HOST,
+      port: Number(process.env.TATIB_DB_PORT),
+      user: process.env.TATIB_DB_USERNAME,
+      password: process.env.TATIB_DB_PASSWORD,
+      database: process.env.TATIB_DB_DATABASE,
+    },
+  },
+};
 
 module.exports = {
-  client: 'pg',
-  connection: {
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT),
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-  },
-  connections: {
-    mysql: {
-      client: 'mysql2',
-      connection: {
-        host: 'localhost',
-        database: 'another_database',
-        user: 'root',
-        password: 'password'
-      }
-    }
-  },
+  ...connections[process.env.NEXT_PUBLIC_PRIMARY_APP_MODULE ?? 'datainduk'], // <-- for CLI migration & seeder
+  connections, // <-- for app multiple connection
   migrations: {
     table: 'migrations',
-    path: './app/tatib/_backend/databases/migrations'
+    path: `./app/${process.env.NEXT_PUBLIC_PRIMARY_APP_MODULE ?? 'datainduk'}/_backend/databases/migrations`
   },
   models: {
-    path: './app/tatib/_backend/models',
+    path: `./app/${process.env.NEXT_PUBLIC_PRIMARY_APP_MODULE ?? 'datainduk'}/_backend/models`,
   }
 };

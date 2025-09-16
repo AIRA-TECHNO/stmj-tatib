@@ -16,7 +16,7 @@
     "ajv-formats": "^3.0.1",
     "bcryptjs": "^3.0.2",
     "dayjs": "^1.11.13",
-    "dotenv": "^16.4.7",
+    "dotenv": "^17.2.2",
     "elysia": "^1.2.14",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
