@@ -1,24 +1,30 @@
 'use client'
 
-import { cn } from "@/externals/utils/frontend";
-import { XIcon } from "@phosphor-icons/react";
+import { cn, useFormManager } from "@/externals/utils/frontend";
+import { FloppyDiskIcon, NotePencilIcon, TrashSimpleIcon, XIcon } from "@phosphor-icons/react";
 import { ReactNode, useEffect, useRef } from "react";
+import Button from "../Button";
 
 type typeModalProps = {
   children?: ReactNode;
   show?: boolean;
-  toHide: (isShow?: any) => any;
+  toHide?: (isShow?: any) => any;
   justHidden?: boolean;
   className?: string;
   title?: ReactNode;
   noHeader?: boolean;
+  fm?: ReturnType<typeof useFormManager>;
+  noDelete?: boolean;
+  noSubmit?: boolean;
+  noEdit?: boolean;
 }
 
-export default function Modal({ children, show, toHide, justHidden, className, title, noHeader }: typeModalProps) {
+export default function Modal({ children, show, toHide, justHidden, className, title, noHeader, fm, noDelete, noEdit, noSubmit }: typeModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
   const currentY = useRef(0);
   const isDragging = useRef(false);
+  if (show == undefined && fm?.show != undefined) show = fm?.show;
 
 
 
@@ -29,7 +35,10 @@ export default function Modal({ children, show, toHide, justHidden, className, t
     if (!modalRef.current) return;
     isDragging.current = false;
     modalRef.current.style.transform = `translateY(100%)`;
-    setTimeout(() => toHide(false), 200);
+    setTimeout(() => {
+      toHide?.(false);
+      fm?.setShow?.(false);
+    }, 200);
   }
 
 
@@ -110,6 +119,33 @@ export default function Modal({ children, show, toHide, justHidden, className, t
           <div className="flex items-center px-4 pb-4 sm:pb-2 border-b font-bold text-xl">
             <XIcon weight="bold" className="text-xl cursor-pointer mr-2" onClick={onHide} />
             {title}
+            {!!fm && (fm.readOnly ? (<>
+              {!noEdit && (
+                <Button varian='btn-flat' className='p-1 h-auto hover:text-warning' onClick={() => fm.setReadOnly(false)}>
+                  <NotePencilIcon weight='bold' className='text-base' />
+                  <div>Edit</div>
+                </Button>
+              )}
+              {!noDelete && (
+                <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-1' onClick={() => { }}>
+                  <TrashSimpleIcon weight='bold' className='text-base' />
+                  <div>Hapus</div>
+                </Button>
+              )}
+            </>) : (<>
+              {fm.values.id && (
+                <Button varian='btn-flat' className='p-1 h-auto hover:text-danger' onClick={() => fm.setReadOnly(true)}>
+                  <XIcon weight='bold' className='text-base' />
+                  <div>Batal</div>
+                </Button>
+              )}
+              {!noSubmit && (
+                <Button varian='btn-flat' className='p-1 h-auto hover:text-success ml-1' onClick={() => fm.formElement.current?.submit()}>
+                  <FloppyDiskIcon weight='bold' className='text-base' />
+                  <div>Simpan</div>
+                </Button>
+              )}
+            </>))}
           </div>
         )}
         {children}

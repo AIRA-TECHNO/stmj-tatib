@@ -26,15 +26,16 @@ export function useOx<T>([getter, setter]: [T, Dispatch<SetStateAction<T>>]): [T
  * Hook form handler
  */
 export function useFormManager<T extends Record<string, any>>() {
-  const [values, setValues] = useState<T>({} as T);
+  const [values, setValues] = useState({} as T);
   const [invalids, setInvalids] = useState<Record<string, string[]>>({});
   const [statusCode, setStatusCode] = useState(200);
   const [show, setShow] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [disable, setDisable] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<T | null>(null);
   const validations = useRef<Record<string, TAnySchema>>({});
-  const defaultValue = useRef<T>({} as T);
-  const formElement = useRef<HTMLFormElement>(null)
+  const defaultValue = useRef({} as T);
+  const formElement = useRef<HTMLFormElement>(null);
 
   const setValue = useCallback(<K extends keyof T>(name: string, newValue: T[K] | ((prevValue: T[K]) => T[K])) => {
     if (!name) return;
@@ -73,7 +74,8 @@ export function useFormManager<T extends Record<string, any>>() {
     readOnly, setReadOnly,
     disable, setDisable,
     validations, setValue,
-    defaultValue, formElement
+    confirmDelete, setConfirmDelete,
+    defaultValue, formElement,
   };
 }
 

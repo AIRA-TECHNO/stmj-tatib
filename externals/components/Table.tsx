@@ -13,8 +13,8 @@ import Input, { typeInputType } from './inputs/Input';
 import Link from 'next/link';
 
 interface typePrototypeTable {
-  title: string;
-  keyData: string | ((dataRow: Record<string, any>, indexDataRow?: any) => ReactNode);
+  label: string;
+  name: string | ((dataRow: Record<string, any>, indexDataRow?: any) => ReactNode);
   className?: string;
   style?: CSSProperties;
   advanceSearch?: { name?: string; };
@@ -41,7 +41,7 @@ export interface typeDataTable {
   selectedRows?: Array<Record<string, any>>;
   statusCode?: number;
   loadDataTable?: () => any;
-  showConfirmDelete?: (dataRow?: any) => any;
+  confirmDeletedRows?: Array<Record<string, any>>;
 }
 
 export default function Table({
@@ -98,7 +98,6 @@ export default function Table({
   const { ScreenWidth } = useContextGlobal();
   const refTimerAdvanceSearch = useRef<NodeJS.Timeout[]>([]);
   const refTimerTouchHold = useRef<{ timer: NodeJS.Timeout; isWaiting: boolean; startX?: any; startY?: any; }>({} as any);
-  const [ConfirmDeleteRows, setConfirmDeleteRows] = useState<any[]>([]);
   const [DataTable, setDataTable] = stateDataTable ?? useState<typeDataTable>({});
   const fmFilters = useFormManager();
   if (!fmParams) fmParams = useFormManager();
@@ -124,21 +123,18 @@ export default function Table({
   function handleDelete() {
     if (onDelete) {
       onDelete((noReload) => {
-        setConfirmDeleteRows([]);
+        setDataTable((prev) => ({ ...(prev ?? {}), confirmDeletedRows: [] }));
         if (!noReload) loadDataTable();
       });
     } else if (url) {
       api({ method: 'DELETE', url: `${url}/${DataTable.selectedRows?.map((sr) => sr[primaryKey])?.join(',')}`, }).then(async (res) => {
         if (res.status == 200) {
-          setConfirmDeleteRows([]);
+          setDataTable((prev) => ({ ...(prev ?? {}), confirmDeletedRows: [] }));
           loadDataTable();
-          const { message } = await res.json();
-          toast.success(message)
+          toast.success((await res.json())?.message ?? 'Berhasil!')
         }
       });
-    } else {
-      setConfirmDeleteRows([]);
-    }
+    } else setDataTable((prev) => ({ ...(prev ?? {}), confirmDeletedRows: [] }));
   };
 
   function handleSearch(keyWord: string) {
@@ -150,7 +146,7 @@ export default function Table({
     if ((fmParams?.values?.page ?? 1) != newPage) fmParams?.setValues((prev: typeDataTable) => ({ ...prev, page: newPage }));
   }
 
-  const getDataCell = (dataRow: Record<string, any>, keyData: any) => (typeof (keyData) == 'function' ? keyData(dataRow) : dataRow[keyData]);
+  const getDataCell = (dataRow: Record<string, any>, name: any) => (typeof (name) == 'function' ? name(dataRow) : dataRow[name]);
 
 
 
@@ -160,8 +156,8 @@ export default function Table({
   useEffect(loadDataTable, [url, fmParams?.values]);
 
   useEffect(() => {
-    if (stateDataTable && (!DataTable.loadDataTable || !DataTable.showConfirmDelete)) {
-      setDataTable((prev) => ({ ...prev, loadDataTable, showConfirmDelete: setConfirmDeleteRows }));
+    if (stateDataTable && (!DataTable.loadDataTable)) {
+      setDataTable((prev) => ({ ...prev, loadDataTable }));
     }
   }, [stateDataTable]);
 
@@ -172,8 +168,8 @@ export default function Table({
    * Short hand var
    */
   const dataShoweds = url ? DataTable.data : DataTable.data?.filter((data: any) => (
-    prototypeTable?.find(({ keyData }) => (
-      String(isValidElement(data) ? data : getDataCell(data, keyData))
+    prototypeTable?.find(({ name }) => (
+      String(isValidElement(data) ? data : getDataCell(data, name))
         .toLowerCase().match(String(fmParams?.values?.search ?? '')?.toLowerCase())
     ))
   ));
@@ -246,12 +242,12 @@ export default function Table({
               <tr>
                 {(!noSelectRow && actions?.length) && (
                   <th className={`w-0 prevent-show`}>
-                    <input type="checkbox" checked={DataTable.selectedRows?.length == dataPaginateds?.length}
+                    <input type="checkbox" checked={Boolean(DataTable.selectedRows?.length && DataTable.selectedRows?.length == dataPaginateds?.length)}
                       onChange={(event) => setDataTable((prev) => ({ ...(prev), selectedRows: event.target.checked ? (dataPaginateds ?? []) : [] }))} />
                   </th>
                 )}
                 {!noNumber && <th className={`w-0`}>No.</th>}
-                {prototypeTable?.map((col, indexCol) => (<th key={indexCol} className={col.className} style={col.style}>{col.title}</th>))}
+                {prototypeTable?.map((col, indexCol) => (<th key={indexCol} className={col.className} style={col.style}>{col.label}</th>))}
               </tr>
             )}
             {(showAdvanceSearch && ScreenWidth > 640) && (
@@ -261,7 +257,7 @@ export default function Table({
                 {prototypeTable?.map((col, indexCol) => {
                   const asConf = col.advanceSearch ?? {};
                   if (asConf?.name == "") return <th key={indexCol} />;
-                  const fieldName = asConf?.name ?? `as_${typeof col.keyData == "string" ? col.keyData : col.title}`;
+                  const fieldName = asConf?.name ?? `as_${typeof col.name == "string" ? col.name : col.label}`;
                   function onChangeAdvanceSearch(event: ChangeEvent<HTMLInputElement>) {
                     if (refTimerAdvanceSearch.current && fmParams) {
                       clearTimeout(refTimerAdvanceSearch.current[indexCol]);
@@ -367,7 +363,7 @@ export default function Table({
 
                     {/* number and data row */}
                     {!noNumber && (<td>{((fmParams?.values?.page || 1) - 1) * (fmParams?.values?.per_page || 10) + rowNumber}</td>)}
-                    {prototypeTable?.map(({ keyData }, indexCol) => (<td key={indexCol}>{getDataCell(dataRow, keyData)}</td>))}
+                    {prototypeTable?.map(({ name }, indexCol) => (<td key={indexCol}>{getDataCell(dataRow, name)}</td>))}
                   </tr>
                 );
               })
@@ -435,10 +431,10 @@ export default function Table({
 
       {/* Action */}
       <Confirm
-        show={Boolean(ConfirmDeleteRows.length)} toHide={() => setConfirmDeleteRows([])} onApproved={handleDelete}
-        question={`${ConfirmDeleteRows.length} baris data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
+        show={Boolean(DataTable.confirmDeletedRows?.length)} toHide={() => setDataTable((prev) => ({ ...(prev ?? {}), confirmDeletedRows: [] }))} onApproved={handleDelete}
+        question={`${DataTable.confirmDeletedRows?.length} baris data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
       />
-      < div className={cn(
+      <div className={cn(
         'fixed z-[-1] bottom-14 sm:bottom-4 left-1/2 -translate-1/2 max-w-7xl max-sm:w-[calc(100vw-1rem)] h-[3rem] opacity-0 duration-200',
         'shadow-2xl shadow-gray-950 bg-gray-950 backdrop-blur-xs text-white/80 font-medium px-6 text-xs sm:text-sm flex items-center rounded-lg',
         { 'opacity-100 z-10': DataTable.selectedRows?.length }
@@ -446,7 +442,8 @@ export default function Table({
         <div className='border-r pr-4 mr-2 text-white'>{DataTable.selectedRows?.length} <span className='max-sm:hidden'>Item</span> terpilih</div>
         {actions?.map((action, indexAction) => {
           if (action == 'delete') return (
-            <div key={indexAction} onClick={() => setConfirmDeleteRows(DataTable.selectedRows ?? [])} className='flex items-center gap-1 mx-2.5 cursor-pointer hover:text-secondary'>
+            <div key={indexAction} onClick={() => setDataTable((prev) => ({ ...(prev ?? {}), confirmDeletedRows: DataTable.selectedRows ?? [] }))}
+              className='flex items-center gap-1 mx-2.5 cursor-pointer hover:text-secondary'>
               <TrashSimpleIcon weight="bold" className='text-base' />
               <span>Hapus</span>
             </div>
@@ -464,7 +461,7 @@ export default function Table({
           <div className='text-red-500 tracking-wider font-semibold cursor-pointer hover:text-red-500/90'
             onClick={() => setDataTable((prev) => ({ ...prev, selectedRows: [] }))}>Batal</div>
         </div>
-      </div >
+      </div>
     </>
   )
 }
@@ -514,7 +511,7 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
                   >
                     <option value="">-- Kolom -- -</option>
                     {prototypeTable.map((pt, indexPt) => (pt.advanceFilter?.name != '' && (
-                      <option key={indexPt} value={pt.title ?? ""}>{pt.title}</option>
+                      <option key={indexPt} value={pt.label ?? ""}>{pt.label}</option>
                     )))}
                   </select>
                 </td>

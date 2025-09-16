@@ -1,12 +1,13 @@
 'use client'
 
-import { DetailedHTMLProps, ElementType, FormEventHandler, Fragment, HTMLAttributes, HTMLInputTypeAttribute, ReactNode, isValidElement, useEffect } from 'react'
+import { DetailedHTMLProps, ElementType, FormEventHandler, Fragment, HTMLAttributes, HTMLInputTypeAttribute, ReactNode, isValidElement, useEffect, useState } from 'react'
 import Button from './Button'
 import Input, { typeInputProps } from './inputs/Input'
 import { useContextGlobal } from '../contexts/ContextGlobal'
 import { api, cn, onInvalid, useFormManager, validateForm } from '../utils/frontend'
 import { toast } from 'react-toastify'
 import { typeSelectProps } from './inputs/Select'
+import Confirm from './popups/Confirm'
 
 
 
@@ -25,16 +26,16 @@ interface typeFormProps {
   noFooter?: boolean;
   noSubmit?: boolean;
   onSubmit?: FormEventHandler<HTMLFormElement>;
-  submitConfig?: {
+  actionApi?: {
     url: string;
-    method?: string;
-    onSuccess: (responseJson: Record<string, any>) => any;
-    customBodyRequest?: (formData: FormData) => any;
-  };
-  sourceDefaultValue?: {
-    url: string;
-    keyResponseJson?: string;
-  };
+    primaryKeyValue?: string | number;
+    methodSubmit?: string;
+    preSubmit?: (data: Record<string, any>) => any;
+    afterLoad?: (data: Response) => any;
+    afterSubmit?: (json: Record<string, any>) => any;
+    afterDelete?: (json: Record<string, any>) => any;
+    onDelete?: () => any;
+  },
   footerElement?: ReactNode;
 }
 
@@ -47,8 +48,7 @@ export default function Form({
   onSubmit,
   noSubmit,
   fm: fmExternal,
-  submitConfig,
-  sourceDefaultValue,
+  actionApi,
   footerElement
 }: typeFormProps) {
   const { setStatusCode } = useContextGlobal();
@@ -68,17 +68,17 @@ export default function Form({
     // On submit
     if (!Object.keys(invalids).length) {
       if (onSubmit) onSubmit(event);
-      if (submitConfig?.url) {
+      if (actionApi?.url) {
         fm?.setStatusCode(202);
         const formData = new FormData(event.target as HTMLFormElement);
         api({
-          url: submitConfig?.url,
-          method: submitConfig?.method ?? 'POST',
-          body: submitConfig.customBodyRequest ? submitConfig.customBodyRequest(formData) : formData
+          url: `${actionApi?.url}/${actionApi.primaryKeyValue ?? ''}`,
+          method: actionApi?.methodSubmit ?? (actionApi.primaryKeyValue ? 'PUT' : 'POST'),
+          body: actionApi.preSubmit ? actionApi.preSubmit(formData) : formData
         }).then(async (res) => {
           fm?.setStatusCode(res.status);
           if (res.status == 200) {
-            submitConfig.onSuccess(await res.json());
+            actionApi.afterSubmit?.(await res.json());
           } else {
             const { invalids, message } = (await res.json());
             toast.error(message);
@@ -89,28 +89,38 @@ export default function Form({
     }
   }
 
+  const handleDelete = () => {
+    if (actionApi?.onDelete) actionApi.onDelete();
+    else if (actionApi?.url) {
+      api({ method: 'DELETE', url: `${actionApi.url}/${actionApi.primaryKeyValue ?? ''}`, }).then(async (res) => {
+        if (res.status == 200) {
+          fm.setConfirmDelete(null);
+          fm.setValues({}, true);
+          fm.setShow(false);
+          toast.success((await res.json())?.message ?? 'Berhasil!');
+        }
+      });
+    } else fm.setConfirmDelete(null);
+  }
+
 
 
   /**
    * Use effect
    */
   useEffect(() => {
-    if (
-      sourceDefaultValue?.url &&
-      !Object.values(fm.values ?? {})?.filter(Boolean)?.length &&
-      fm?.statusCode != 202
-    ) {
+    if (actionApi?.url && actionApi.primaryKeyValue && fm?.statusCode == 204) {
       fm.setStatusCode(202);
-      api({ url: sourceDefaultValue.url }).then(async (res) => {
+      api({ url: `${actionApi?.url}/${actionApi.primaryKeyValue ?? ''}` }).then(async (res) => {
         if (res.status == 200) {
           fm.setStatusCode(200);
-          fm.setValues((await res.json())?.[sourceDefaultValue?.keyResponseJson ?? 'data'] ?? {});
+          fm.setValues(actionApi?.afterLoad ? actionApi?.afterLoad(res) : (await res.json())?.data ?? {});
         } else {
           setStatusCode(res.status);
         }
       })
     }
-  }, [sourceDefaultValue])
+  }, [actionApi]);
 
 
 
@@ -150,6 +160,10 @@ export default function Form({
           {footerElement}
         </div>
       )}
+      <Confirm
+        show={Boolean(fm.confirmDelete)} toHide={() => fm.setConfirmDelete(null)} onApproved={handleDelete}
+        question={`Data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
+      />
     </Wrapper>
   )
 }

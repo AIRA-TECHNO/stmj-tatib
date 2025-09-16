@@ -5,7 +5,7 @@ import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
 import { useState } from 'react'
-import { DownloadSimpleIcon, FloppyDiskIcon, NotePencilIcon, PencilSimpleIcon, PlusIcon, TrashSimpleIcon, UploadSimpleIcon, XIcon } from '@phosphor-icons/react'
+import { DownloadSimpleIcon, PencilSimpleIcon, PlusIcon, UploadSimpleIcon, XIcon } from '@phosphor-icons/react'
 import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
@@ -54,7 +54,7 @@ export default function Page() {
               }}
               prototypeTable={[
                 {
-                  title: "peraturan", keyData: (data) => {
+                  label: "peraturan", name: (data) => {
                     if (ScreenWidth >= 640) return data.rule;
                     return (
                       <div>
@@ -66,8 +66,8 @@ export default function Page() {
                   }
                 },
                 ...(ScreenWidth >= 640 ? [
-                  { title: "poin", keyData: "point" },
-                  { title: "sanksi", keyData: "punishment" },
+                  { label: "poin", name: "point" },
+                  { label: "sanksi", name: "punishment" },
                 ] : [])
               ]}
               leftElement={<div>
@@ -79,34 +79,7 @@ export default function Page() {
             />
           </div>
         </div>
-        <Modal
-          show={fmDetail.show} toHide={fmDetail.setShow}
-          title={<>
-            <div className='mr-auto capitalize'>detail peraturan</div>
-            {/* here 2 */}
-            {fmDetail.readOnly ? (<>
-              <Button varian='btn-flat' className='p-1 h-auto hover:text-warning' onClick={() => fmDetail.setReadOnly(false)}>
-                <NotePencilIcon weight='bold' className='text-base' />
-                <div>Edit</div>
-              </Button>
-              <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-1' onClick={() => DataTable.showConfirmDelete?.([fmDetail.defaultValue.current])}>
-                <TrashSimpleIcon weight='bold' className='text-base' />
-                <div>Hapus</div>
-              </Button>
-            </>) : (<>
-              {fmDetail.values.id && (
-                <Button varian='btn-flat' className='p-1 h-auto hover:text-danger' onClick={() => fmDetail.setReadOnly(true)}>
-                  <XIcon weight='bold' className='text-base' />
-                  <div>Batal</div>
-                </Button>
-              )}
-              <Button varian='btn-flat' className='p-1 h-auto hover:text-success ml-1' onClick={() => fmDetail.formElement.current?.submit()}>
-                <FloppyDiskIcon weight='bold' className='text-base' />
-                <div>Simpan</div>
-              </Button>
-            </>)}
-          </>}
-        >
+        <Modal fm={fmDetail} title={<div className='mr-auto capitalize'>detail peraturan</div>}>
           <div className='px-4 pb-4'>
             <Form
               fm={fmDetail}
