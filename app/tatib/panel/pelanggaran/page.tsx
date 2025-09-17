@@ -2,53 +2,22 @@
 
 import HeaderApp from '@/externals/layouts/HeaderApp'
 import Button from '@/externals/components/Button'
-import Table, { typeDataTable } from '@/externals/components/Table'
+import Table, { typeDataTable, typePrototypeTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
-import { useEffect, useState } from 'react'
-import { DownloadSimpleIcon, FloppyDiskIcon, NotePencilIcon, PencilSimpleIcon, PlusIcon, TrashSimpleIcon, XIcon } from '@phosphor-icons/react'
+import { useState } from 'react'
+import { DownloadSimpleIcon, PlusIcon } from '@phosphor-icons/react'
 import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
 import Form from '@/externals/components/Form'
+import { formatIndoDate } from '@/externals/utils/general'
+import { toast } from 'react-toastify'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
   const [DataTable, setDataTable] = useState<typeDataTable>({});
   const fmParams = useFormManager();
   const fmDetail = useFormManager();
-
-
-
-  /**
-   * Use effect
-   */
-  useEffect(() => {
-    setDataTable({
-      data: [
-        { id: 1, name: "Yuda Ismail", nisn: 20222, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 2, name: "Yudi Akbar", nisn: 20223, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 3, name: "Yanti Rahayu", nisn: 20224, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 4, name: "Rizky Maulana", nisn: 20225, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 5, name: "Siti Nurhaliza", nisn: 20226, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 6, name: "Dwi Ananda", nisn: 20227, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 7, name: "Agus Prasetyo", nisn: 20228, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 8, name: "Intan Permata", nisn: 20229, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 9, name: "Fajar Nugroho", nisn: 20230, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 10, name: "Nia Ramadhani", nisn: 20231, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 11, name: "Andi Setiawan", nisn: 20232, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 12, name: "Lia Marlina", nisn: 20233, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 13, name: "Bayu Saputra", nisn: 20234, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 14, name: "Salsa Amelia", nisn: 20235, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 15, name: "Rian Hidayat", nisn: 20236, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 16, name: "Wulan Sari", nisn: 20237, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 17, name: "Teguh Ariyanto", nisn: 20238, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 18, name: "Maya Fitriani", nisn: 20239, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 19, name: "Ilham Fauzi", nisn: 20240, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-        { id: 20, name: "Nadya Ayu", nisn: 20241, class_full_name: "XI RPL A 2024", note: 'lorem', point: -10, rule: 'Membolos' },
-      ],
-    });
-  }, []);
-
 
 
   /**
@@ -58,14 +27,11 @@ export default function Page() {
     <>
       <HeaderApp
         className='border-none'
-        rightElement={[
-          <div className='flex' key="1">
-            <Button varian={`btn-flat`} className='max-sm:text-2xs font-semibold hover:text-primary'>
-              <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />
-              <span>Export</span>
-              <span className='max-sm:hidden'>Excel</span>
-            </Button>
-          </div>,
+        rightElements={[
+          {
+            icon: <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
+            label: 'Export Excel',
+          },
         ]}
       />
       <SubMenuNav
@@ -81,18 +47,17 @@ export default function Page() {
             <div className="card">
               <div className='card-body sm:py-4'>
                 <Table
+                  url='/tatib/api/student-violation'
                   stateDataTable={[DataTable, setDataTable]}
-                  actions={[{ icon: <PencilSimpleIcon weight="bold" className='text-base' />, label: 'Edit' }, 'delete']}
+                  actions={['delete']}
                   fmParams={fmParams}
                   onClickRow={(dataRow) => {
-                    fmDetail.defaultValue.current = dataRow;
-                    fmDetail.setValues(dataRow);
-                    fmDetail.setShow(true);
-                    fmDetail.setReadOnly(true);
+                    fmDetail.setValues(dataRow, true);
+                    fmDetail.setShow(true, true);
                   }}
                   prototypeTable={[
                     {
-                      title: "nama", keyData: (data) => {
+                      label: "nama", name: (data) => {
                         if (ScreenWidth >= 640) return data.name;
                         return (
                           <div>
@@ -104,15 +69,15 @@ export default function Page() {
                       }
                     },
                     ...(ScreenWidth >= 640 ? [
-                      { title: "kelas", keyData: "class_full_name" },
-                      { title: "pelanggaran", keyData: "rule" },
-                      { title: "poin pelanggaran", keyData: "point" },
-                    ] : [])
+                      { label: "kelas", name: "class_full_name" },
+                      { label: "pelanggaran", name: (data) => (<>{data?.rule} <span className='text-danger text-xs font-semibold'>{`(-${data?.point})`}</span></>) },
+                      { label: "tanggal", name: (data) => formatIndoDate(data.date) },
+                    ] : []) as typePrototypeTable[]
                   ]}
                   leftElement={<div>
-                    <Button href='/tatib/panel/portofolio/form' className='btn-sm btn-auto-floating'>
+                    <Button onClick={() => fmDetail.setShow(true, false, true)} className='btn-sm btn-auto-floating'>
                       <PlusIcon weight='bold' className='text-sm' />
-                      <span>Tambah Data</span>
+                      <span>pelanggaran baru</span>
                     </Button>
                   </div>}
                 />
@@ -131,40 +96,39 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <Modal
-          show={fmDetail.show} toHide={fmDetail.setShow}
-          title={<>
-            <div>Detail Siswa</div>
-            {fmDetail.readOnly ? (<>
-              <Button varian='btn-flat' className='p-1 h-auto hover:text-warning ml-auto' onClick={() => fmDetail.setReadOnly(false)}>
-                <NotePencilIcon weight='bold' className='text-base' />
-                <div>Edit</div>
-              </Button>
-              <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-1' onClick={() => DataTable.showConfirmDelete?.([fmDetail.defaultValue.current])}>
-                <TrashSimpleIcon weight='bold' className='text-base' />
-                <div>Hapus</div>
-              </Button>
-            </>) : (<>
-              <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-auto' onClick={() => fmDetail.setReadOnly(true)}>
-                <XIcon weight='bold' className='text-base' />
-                <div>Batal</div>
-              </Button>
-              <Button varian='btn-flat' className='p-1 h-auto hover:text-success ml-1' onClick={() => fmDetail.formElement.current?.submit()}>
-                <FloppyDiskIcon weight='bold' className='text-base' />
-                <div>Simpan</div>
-              </Button>
-            </>)}
-          </>}
-        >
+        <Modal fm={fmDetail} title={<div className='mr-auto capitalize'>detail pelanggaran</div>}>
           <div className='px-4 pb-4'>
             <Form
+              actionApi={{
+                url: '/tatib/api/student-violation', afterSubmit: (data) => {
+                  toast.success(data.message);
+                  DataTable.loadDataTable?.();
+                  fmDetail.setValues(data?.data, true);
+                  fmDetail.setReadOnly(true);
+                }
+              }}
               fm={fmDetail}
               fields={[
-                { name: 'name', label: 'siswa', parentProps: { className: 'lg:col-span-6' } },
-                { name: 'rule', label: 'peraturan yang dilanggar', parentProps: { className: 'lg:col-span-6' } },
+                {
+                  name: 'student_x_user_id', label: 'siswa', type: 'select',
+                  optionFromApi: {
+                    url: '/tatib/api/user',
+                    render: (data) => (data.map((op) => ({ label: op.name, value: op.id })))
+                  },
+                  parentProps: { className: 'lg:col-span-6' }
+                },
+                {
+                  name: 'rule_school_id', label: 'peraturan yang dilanggar', type: 'select',
+                  optionFromApi: {
+                    url: '/tatib/api/rule-school',
+                    render: (data) => (data.map((op) => ({ label: op.rule, value: op.id })))
+                  },
+                  parentProps: { className: 'lg:col-span-6' }
+                },
+                { name: 'date', label: 'tanggal', type: 'date' },
                 { name: 'note', label: 'catatan', type: 'textarea' },
               ]}
-              noSubmit
+              noFooter
             />
           </div>
         </Modal>

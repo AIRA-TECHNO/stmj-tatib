@@ -35,7 +35,7 @@ export function useFormManager<T extends Record<string, any>>() {
   const [confirmDelete, setConfirmDelete] = useState<T | null>(null);
   const validations = useRef<Record<string, TAnySchema>>({});
   const defaultValue = useRef({} as T);
-  const formElement = useRef<HTMLFormElement>(null);
+  const btnSubmit = useRef<HTMLButtonElement>(null);
 
   const setValue = useCallback(<K extends keyof T>(name: string, newValue: T[K] | ((prevValue: T[K]) => T[K])) => {
     if (!name) return;
@@ -75,7 +75,7 @@ export function useFormManager<T extends Record<string, any>>() {
     disable, setDisable,
     validations, setValue,
     confirmDelete, setConfirmDelete,
-    defaultValue, formElement,
+    defaultValue, btnSubmit,
   };
 }
 

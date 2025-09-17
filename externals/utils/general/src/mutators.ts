@@ -1,3 +1,6 @@
+import dayjs from "dayjs";
+import 'dayjs/locale/id';
+
 /**
  * Interfaces
  */
@@ -37,12 +40,13 @@ export const toRoman = (n: number) => {
  * Date
  */
 export const toMiliSecond = (d: any) => {
-  if (!isNaN(Number(d))) {
+  if (isNaN(Number(d))) {
+    d = new Date(d).getTime();
+  } else {
     d = Number(d);
     if (String(d).length === 10) d *= 1000;
   }
-  const t = new Date(d).getTime();
-  return isNaN(t) ? 0 : t;
+  return isNaN(d) ? 0 : d;
 };
 
 export const toUnixTime = (d: any) => Math.floor(toMiliSecond(d) / 1000);
@@ -67,6 +71,11 @@ export function formatInputDateTime(date: any) {
   result += 'T' + String(dateObj.getHours()).padStart(2, '0');
   result += ':' + String(dateObj.getMinutes()).padStart(2, '0');
   return result;
+}
+
+export function formatIndoDate(date: any, format?: string) {
+  const milisecond = toMiliSecond(date);
+  return milisecond ? dayjs(milisecond).locale('id').format(format || 'dddd, D MMMM YYYY') : '';
 }
 
 
@@ -145,3 +154,9 @@ export const unProxy = (proxyObj: any): any => {
  * Array
  */
 export const getRandomItem = (array: Array<any>) => (array[Math.floor(Math.random() * array.length)]);
+
+export const stringToArray = (text: string, convertItem?: (item: any) => any, allowDuplicate?: boolean) => {
+  let array = text.split(',');
+  if (convertItem) array = array.map(convertItem);
+  return (allowDuplicate ? array : [...new Set<any>(array)]).filter(Boolean);
+}

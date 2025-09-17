@@ -32,8 +32,8 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
     ) {
       setTimeout(() => {
         if (refDropDown.current) {
-          refDropDown.current.style.zIndex = '-1';
-          refDropDown.current.style.opacity = '0';
+          refDropDown.current.style.removeProperty('z-index');
+          refDropDown.current.style.removeProperty('opacity');
         }
       }, 300);
       document.removeEventListener('click', onClickOutSide);
@@ -83,15 +83,15 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
             <div
               className='sm:hidden header-icon-square max-sm:mr-[-.75rem]'
               onClick={() => {
-                if (!(refDropDown.current && refDropDown.current.style.zIndex)) return;
-                refDropDown.current.style.removeProperty('z-index');
+                if (!(refDropDown.current && refDropDown.current.style.zIndex != 'unset')) return;
                 refDropDown.current.style.opacity = '100%';
+                refDropDown.current.style.zIndex = 'unset';
                 document.addEventListener('click', onClickOutSide);
               }}
             ><DotsThreeOutlineVerticalIcon weight='fill' className='text-lg' /></div>
-            <div ref={refDropDown} style={{ opacity: 0, zIndex: -1 }} className={cn(
+            <div ref={refDropDown} className={cn(
               `right-4 sm:flex items-center gap-2 bg-white rounded-md transition-opacity`,
-              `max-sm:absolute max-sm:border max-sm:divide-y max-sm:shadow max-sm:w-[11rem] max-sm:-mt-3`
+              `max-sm:absolute max-sm:border max-sm:divide-y max-sm:shadow max-sm:w-[11rem] max-sm:-mt-3 max-sm:opacity-0 max-sm:z-[-1]`
             )}>
               {(rightElements as any[]).map((rightElement, indexRightElement) => (
                 isValidElement(rightElement) ? <Fragment key={indexRightElement}>{rightElement}</Fragment> : (
@@ -107,21 +107,6 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
             </div>
           </>)}
         </div>
-
-        {/* <div className='ml-auto lg:ml-12 flex items-center gap-2 max-sm:mr-[-1rem]'>
-          {isValidElement(rightElements) ? rightElements : (rightElements as any[]).map((rightElement, indexRightElement) => (
-            isValidElement(rightElement) ? <Fragment key={indexRightElement}>{rightElement}</Fragment> : (
-              <Button
-                key={indexRightElement}
-                varian={`btn-flat`}
-                className='max-sm:text-2xs px-2 font-semibold hover:text-primary'
-                onClick={rightElement.onClick}
-                href={rightElement.href}
-              >{rightElement.icon} {rightElement.label}</Button>
-            )
-          ))}
-        </div> */}
-
       </div>
     </header>
   )

@@ -10,6 +10,7 @@ import { useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
 import Form from '@/externals/components/Form'
+import { toast } from 'react-toastify'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
@@ -47,7 +48,7 @@ export default function Page() {
             <Table
               url='/tatib/api/rule-school'
               stateDataTable={[DataTable, setDataTable]}
-              actions={[{ icon: <PencilSimpleIcon weight="bold" className='text-base' />, label: 'Edit' }, 'delete']}
+              actions={['delete']}
               fmParams={fmParams}
               onClickRow={(dataRow) => {
                 fmDetail.setValues(dataRow, true);
@@ -84,11 +85,16 @@ export default function Page() {
           <div className='px-4 pb-4'>
             <Form
               actionApi={{
-                url: '/tatib/api/rule-school',
+                url: '/tatib/api/rule-school', afterSubmit: (data) => {
+                  toast.success(data.message);
+                  DataTable.loadDataTable?.();
+                  fmDetail.setValues(data?.data, true);
+                  fmDetail.setReadOnly(true);
+                }
               }}
               fm={fmDetail}
               fields={[
-                { name: 'rule', label: 'peraturan yang dilanggar', parentProps: { className: 'lg:col-span-6' } },
+                { label: 'peraturan', name: 'rule', parentProps: { className: 'lg:col-span-6' } },
                 { label: "poin", name: "point", type: 'number', parentProps: { className: 'lg:col-span-6' } },
                 { label: "sanksi", name: "punishment", type: 'textarea' },
               ]}

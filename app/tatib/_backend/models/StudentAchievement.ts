@@ -10,7 +10,7 @@ export default class StudentAchievement extends Model {
   achievement!: string;
   point!: number;
   note!: string;
-  date!: number;
+  date!: Date;
   created_at!: Date;
   updated_at!: Date;
 }

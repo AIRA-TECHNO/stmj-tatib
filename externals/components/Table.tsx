@@ -12,7 +12,7 @@ import InputText from './inputs/InputText';
 import Input, { typeInputType } from './inputs/Input';
 import Link from 'next/link';
 
-interface typePrototypeTable {
+export interface typePrototypeTable {
   label: string;
   name: string | ((dataRow: Record<string, any>, indexDataRow?: any) => ReactNode);
   className?: string;
@@ -435,8 +435,8 @@ export default function Table({
         question={`${DataTable.confirmDeletedRows?.length} baris data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
       />
       <div className={cn(
-        'fixed z-[-1] bottom-14 sm:bottom-4 left-1/2 -translate-1/2 max-w-7xl max-sm:w-[calc(100vw-1rem)] h-[3rem] opacity-0 duration-200',
-        'shadow-2xl shadow-gray-950 bg-gray-950 backdrop-blur-xs text-white/80 font-medium px-6 text-xs sm:text-sm flex items-center rounded-lg',
+        'fixed z-[-1] bottom-14 sm:bottom-4 left-1/2 -translate-1/2 max-w-7xl w-[calc(100vw-1rem)] sm:w-xl h-[3rem] opacity-0 duration-200',
+        'shadow-2xl shadow-gray-950 bg-gray-950 backdrop-blur-xs text-white/80 font-medium px-6 text-xs flex items-center rounded-lg',
         { 'opacity-100 z-10': DataTable.selectedRows?.length }
       )}>
         <div className='border-r pr-4 mr-2 text-white'>{DataTable.selectedRows?.length} <span className='max-sm:hidden'>Item</span> terpilih</div>
@@ -457,7 +457,7 @@ export default function Table({
             >{action.icon}<div>{action.label}</div></Link>
           );
         })}
-        <div className='ml-auto sm:ml-[5rem]'>
+        <div className='ml-auto'>
           <div className='text-red-500 tracking-wider font-semibold cursor-pointer hover:text-red-500/90'
             onClick={() => setDataTable((prev) => ({ ...prev, selectedRows: [] }))}>Batal</div>
         </div>

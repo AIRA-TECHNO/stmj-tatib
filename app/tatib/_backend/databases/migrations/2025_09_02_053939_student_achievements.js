@@ -13,7 +13,7 @@ module.exports = class extends Migration {
       table.string('achievement')
       table.integer('point')
       table.text('note')
-      table.bigInteger('date')
+      table.timestamp('date')
 
       table.timestamps(true, true)
     });

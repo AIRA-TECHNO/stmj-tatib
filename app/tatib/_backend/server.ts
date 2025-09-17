@@ -15,7 +15,6 @@ import StudentAchievementController from './controllers/StudentAchievement/Stude
  * Init DB connection
  */
 sutando.addConnection(config.connections.tatib, 'tatib');
-sutando.addConnection(config.connections.tatib, 'tatib');
 
 
 

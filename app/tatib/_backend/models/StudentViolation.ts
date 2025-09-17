@@ -10,7 +10,7 @@ export default class StudentViolation extends Model {
   rule!: string;
   point!: number;
   note!: string;
-  date!: number;
+  date!: Date;
   created_at!: Date;
   updated_at!: Date;
 }

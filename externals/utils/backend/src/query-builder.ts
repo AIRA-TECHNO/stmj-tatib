@@ -1,4 +1,4 @@
-import type { AnyQueryBuilder } from 'sutando'
+import { Builder, QueryBuilder, sutando, type AnyQueryBuilder } from 'sutando'
 
 type Operator = '=' | '!=' | '<' | '<=' | '>' | '>=' | 'LIKE' | 'NOT LIKE' | 'IN' | 'NOT IN'
 type Condition = [string, Operator, any]
@@ -25,63 +25,91 @@ function applyFilters(qb: AnyQueryBuilder, filters: FilterGroup, isOr?: boolean)
 }
 
 export async function paginator(
-  qb: any,
-  query: {
-    filters?: string;
-    page?: number;
-    per_page?: number;
-    search?: string;
-    sortings?: string;
-  },
+  qb: Builder<any> | QueryBuilder<any>,
+  request: Request,
   searchableFields?: string[]
 ) {
-  // Filter
-  if (query.filters) {
-    try {
-      const filters: FilterGroup = JSON.parse(query.filters);
-      qb.where((subQb: any) => {
-        applyFilters(subQb, filters)
-      })
-    } catch (err) {
-      console.error('Invalid filters format:', err)
+  // Init var
+  const searchParams = new URL(request.url).searchParams;
+  let filters = searchParams.getAll('filters');
+  let page = Number(searchParams.get('page'));
+  let per_page = Number(searchParams.get('per_page'));
+  let search = searchParams.get('search');
+  let sortings = searchParams.getAll('sortings');
+
+
+  // Filter -- ?filters=['id','=',2]
+  if (filters.length) {
+    const filterParseds: FilterGroup = [];
+    for (const filter of filters) {
+      try {
+        filterParseds.push(JSON.parse(filter));
+      } catch (error) {
+        console.error('Invalid filters format:', error);
+      }
     }
+    qb.where((subQb: AnyQueryBuilder) => {
+      filterParseds.forEach((filters) => applyFilters(subQb, filters as FilterGroup))
+    });
   }
 
   // Search
-  if (query.search && searchableFields) {
-    qb.where((subQb: any) => {
+  if (search && searchableFields) {
+    qb.where((subQb: AnyQueryBuilder) => {
       for (const searchableField of searchableFields) {
-        subQb.where(searchableField, 'like', `%${query.search}%`)
+        subQb.orWhere(searchableField, 'ilike', `%${search}%`)
       }
     })
   }
 
-  // Order By
-  if (query.sortings) {
-    let sortings: string[] = [];
-    try {
-      sortings = JSON.parse(query.sortings)
-    } catch (err) {
-      sortings = query.sortings.split(',');
-    }
-    for (let sorting of sortings) {
-      let direction: 'ASC' | 'DESC' = 'ASC';
-      if (sorting.startsWith('-')) {
-        sorting = sorting.substring(1);
-        direction = 'DESC';
+  // Order By -- ?sortings=name,-age
+  if (sortings) {
+    sortings.flatMap((s) => {
+      try {
+        const parsed = JSON.parse(s);
+        if (Array.isArray(parsed)) return parsed;
+        if (typeof parsed == 'string') return [parsed];
+        return null;
+      } catch {
+        return s.split(',');
       }
-      qb.orderBy(sorting, direction)
-    }
+    }).forEach((field) => {
+      if (!field) return;
+      const direction = field.startsWith('-') ? 'DESC' : 'ASC';
+      const column = field.replace(/^-/, '');
+      qb.orderBy(column, direction);
+    });
   }
 
-  // Paginate
-  let perPage = Number(query.per_page);
-  if (isNaN(perPage)) perPage = 10;
-  if (perPage < 1) return { data: await qb.get() };
+  // Return non pagination
+  let perPage = Number(per_page) || 50;
+  if (perPage < 1) {
+    const data = await qb.get();
+    return { data, paginate: { total: data.length, per_page: perPage, page: 1, last_page: 1 } };
+  }
 
-  let page = Number(query.page);
-  if (isNaN(page)) page = 1;
+  // Pagination
+  if (isNaN(page) || page < 1) page = 1;
+  const offset = (page - 1) * perPage;
+  const data = await qb.clone().offset(offset).limit(perPage).get();
+  let total = Number(data.length ?? 0);
+  const qbAny: any = qb.clone();
+  try {
+    if (qbAny?.model?.connection) {
+      const qbTotal: any = sutando.connection(qbAny.model.connection)
+      total = Number(await qbTotal.table(qbTotal.raw(`(${qbAny.toSql().sql}) as counter`)).count('*')) || 0;
+    } else if (qbAny?.client?.queryBuilder) {
+      total = Number((await qbAny.client.queryBuilder().from(qb).count('*').first())?.count) || 0;
+    }
+  } catch (error) { }
 
-  const { data, ...paginate } = (await qb.paginate(page, perPage)).toJSON();
-  return { data, paginate }
+  // Return with pagination
+  return {
+    data, paginate: {
+      total,
+      per_page: perPage,
+      page,
+      last_page: Math.ceil(total / perPage)
+    }
+  };
 }

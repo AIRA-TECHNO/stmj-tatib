@@ -26,6 +26,7 @@ export default function InputDate({
 
   defaultValue,
   className,
+  readOnly,
   onChange,
   value,
   name,
@@ -136,18 +137,18 @@ export default function InputDate({
   return (
     <div className={cn("input-group relative", className, { "input-group-invalid": fm.invalids?.[name]?.length })}>
       {!noLabel && (
-        <label onClick={() => setIsFocus(true)} className="label-input-form" htmlFor={id ?? name}>
+        <label htmlFor={id ?? name} onClick={() => setIsFocus(true)} className={cn('label-input-form', { 'mx-2 px-1': !readOnly })}>
           {label ?? name}{isRequired(validation) && <span className="text-rose-600">*</span>}
         </label>
       )}
-      <div ref={refWrapper} className='input-form flex items-center gap-1'>
+      <div ref={refWrapper} className={cn('input-form flex items-center gap-1', { 'border px-3': !readOnly })}>
         {(() => {
           if (mode == "multiple") {
             return ((Array.isArray(fm.values[name]) ? fm.values[name] : []).map((s: any, indexS: any) => (
               <div key={indexS} className='flex items-center gap-1.5 border border-gray-300 text-[13px] font-medium py-[2px] rounded-full px-2'>
                 <input
                   ref={(el) => { refDateMultiples.current[indexS] = el }}
-                  {...props} name={name} id={id ?? name} className='hidden'
+                  {...props} readOnly={readOnly} name={name} id={id ?? name} className='hidden'
                   value={toFormatInput(s)} onChange={(e) => onChange?.(e, indexS)}
                 />
                 <span className='ml-1'>{toFormatInput(s, false).split('-').reverse().join('/')}</span>
@@ -162,7 +163,7 @@ export default function InputDate({
           } else if (mode == "range") {
             return (<>
               <input
-                {...props} ref={refDateStart} name={name} id={id ?? name} className='hidden'
+                {...props} readOnly={readOnly} ref={refDateStart} name={name} id={id ?? name} className='hidden'
                 value={fm.values?.[name]?.start_at ?? ""} onChange={(e) => {
                   const newValue = e.target.value;
                   onChange?.(e, "start");
@@ -175,7 +176,7 @@ export default function InputDate({
               />
               <span className='pl-2 pr-3'>s/d</span>
               <input
-                {...props} ref={refDateEnd} name={name} id={id ?? name} className='hidden'
+                {...props} readOnly={readOnly} ref={refDateEnd} name={name} id={id ?? name} className='hidden'
                 value={fm.values?.[name]?.end_at ?? ""} onChange={(e) => {
                   const newValue = e.target.value;
                   onChange?.(e, "end");
@@ -190,7 +191,7 @@ export default function InputDate({
           } else {
             return (<>
               <input
-                {...props} ref={refDateSingle} name={name} id={id ?? name} className='hidden'
+                {...props} readOnly={readOnly} ref={refDateSingle} name={name} id={id ?? name} className='hidden'
                 value={fm.values?.[name] ?? ""} onChange={(e) => {
                   onChange?.(e);
                   fm.setValue(name, e.target.value);

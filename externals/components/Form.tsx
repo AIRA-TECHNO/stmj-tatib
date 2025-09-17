@@ -130,9 +130,10 @@ export default function Form({
   const Wrapper: ElementType = noSubmit ? 'div' : 'form';
   return (
     <Wrapper
-      onSubmit={handleSubmit} encType={encType} ref={fm.formElement as any}
+      onSubmit={handleSubmit} encType={encType}
       id={id} className={cn('grid grid-cols-12 gap-x-4 pb-4', className)}
     >
+      <button className='hidden' ref={fm.btnSubmit as any} type='submit'></button>
       {(fields as typeFormInputProps[]).map((field, indexField) => {
         if (isValidElement(field)) {
           return (<Fragment key={indexField}>{field}</Fragment>);

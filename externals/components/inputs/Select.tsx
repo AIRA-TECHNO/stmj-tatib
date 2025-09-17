@@ -48,7 +48,7 @@ export default function Select({
   const refInput = useRef<HTMLInputElement>(null);
   const refLoading = useRef<HTMLDivElement>(null);
   const refDropDown = useRef<HTMLDivElement>(null);
-  const refLoadOption = useRef({ is_loading: false, current_page: 0, last_page: 1 });
+  const refLoadOption = useRef({ is_loading: false, page: 0, last_page: 1 });
   const refRequestId = useRef<Record<string, number>>({});
   const [IsFocus, setIsFocus] = useState(false);
   const [Search, setSearch] = useState('');
@@ -63,7 +63,7 @@ export default function Select({
     if (!optionFromApi || options) return;
     refLoadOption.current.is_loading = true;
     const selectedOption = selected || refInput.current?.value;
-    const currentPage = refLoadOption.current.current_page;
+    const currentPage = refLoadOption.current.page;
     const objParams = { search: Search, page: currentPage + 1 };
     if (objParams.page > refLoadOption.current.last_page) return;
 
@@ -83,7 +83,7 @@ export default function Select({
       if (selectedOption && ![...((currentPage != 0) ? [...CurrentOptions] : []), ...newOptions]
         .find((opt) => (opt?.value ?? opt) == selectedOption)) {
         const primaryKey = optionFromApi.primaryKey ?? 'id';
-        const resSelectedOption = await api({ url: optionFromApi.url, objParams: { [primaryKey]: selectedOption } });
+        const resSelectedOption = await api({ url: optionFromApi.url, objParams: { filters: JSON.stringify([primaryKey, '=', selectedOption]) } });
         if (resSelectedOption.status == 200) {
           newOptions = [...optionFromApi.render((await resSelectedOption.json())?.data || []), ...newOptions];
         }
@@ -113,7 +113,7 @@ export default function Select({
 
   useEffect(() => {
     const delaySearch = setTimeout(() => {
-      refLoadOption.current.current_page = 0;
+      refLoadOption.current.page = 0;
       loadOptions();
     }, 1000);
     return (() => clearTimeout(delaySearch));
@@ -161,8 +161,8 @@ export default function Select({
     if (IsFocus) {
       observer = new IntersectionObserver((entries) => {
         if (optionFromApi && entries[0].isIntersecting) {
-          const { is_loading, current_page, last_page } = refLoadOption.current;
-          if (!is_loading && current_page < last_page) loadOptions();
+          const { is_loading, page, last_page } = refLoadOption.current;
+          if (!is_loading && page < last_page) loadOptions();
         }
       }, { root: refDropDown.current, rootMargin: "0px", threshold: 0.1, });
       if (refLoading.current) observer.observe(refLoading.current);
@@ -183,7 +183,10 @@ export default function Select({
     <div className='relative'>
       <div className={cn("input-group", className, { 'input-group-invalid': fm.invalids?.[name]?.length })}>
         {(!noLabel) && (
-          <label onClick={() => { if (!(disabled || readOnly)) setIsFocus(true) }} className='label-input-form'>
+          <label
+            onClick={() => { if (!(disabled || readOnly)) setIsFocus(true) }}
+            className={cn('label-input-form', { 'mx-2 px-1': !readOnly })}
+          >
             {label ?? name}
             {isRequired(validation) && <span className="text-rose-600">*</span>}
           </label>
@@ -202,7 +205,8 @@ export default function Select({
             className={cn(`input-form`, {
               'cursor-default': disabled || readOnly,
               'input-form-disabled': disabled,
-              'input-form-focus': IsFocus
+              'input-form-focus': IsFocus,
+              'border px-3': !readOnly
             })}
             onClick={() => { if (!(disabled || readOnly)) setIsFocus(true) }}
           >
@@ -258,7 +262,7 @@ export default function Select({
                   )
                 })}
                 <div ref={refLoading} className="py-2">
-                  {optionFromApi && (refLoadOption.current.current_page < refLoadOption.current.last_page) && (
+                  {optionFromApi && (refLoadOption.current.page < refLoadOption.current.last_page) && (
                     <div className="text-sm text-center text-gray-500">Loading...</div>
                   )}
                 </div>

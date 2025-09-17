@@ -127,7 +127,7 @@ export default function Modal({ children, show, toHide, justHidden, className, t
                 </Button>
               )}
               {!noDelete && (
-                <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-1' onClick={() => { }}>
+                <Button varian='btn-flat' className='p-1 h-auto hover:text-danger ml-1' onClick={() => fm.setConfirmDelete([fm.values])}>
                   <TrashSimpleIcon weight='bold' className='text-base' />
                   <div>Hapus</div>
                 </Button>
@@ -140,7 +140,7 @@ export default function Modal({ children, show, toHide, justHidden, className, t
                 </Button>
               )}
               {!noSubmit && (
-                <Button varian='btn-flat' className='p-1 h-auto hover:text-success ml-1' onClick={() => fm.formElement.current?.submit()}>
+                <Button varian='btn-flat' className='p-1 h-auto hover:text-success ml-1' onClick={() => fm.btnSubmit.current?.click()}>
                   <FloppyDiskIcon weight='bold' className='text-base' />
                   <div>Simpan</div>
                 </Button>
