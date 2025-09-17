@@ -161,10 +161,12 @@ export default function Form({
           {footerElement}
         </div>
       )}
-      <Confirm
-        show={Boolean(fm.confirmDelete)} toHide={() => fm.setConfirmDelete(null)} onApproved={handleDelete}
-        question={`Data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
-      />
+      <div className='[&>div]:w-screen [&>div]:h-screen [&>div]:mt-[-4rem] [&>div]:sm:mt-[-2rem] [&>div]:transform-[translateX(-50%)] [&>div]:left-1/2'>
+        <Confirm
+          show={Boolean(fm.confirmDelete)} toHide={() => fm.setConfirmDelete(null)} onApproved={handleDelete}
+          question={`Data terpilih akan dihapus. Apakah anda yakin ingin melakukan hal ini?`}
+        />
+      </div>
     </Wrapper>
   )
 }

@@ -19,7 +19,7 @@ input {
  */
 .input-form {
   @apply bg-white w-full h-10 rounded;
-  @apply px-3 [&:read-only]:px-0 [&:not(:read-only)]:border [&:read-only]:mb-[-0.5rem];
+  @apply px-3 [&:read-only]:px-0 [&:not(:read-only)]:border;
 }
 
 textarea.input-form {

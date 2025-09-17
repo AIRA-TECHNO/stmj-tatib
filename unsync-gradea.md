@@ -1,12 +1,15 @@
-todo:
-- file controller flat on base folder
-- bug hide input date
+blocker:
+- bug css input date
+
+
+
+major:
 - bug auto filter on BE
-- handle dynamic order by
+- handle dynamic order by BE
 
 
 
-plan:
+minor:
 - UI footer
 - ornament UI left area
 - handle right click row table (show shorthand action)

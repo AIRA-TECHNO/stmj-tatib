@@ -40,11 +40,11 @@ export default function Confirm({
             {question ?? <div className="text-lg font-medium">Apakah anda yakin ingin melakukan hal ini?</div>}
           </div>
           <div className="grid grid-cols-2 border-t border-gray-300 divide-x divide-gray-300 text-sm font-medium">
-            <div className="py-4 cursor-pointer hover:bg-gray-100"
+            <div className="py-4 cursor-pointer hover:bg-gray-200"
               onClick={onApproved}>
               {approvedLabel ?? 'YA'}
             </div>
-            <div className="py-4 cursor-pointer text-danger hover:bg-gray-100"
+            <div className="py-4 cursor-pointer text-danger hover:bg-gray-200"
               onClick={() => toHide(false)}>
               {deniedLabel ?? 'TIDAK'}
             </div>
