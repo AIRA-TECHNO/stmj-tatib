@@ -49,6 +49,7 @@ export default function InputDate({
   const refDateSingle = useRef<HTMLInputElement>(null);
   const refTimeSingle = useRef<HTMLInputElement>(null);
   const refMode = useRef('');
+  const [Month, setMonth] = useState<Date>(new Date());
   const [IsFocus, setIsFocus] = useState(false);
   if (!fm) fm = useFormManager();
   if (!name) name = useId();
@@ -92,6 +93,7 @@ export default function InputDate({
     let newValue = value;
     if (!newValue && defaultValue) newValue = defaultValue;
     if (newValue == undefined) newValue = fm.values[name];
+    const shortHandNewValue = newValue?.start_at ?? (Array.isArray(newValue) ? newValue?.[0] : newValue);
     if (mode == "multiple") {
       const newSelecteds: any[] = (Array.isArray(newValue) ? newValue : [newValue?.start_at ?? newValue, newValue?.end_at])
         .filter((ns) => ns).map((ns) => toFormatInput(ns));
@@ -106,16 +108,24 @@ export default function InputDate({
         !["start_at", "end_at"].find((k) => Object.keys(newValue ?? {}).includes(k)) ||
         JSON.stringify(fm.values[name]) != JSON.stringify(newValue)
       ) {
-        const newStartAt = toFormatInput(newValue?.start_at ?? (Array.isArray(newValue) ? newValue?.[0] : newValue));
+        const newStartAt = toFormatInput(shortHandNewValue);
         const newEndAt = toFormatInput(newValue?.end_at ?? (Array.isArray(newValue) ? newValue?.[1] : newValue));
         changeAttr(refDateStart.current, 'value', newStartAt);
         changeAttr(refDateEnd.current, 'value', newEndAt);
       }
     } else {
       if (fm.values[name] != newValue) {
-        const newSelected = toFormatInput(newValue?.start_at ?? (Array.isArray(newValue) ? newValue?.[0] : newValue));
+        const newSelected = toFormatInput(shortHandNewValue);
         changeAttr(refDateSingle.current, 'value', newSelected);
       }
+    }
+    if (shortHandNewValue) {
+      const monthNew = new Date(shortHandNewValue);
+      if (
+        !isNaN(monthNew.getTime()) &&
+        (monthNew.getFullYear() != Month.getFullYear() ||
+          monthNew.getMonth() != Month.getMonth())
+      ) setMonth(monthNew);
     }
   }, [fm.values?.[name], value, defaultValue, mode]);
 
@@ -243,10 +253,15 @@ export default function InputDate({
           </>)}
           <DayPicker
             animate hideNavigation captionLayout="dropdown" locale={localeID} mode={(mode ?? "single") as any}
-            month={(() => {
-              const currentMonth = (fm.values[name]?.start_at ?? (Array.isArray(fm.values[name]) ? fm.values[name]?.[0] : fm.values[name]));
-              return isNaN(Number(new Date(currentMonth))) ? undefined : new Date(currentMonth);
-            })()}
+            month={Month}
+            onMonthChange={setMonth}
+            // month={(() => {
+            //   const currentMonth = (fm.values[name]?.start_at ?? (Array.isArray(fm.values[name]) ? fm.values[name]?.[0] : fm.values[name]));
+            //   return ((currentMonth || currentMonth == 0) && isNaN(Number(new Date(currentMonth)))) ? new Date(currentMonth) : undefined
+            // })()}
+            // onMonthChange={(ev) => {
+            //   console.log(ev);
+            // }}
             selected={(() => {
               if (mode == "multiple") return (Array.isArray(fm.values[name]) ? fm.values[name] : [])?.map((s: any) => new Date(s));
               if (mode == "range") {

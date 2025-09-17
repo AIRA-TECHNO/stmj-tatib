@@ -1,3 +1,7 @@
+/**
+ * Input date with minimal props. unintegrated with useFormManager
+ */
+
 'use client'
 
 import React, { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';

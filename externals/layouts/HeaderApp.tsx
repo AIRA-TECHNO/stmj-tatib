@@ -26,10 +26,7 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
   const prevItem = breadcumbItems?.slice(-2)?.[0];
 
   function onClickOutSide(event: MouseEvent) {
-    if (
-      !refDropDown.current?.contains(event.target as Node) &&
-      !(event.target as HTMLElement).closest("[data-identity='modal']")
-    ) {
+    if (!refDropDown.current?.contains(event.target as Node)) {
       setTimeout(() => {
         if (refDropDown.current) {
           refDropDown.current.style.removeProperty('z-index');

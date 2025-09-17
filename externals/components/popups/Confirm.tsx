@@ -30,7 +30,6 @@ export default function Confirm({
   if (!show) return null;
   return (
     <div
-      data-identity="modal"
       onClick={(e) => { if (e.target == e.currentTarget) toHide(false); }}
       className='fixed inset-0 z-20 flex overflow-auto bg-black/30 pb-16 pt-2 md:pb-[8rem]'
     >

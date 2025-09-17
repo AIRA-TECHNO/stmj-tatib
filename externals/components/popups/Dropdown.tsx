@@ -30,10 +30,7 @@ export default function Dropdown({
    */
   useEffect(() => {
     function onClickOutSide(event: MouseEvent) {
-      if (
-        !refDropDown.current?.contains(event.target as Node) &&
-        !(event.target as HTMLElement).closest("[data-identity='modal']")
-      ) setTimeout(() => toHide(false), 300);
+      if (!refDropDown.current?.contains(event.target as Node)) setTimeout(() => toHide(false), 300);
     }
 
     if (show && !eventAdded.current) {

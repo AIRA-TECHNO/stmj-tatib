@@ -97,7 +97,6 @@ export default function Modal({ children, show, toHide, justHidden, className, t
   if (!(show || justHidden)) return null;
   return (
     <div
-      data-identity="modal"
       onClick={(e) => { if (e.target == e.currentTarget) onHide(); }}
       className={cn('fixed inset-0 z-20 flex bg-black/30 sm:overflow-auto sm:px-2', { hidden: !show })}
     >

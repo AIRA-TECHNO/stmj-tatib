@@ -84,7 +84,7 @@ export function useFormManager<T extends Record<string, any>>() {
 /**
  * Validator on submit form
  */
-export const isRequired = (schema: any) => (schema?.modifier != 'Optional');
+export const isRequired = (schema: any) => (schema && schema?.modifier != 'Optional');
 export function validateForm({
   values,
   validations,
