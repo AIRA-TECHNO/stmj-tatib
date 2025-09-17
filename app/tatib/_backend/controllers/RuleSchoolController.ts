@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { customMessage, stringToArray } from "@/externals/utils/general";
-import RuleSchool from "../../models/RuleSchool";
-import { AuthMiddleware } from "../../middlewares/AuthMiddleware";
+import RuleSchool from "../models/RuleSchool";
+import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 import { paginator } from "@/externals/utils/backend";
 import { sutando } from "sutando";
 

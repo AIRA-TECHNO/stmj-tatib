@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { customMessage } from "@/externals/utils/general";
-import StudentAchievement from "../../models/StudentAchievement";
-import { AuthMiddleware } from "../../middlewares/AuthMiddleware";
+import StudentAchievement from "../models/StudentAchievement";
+import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 
 const StudentAchievementController = new Elysia().use(AuthMiddleware);
 

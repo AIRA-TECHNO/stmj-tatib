@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import { sutando } from "sutando";
-import { AuthMiddleware } from "../../middlewares/AuthMiddleware";
+import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 import { paginator } from "@/externals/utils/backend";
 
 const UserController = new Elysia().use(AuthMiddleware);

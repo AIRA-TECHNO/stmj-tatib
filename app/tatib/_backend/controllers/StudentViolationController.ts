@@ -1,10 +1,10 @@
 import { Elysia, t } from "elysia";
 import { customMessage, stringToArray } from "@/externals/utils/general";
-import StudentViolation from "../../models/StudentViolation";
+import StudentViolation from "../models/StudentViolation";
 import { sutando } from "sutando";
-import { AuthMiddleware } from "../../middlewares/AuthMiddleware";
+import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 import { paginator } from "@/externals/utils/backend";
-import RuleSchool from "../../models/RuleSchool";
+import RuleSchool from "../models/RuleSchool";
 
 const StudentViolationController = new Elysia().use(AuthMiddleware);
 

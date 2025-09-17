@@ -2,12 +2,12 @@ import { Elysia } from 'elysia'
 import { HookOnError } from '@/externals/utils/backend';
 import config from "../../../sutando.config";
 import { sutando } from 'sutando';
-import AuthController from './controllers/Auth/AuthController';
-import UserController from './controllers/User/UserController';
-import RuleSchoolController from './controllers/RuleSchool/RuleSchoolController';
-import StudentViolationController from './controllers/StudentViolation/StudentViolationController';
-import AchievementController from './controllers/Achievement/AchievementController';
-import StudentAchievementController from './controllers/StudentAchievement/StudentAchievementController';
+import AuthController from './controllers/AuthController';
+import UserController from './controllers/UserController';
+import RuleSchoolController from './controllers/RuleSchoolController';
+import StudentViolationController from './controllers/StudentViolationController';
+import AchievementController from './controllers/AchievementController';
+import StudentAchievementController from './controllers/StudentAchievementController';
 
 
 
