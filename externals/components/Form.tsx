@@ -149,7 +149,7 @@ export default function Form({
           );
         }
       })}
-      {!noFooter && (!(noSubmit || fm.disable || fm.readOnly) || footerElement) && (
+      {!noFooter && (!noSubmit || footerElement) && (
         <div className='col-span-full flex gap-2 mt-8 pt-4 border-t'>
           {!(noSubmit || fm.disable) && (
             <Button

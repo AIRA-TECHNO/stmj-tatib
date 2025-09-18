@@ -257,13 +257,6 @@ export default function InputDate({
             animate hideNavigation captionLayout="dropdown" locale={localeID} mode={(mode ?? "single") as any}
             month={Month}
             onMonthChange={setMonth}
-            // month={(() => {
-            //   const currentMonth = (fm.values[name]?.start_at ?? (Array.isArray(fm.values[name]) ? fm.values[name]?.[0] : fm.values[name]));
-            //   return ((currentMonth || currentMonth == 0) && isNaN(Number(new Date(currentMonth)))) ? new Date(currentMonth) : undefined
-            // })()}
-            // onMonthChange={(ev) => {
-            //   console.log(ev);
-            // }}
             selected={(() => {
               if (mode == "multiple") return (Array.isArray(fm.values[name]) ? fm.values[name] : [])?.map((s: any) => new Date(s));
               if (mode == "range") {

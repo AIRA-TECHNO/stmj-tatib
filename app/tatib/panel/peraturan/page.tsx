@@ -6,7 +6,7 @@ import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
 import { useState } from 'react'
 import { DownloadSimpleIcon, PencilSimpleIcon, PlusIcon, UploadSimpleIcon } from '@phosphor-icons/react'
-import { useFormManager } from '@/externals/utils/frontend'
+import { api, downloadFile, useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
 import Form from '@/externals/components/Form'
@@ -17,6 +17,8 @@ export default function Page() {
   const [DataTable, setDataTable] = useState<typeDataTable>({});
   const fmParams = useFormManager();
   const fmDetail = useFormManager();
+  const fmExport = useFormManager();
+  const fmImport = useFormManager();
 
 
 
@@ -31,10 +33,16 @@ export default function Page() {
           {
             icon: <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
             label: 'Export Excel',
+            onClick: () => {
+              api({ url: '/tatib/api/rule-school/excel/export' }).then(async (res) => {
+                downloadFile(await res.blob(), `Peraturan Sekolah.xlsx`);
+              });
+            }
           },
           {
             icon: <UploadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
             label: 'Import Excel',
+            onClick: () => fmImport.setShow(true)
           },
         ]}
       />
@@ -103,6 +111,18 @@ export default function Page() {
           </div>
         </Modal>
       </section>
+      <Modal show={fmImport.show} toHide={fmImport.setShow} className='[&>.modal-header]:border-none'
+        title={<div>
+          <div>Import Peraturan Sekolah</div>
+          <div className='text-sm font-normal'>
+            
+          </div>
+        </div>}
+      >
+        <div>
+          okok
+        </div>
+      </Modal>
     </>
   )
 }

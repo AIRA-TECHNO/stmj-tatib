@@ -199,8 +199,6 @@ export default function Table({
   /**
    * Rendered JSX
    */
-  console.log(LabelFilters);
-  
   return (
     <>
       <div className='bg-white'>

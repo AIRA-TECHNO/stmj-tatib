@@ -28,7 +28,8 @@
     "react-day-picker": "^9.7.0",
     "react-dom": "^19.0.0",
     "react-toastify": "^11.0.3",
-    "sutando": "^1.7.1"
+    "sutando": "^1.7.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
