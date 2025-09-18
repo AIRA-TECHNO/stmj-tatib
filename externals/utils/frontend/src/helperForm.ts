@@ -57,16 +57,25 @@ export function useFormManager<T extends Record<string, any>>() {
 
   return {
     values,
+    // setValues: (newValues: T | ((prevValue: T) => T), reset?: boolean) => {
+    //   setValues(newValues);
+    //   if (reset && typeof newValues != 'function') defaultValue.current = newValues;
+    // },
     setValues: (newValues: T | ((prevValue: T) => T), reset?: boolean) => {
-      setValues(newValues);
-      if (reset && typeof newValues != 'function') defaultValue.current = newValues;
+      setValues((prev) => {
+        let implementedValues = newValues as T;
+        if (typeof newValues == 'function') implementedValues = newValues(prev);
+        if (reset) defaultValue.current = implementedValues;
+        return implementedValues;
+      });
     },
     invalids, setInvalids,
     statusCode, setStatusCode,
-    show, setShow: (newValues: boolean | ((prevValue: boolean) => boolean), readOnly?: boolean, reset?: boolean) => {
-      setShow(newValues);
+    show,
+    setShow: (newShow: boolean | ((prevValue: boolean) => boolean), readOnly?: boolean, reset?: boolean) => {
+      setShow(newShow);
       if (readOnly != undefined) setReadOnly(readOnly);
-      if (reset && typeof newValues != 'function') {
+      if (reset) {
         defaultValue.current = {} as T;
         setValues({} as T);
       };

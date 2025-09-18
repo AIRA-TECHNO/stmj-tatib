@@ -58,7 +58,7 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
             </Link>
           )}
           <div className='capitalize font-roboto sm:ml-1'>
-            <div className="hidden sm:flex items-center">
+            <div className="hidden sm:flex items-center text-sm mb-1">
               {breadcumbItems?.map((breadcumbItem, indexBreadcumbItem) => (
                 <div key={indexBreadcumbItem}>
                   {((indexBreadcumbItem + 1) < breadcumbItems.length) ? (

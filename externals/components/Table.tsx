@@ -13,13 +13,14 @@ import Input, { typeInputType } from './inputs/Input';
 import Link from 'next/link';
 
 export interface typePrototypeTable {
-  label: string;
+  label: ReactNode;
   name: string | ((dataRow: Record<string, any>, indexDataRow?: any) => ReactNode);
   className?: string;
   style?: CSSProperties;
   advanceSearch?: { name?: string; };
   advanceFilter?: {
     name?: string;
+    label?: string;
     type?: typeInputType;
     selectConfig?: {
       options?: Array<string | number | { label: ReactNode; value: any }>;
@@ -99,6 +100,7 @@ export default function Table({
   const refTimerAdvanceSearch = useRef<NodeJS.Timeout[]>([]);
   const refTimerTouchHold = useRef<{ timer: NodeJS.Timeout; isWaiting: boolean; startX?: any; startY?: any; }>({} as any);
   const [DataTable, setDataTable] = stateDataTable ?? useState<typeDataTable>({});
+  const [LabelFilters, setLabelFilters] = useState<Array<any>>([]);
   const fmFilters = useFormManager();
   if (!fmParams) fmParams = useFormManager();
 
@@ -110,7 +112,11 @@ export default function Table({
   function loadDataTable() {
     if (url) {
       setDataTable((prev) => ({ ...prev, statusCode: 202 }));
-      api({ url, objParams: fmParams?.values }).then(async (res) => {
+      const objParams = { ...fmParams?.values };
+      try {
+        if (objParams?.filters) objParams.filters = JSON.stringify(objParams.filters);
+      } catch (error) { }
+      api({ url, objParams }).then(async (res) => {
         let { data, paginate, message } = await res.json();
         if (res.status != 200) toast.error(message);
         if (!paginate) paginate = { page: 1, per_page: 10, total: 0, total_pages: 1 };
@@ -193,6 +199,8 @@ export default function Table({
   /**
    * Rendered JSX
    */
+  console.log(LabelFilters);
+  
   return (
     <>
       <div className='bg-white'>
@@ -204,7 +212,13 @@ export default function Table({
               {(!noSearch || !noAdvanceFilter) && (
                 <div className='grow flex relative'>
                   {!noSearch && (<Search className={`${!noAdvanceFilter ? 'rounded-r-none' : ''} h-10`} onSubmit={handleSearch} />)}
-                  {!noAdvanceFilter && (<AdvanceFilter fmParams={fmParams} prototypeTable={prototypeTable} noSearch={noSearch} fmFilters={fmFilters} />)}
+                  {!noAdvanceFilter && (<AdvanceFilter
+                    fmParams={fmParams}
+                    prototypeTable={prototypeTable}
+                    noSearch={noSearch}
+                    fmFilters={fmFilters}
+                    setLabelFilters={setLabelFilters}
+                  />)}
                 </div>
               )}
             </div>
@@ -222,10 +236,13 @@ export default function Table({
                     <div
                       className='pl-4 py-1.5 rounded-l-full'
                       onClick={() => { fmFilters.setValue('filters', fmParams.values?.filters ?? []); fmFilters.setShow(true); }}
-                    >{filter.join(' ')}</div>
+                    ><span className='capitalize'>{LabelFilters[indexFilter]}</span> {filter[1]} {filter[2]}</div>
                     <XIcon
                       className='mt-[1px] hover:text-red-500 h-full mr-2 cursor-pointer text-sm btn-delete'
-                      onClick={() => fmParams.setValue('filters', (prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter))}
+                      onClick={() => {
+                        fmParams.setValue('filters', (prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter));
+                        setLabelFilters((prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter));
+                      }}
                     />
                   </div>
                 )
@@ -469,11 +486,12 @@ export default function Table({
 
 
 
-function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
+function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, setLabelFilters }: {
   prototypeTable: Array<typePrototypeTable>;
   fmParams: ReturnType<typeof useFormManager>;
   fmFilters: ReturnType<typeof useFormManager>;
   noSearch?: boolean;
+  setLabelFilters: Dispatch<SetStateAction<Array<any>>>;
 }) {
   return (<>
     <div
@@ -505,14 +523,18 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
                         prev[indexFilter] = [event.target.value, prev?.[indexFilter]?.[1], prev?.[indexFilter]?.[2]];
                         return [...prev];
                       });
+                      setLabelFilters((prev) => {
+                        prev[indexFilter] = event.target.options[event.target.selectedIndex].innerText;
+                        return [...prev];
+                      })
                     }}
-                    className='appearance-none invalid:text-gray-500 w-full h-[2.25rem] border-gray-300 border px-2 rounded-l-md sm:min-w-16'
+                    className='appearance-none capitalize invalid:text-gray-500 w-full h-[2.5rem] border-gray-300 border px-2 rounded-l-md sm:min-w-16'
                     required
                   >
-                    <option value="">-- Kolom -- -</option>
-                    {prototypeTable.map((pt, indexPt) => (pt.advanceFilter?.name != '' && (
-                      <option key={indexPt} value={pt.label ?? ""}>{pt.label}</option>
-                    )))}
+                    {prototypeTable.map((pt, indexPt) => {
+                      const opt = pt.advanceFilter?.name ?? (typeof pt.name == "string" ? pt.name : null);
+                      return (!!(opt) && (<option key={indexPt} value={opt}>{pt?.advanceFilter?.label ?? pt.label ?? opt}</option>))
+                    })}
                   </select>
                 </td>
                 <td>
@@ -524,11 +546,10 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
                         return [...prev];
                       });
                     }}
-                    className='appearance-none invalid:text-gray-500 w-full h-[2.25rem] border-gray-300 border-y px-2 sm:min-w-8 text-center'
+                    className='appearance-none invalid:text-gray-500 w-full h-[2.5rem] border-gray-300 border-y px-2 text-center'
                     required
                   >
-                    <option value="">-- Operator -- -</option>
-                    {['=', '<', '>', '%'].map((sym, indexSym) => (<option key={indexSym}>{sym}</option>))}
+                    {['LIKE', '=', '!=', '<', '<=', '>', '>='].map((sym, indexSym) => (<option key={indexSym}>{sym}</option>))}
                   </select>
                 </td>
                 <td>
@@ -542,16 +563,20 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
                           return [...prev]
                         })
                       }}
-                      placeholder='-- Isi Filter --'
+                      placeholder='Parameter Filter'
                     />
                   </div>
                 </td>
                 <td>
                   <div
-                    className='h-[2.25rem] px-2 flex border rounded-r-md text-gray-600 cursor-pointer hover:text-red-500'
+                    className='h-[2.5rem] px-2 flex border rounded-r-md text-gray-600 cursor-pointer hover:text-red-500'
                     onClick={() => {
-                      fmFilters.setValue('filters', (prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter))
-                    }}><TrashIcon className='text-base m-auto' weight='bold' /></div>
+                      setTimeout(() => {
+                        fmFilters.setValue('filters', (prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter));
+                        setLabelFilters((prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter));
+                      }, 0);
+                    }}
+                  ><TrashIcon className='text-base m-auto' weight='bold' /></div>
                 </td>
               </tr>
             ))}
@@ -559,7 +584,13 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
               <td colSpan={4}>
                 <div
                   className='inline-flex items-center gap-1 bg-primary/10 text-primary rounded px-2 py-1.5 cursor-pointer'
-                  onClick={() => fmFilters.setValue('filters', (prev: any) => ([...(prev ?? []), []]))}
+                  onClick={() => {
+                    const fieldNames = prototypeTable.map((pt) => (pt.advanceFilter?.name ?? (typeof pt.name == "string" ? pt.name : null)));
+                    const indexFieldName = fieldNames.findIndex(Boolean);
+                    const pt = prototypeTable[indexFieldName];
+                    fmFilters.setValue('filters', (prev: any) => ([...(prev ?? []), [fieldNames[indexFieldName], 'LIKE', '']]));
+                    setLabelFilters((prev) => ([...(prev ?? []), (pt?.advanceFilter?.label ?? pt.label ?? fieldNames[indexFieldName])]));
+                  }}
                 >
                   <PlusCircleIcon weight='bold' />
                   <span className='text-xs font-medium'>Filter Baru</span>
@@ -587,6 +618,6 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, }: {
           </tbody>
         </table>
       </div>
-    </Dropdown>
+    </Dropdown >
   </>)
 }

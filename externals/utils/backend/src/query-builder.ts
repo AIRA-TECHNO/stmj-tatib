@@ -48,9 +48,11 @@ export async function paginator(
         console.error('Invalid filters format:', error);
       }
     }
-    qb.where((subQb: AnyQueryBuilder) => {
-      filterParseds.forEach((filters) => applyFilters(subQb, filters as FilterGroup))
-    });
+    if (filterParseds.flatMap((fp) => fp).length) {
+      qb.where((subQb: AnyQueryBuilder) => {
+        filterParseds.forEach((filters) => applyFilters(subQb, filters as FilterGroup))
+      });
+    }
   }
 
   // Search

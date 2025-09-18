@@ -1,11 +1,12 @@
 blocker:
+- import/export excel
 
 
 
 
 major:
-- bug auto filter on BE
 - handle dynamic order by BE
+- merge any state on useFormManager to one state
 
 
 

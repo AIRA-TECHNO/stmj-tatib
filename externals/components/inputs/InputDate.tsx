@@ -214,9 +214,11 @@ export default function InputDate({
             </>);
           }
         })()}
-        <div className='grow h-full flex items-center justify-end cursor-pointer' onClick={() => setIsFocus(true)}>
-          <CalendarBlankIcon weight='duotone' style={{ fontSize: "18px" }} />
-        </div>
+        {!readOnly && (
+          <div className='grow h-full flex items-center justify-end cursor-pointer' onClick={() => setIsFocus(true)}>
+            <CalendarBlankIcon weight='duotone' style={{ fontSize: "18px" }} />
+          </div>
+        )}
       </div>
 
       <Dropdown show={IsFocus} toHide={setIsFocus} className={`w-min shadow-none my-2 ${showAbove ? "bottom-full" : "top-full"}`}>
