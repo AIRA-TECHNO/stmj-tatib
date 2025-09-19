@@ -5,12 +5,13 @@ import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
 import { useState } from 'react'
-import { DownloadSimpleIcon, PencilSimpleIcon, PlusIcon, UploadSimpleIcon } from '@phosphor-icons/react'
+import { DownloadSimpleIcon, FileArrowUpIcon, PencilSimpleIcon, PlusIcon, UploadSimpleIcon } from '@phosphor-icons/react'
 import { api, downloadFile, useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
 import Form from '@/externals/components/Form'
 import { toast } from 'react-toastify'
+import InputFileDropZone from '@/externals/components/inputs/InputFile/InputFileDropZone'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
@@ -52,6 +53,7 @@ export default function Page() {
       ]} />
       <section className="sm:mt-2 max-w-7xl">
         <div className="card">
+          <InputFileDropZone name='Coba Component Input File Drop Zone' />
           <div className='card-body sm:py-4'>
             <Table
               url='/tatib/api/rule-school'
@@ -111,16 +113,18 @@ export default function Page() {
           </div>
         </Modal>
       </section>
-      <Modal show={fmImport.show} toHide={fmImport.setShow} className='[&>.modal-header]:border-none'
-        title={<div>
-          <div>Import Peraturan Sekolah</div>
-          <div className='text-sm font-normal'>
-            
-          </div>
-        </div>}
-      >
-        <div>
-          okok
+      <Modal fm={fmImport} btnClose noSubmit className='whitespace-normal max-w-xl'>
+        <div className='px-4 py-4'>
+          <InputFileDropZone
+            fm={fmImport}
+            name='file'
+            className='sm:p-0 border-none sm:shadow-none'
+            label={<>
+              <div className='mb-1'>Import Peraturan Sekolah</div>
+              <div className='text-sm font-normal text-gray-800'>File harus sesuai dengan format excel berikut master jadwal pelajaran.xlsx</div>
+            </>}
+          />
+          {!!fmImport.values?.file && (<div className='btn w-full mt-6 rounded-lg h-[2.75rem]'>Simpan</div>)}
         </div>
       </Modal>
     </>

@@ -3,7 +3,7 @@
 import React, { useEffect, useId, useRef } from "react"
 import { typeInputProps } from "../Input"
 import { cn, isRequired, useFormManager } from "@/externals/utils/frontend"
-import { DownloadSimple, FileArrowUp, XCircle } from "@phosphor-icons/react"
+import { DownloadSimpleIcon, FileArrowUpIcon, XCircleIcon } from "@phosphor-icons/react"
 
 export default function InputFile({
   fm,
@@ -28,7 +28,7 @@ export default function InputFile({
 }: Omit<typeInputProps, "defaultValue"> & { noUnset?: boolean }) {
   const refInput = useRef<HTMLInputElement>(null);
   if (!fm) fm = useFormManager();
-    if (!name) name = useId();
+  if (!name) name = useId();
 
 
 
@@ -40,26 +40,23 @@ export default function InputFile({
   }, [validation]);
 
   useEffect(() => {
-    if (refInput.current && refInput.current?.files?.[0] !== value) {
+    if (refInput.current && refInput.current?.files?.[0] != value) {
       if (value instanceof File) {
-        const container = new DataTransfer()
-        container.items.add(value)
-        refInput.current.files = container.files
-      } else {
-        const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
-        setter?.call(refInput.current, null)
-        refInput.current.dispatchEvent(new Event("change", { bubbles: true }))
-      }
+        const dataTransfer = new DataTransfer()
+        dataTransfer.items.add(value)
+        refInput.current.files = dataTransfer.files
+      } else (Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set)?.call?.(refInput.current, null);
+      refInput.current.dispatchEvent(new Event("change", { bubbles: true }));
     }
-  }, [value])
+  }, [value]);
 
   useEffect(() => {
     if (fm.values?.[name] instanceof File && refInput.current) {
-      const container = new DataTransfer()
-      container.items.add(fm.values[name])
-      refInput.current.files = container.files
+      const dataTransfer = new DataTransfer()
+      dataTransfer.items.add(fm.values[name])
+      refInput.current.files = dataTransfer.files
     }
-  }, [fm.values?.[name]])
+  }, [fm.values?.[name]]);
 
   useEffect(() => () => {
     if (isCleanup) {
@@ -76,9 +73,8 @@ export default function InputFile({
   return (
     <div className={cn("input-group", { "input-group-invalid": fm.invalids?.[name]?.length })}>
       {!noLabel && (
-        <div className="label-input-form" onClick={() => refInput.current?.click()}>
-          {label ?? name}
-          {isRequired(validation) && <span className="text-rose-600">*</span>}
+        <div className={cn("label-input-form", 'mx-2 px-1')} onClick={() => refInput.current?.click()}>
+          {label ?? name} {isRequired(validation) && <span className="text-rose-600">*</span>}
         </div>
       )}
 
@@ -93,13 +89,9 @@ export default function InputFile({
         disabled={disabled}
         readOnly={readOnly}
         onChange={(e) => {
-          const blobFile = e.target.files?.[0]
-
-          const invalids: string[] = []
-          if (!blobFile && required) {
-            invalids.push("Field tidak boleh kosong!")
-          }
-
+          const blobFile = e.target.files?.[0];
+          const invalids: string[] = [];
+          if (!blobFile && required) invalids.push("Field tidak boleh kosong!");
           if (accept && blobFile) {
             const rule = accept.replaceAll(" ", "").replaceAll(",", "|").replaceAll("/*", "[/*]")
             const extName = blobFile.name.split(".").pop() ?? ""
@@ -107,13 +99,9 @@ export default function InputFile({
               invalids.push(`File harus bertipe ${accept}`)
             }
           }
-
           fm.setValues((prev) => ({ ...prev, [name]: blobFile }));
-          if (JSON.stringify(invalids) != JSON.stringify(fm.invalids[name])) {
-            fm.setInvalids((prev) => ({ ...prev, [name]: invalids }));
-          }
-
-          if (onChange) onChange(e)
+          if (JSON.stringify(invalids) != JSON.stringify(fm.invalids[name])) fm.setInvalids((prev) => ({ ...prev, [name]: invalids }));
+          if (onChange) onChange(e);
         }}
         {...props}
       />
@@ -122,47 +110,34 @@ export default function InputFile({
         <div
           onClick={() => !(disabled || readOnly) && refInput.current?.click()}
           className={cn(
-            "input-form flex items-center gap-1 px-2",
+            "input-form flex items-center gap-1 border pl-1 pr-3",
             { "cursor-pointer": !(disabled || readOnly) },
             className
           )}
         >
           <div className="h-3/4 aspect-square flex items-center justify-center">
-            <FileArrowUp className="text-xl h-[calc(100%-10px)]" />
+            <FileArrowUpIcon className="text-xl h-[calc(100%-10px)]" />
           </div>
           <div>{placeholder ?? "Pilih file"}</div>
         </div>
       ) : (
-        <div className={cn("input-form flex items-center px-2", className)}>
+        <div className={cn("input-form flex items-center px-2", 'border pl-1 pr-3', className)}>
           <div className="flex items-center gap-1 h-full">
             <a
-              className={cn(
-                "h-3/4 aspect-square flex items-center justify-center",
-                "rounded-full hover:bg-primary/10 hover:text-primary"
-              )}
-              target="_blank"
-              rel="noreferrer"
-              href={
-                fm.values[name] instanceof File
-                  ? URL.createObjectURL(fm.values[name])
-                  : fm.values[name]
-              }
-            >
-              <DownloadSimple className="h-[calc(100%-10px)]" />
-            </a>
-            <div className="truncate block max-w-[12rem]">
-              {fm.values[name]?.name ?? fm.values[name]}
-            </div>
+              className="h-3/4 aspect-square flex items-center justify-center rounded-full hover:bg-primary/10 hover:text-primary"
+              target="_blank" rel="noreferrer"
+              href={fm.values[name] instanceof File ? URL.createObjectURL(fm.values[name]) : fm.values[name]}
+            ><DownloadSimpleIcon className="h-[calc(100%-10px)]" /></a>
+            <div className="truncate block max-w-[12rem]">{fm.values[name]?.name ?? fm.values[name]}</div>
           </div>
           {!(noUnset || disabled || readOnly) && (
             <div className="ml-auto h-full flex items-center justify-center">
-              <XCircle
+              <XCircleIcon
                 className="h-[calc(75%-6px)] cursor-pointer hover:text-danger"
                 onClick={() => {
                   if (refInput.current) {
-                    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
-                    setter?.call(refInput.current, null)
-                    refInput.current.dispatchEvent(new Event("change", { bubbles: true }))
+                    (Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set)?.call?.(refInput.current, null);
+                    refInput.current.dispatchEvent(new Event("change", { bubbles: true }));
                   }
                 }}
               />
@@ -171,9 +146,7 @@ export default function InputFile({
         </div>
       )}
 
-      {Boolean(fm.invalids?.[name]?.length) && (
-        <div className="invalid-message">{fm.invalids[name][0]}</div>
-      )}
+      {Boolean(fm.invalids?.[name]?.length) && (<div className="invalid-message">{fm.invalids[name][0]}</div>)}
     </div>
   )
 }

@@ -170,7 +170,7 @@ export default function GradeaSidebar({ sidebarItems = menuApps, hideOnCollapse 
               if (!sidebarItem.href) {
                 return (
                   <div key={indexSidebarItem} className={`mx-5 ${indexSidebarItem ? 'pt-6 h-[2.5rem]' : 'pt-2 h-[1.5rem]'}`}>
-                    <div className='text-xs text-gray-300/80 font-bold sidebar-hide-on-collapse'>{sidebarItem.label}</div>
+                    <div className='text-xs text-white/50 font-bold sidebar-hide-on-collapse'>{sidebarItem.label}</div>
                   </div>
                 )
               }
@@ -213,7 +213,7 @@ export default function GradeaSidebar({ sidebarItems = menuApps, hideOnCollapse 
                         {[...Array(4)].map((res, index) => (
                           <div
                             key={index}
-                            className='flex items-center gap-2 pl-4 pr-2 py-2 cursor-pointer hover:bg-slate-300/40'
+                            className='flex items-center gap-2 pl-4 pr-2 py-2 cursor-pointer hover:bg-slate-300/50'
                             onClick={(event) => {
                               if (!event.currentTarget.querySelector('a')?.contains(event.target as Node)) {
                                 if (confirm('Ganit ke akun X')) window.location.reload();

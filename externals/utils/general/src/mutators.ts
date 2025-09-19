@@ -34,6 +34,15 @@ export const toRoman = (n: number) => {
   }, '');
 };
 
+export const formatFileSize = (size: number, decimals: number = 2) => {
+  if (size === 0) return '0 B';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  const i = Math.floor(Math.log(size) / Math.log(k));
+  const formatted = parseFloat((size / Math.pow(k, i)).toFixed(dm));
+  return units[i] ? `${formatted} ${units[i]}` : '-';
+}
 
 
 /**

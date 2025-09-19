@@ -17,9 +17,10 @@ type typeModalProps = {
   noDelete?: boolean;
   noSubmit?: boolean;
   noEdit?: boolean;
+  btnClose?: boolean;
 }
 
-export default function Modal({ children, show, toHide, justHidden, className, title, noHeader, fm, noDelete, noEdit, noSubmit }: typeModalProps) {
+export default function Modal({ children, show, toHide, justHidden, className, title, noHeader, fm, noDelete, noEdit, noSubmit, btnClose }: typeModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
   const currentY = useRef(0);
@@ -106,7 +107,7 @@ export default function Modal({ children, show, toHide, justHidden, className, t
           "max-w-2xl w-full mx-auto sm:my-[2rem] max-sm:mt-[4rem] h-max",
           "transition-transform duration-200 ease-out touch-none sm:transform-[translateY(0)]!",
           "card max-sm:h-[calc(100vh-4rem)] max-sm:rounded-t-2xl max-sm:overflow-auto",
-          { "bg-gray-200": fm },
+          { "bg-gray-200/90 backdrop-blur-xs": fm },
           className
         )}
       >
@@ -136,10 +137,6 @@ export default function Modal({ children, show, toHide, justHidden, className, t
                     <div className="max-sm:hidden">Hapus</div>
                   </Button>
                 )}
-                <div
-                  className="h-[1.75rem] aspect-square rounded-full flex cursor-pointer bg-primary/10 hover:bg-primary/20 ml-2 sm:ml-3"
-                  onClick={onHide}
-                ><XIcon weight="bold" className="text-base sm:text-lg m-auto" /></div>
               </>) : (<>
                 {fm.values.id && (
                   <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/5 hover:text-danger' onClick={() => fm.setReadOnly(true)}>
@@ -154,6 +151,12 @@ export default function Modal({ children, show, toHide, justHidden, className, t
                   </Button>
                 )}
               </>))}
+              {Boolean(fm?.readOnly || btnClose) && (
+                <div
+                  className="h-[1.75rem] aspect-square rounded-full flex cursor-pointer bg-primary/10 hover:bg-primary/20 ml-2 sm:ml-3"
+                  onClick={onHide}
+                ><XIcon weight="bold" className="text-base sm:text-lg m-auto" /></div>
+              )}
             </div>
           </div>
         )}

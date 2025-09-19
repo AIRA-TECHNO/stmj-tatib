@@ -252,8 +252,8 @@ export default function Select({
                     <div
                       key={indexOption}
                       className={cn(
-                        "truncate hover:bg-sky-200/30 min-h-10 flex items-center px-3 cursor-pointer",
-                        { 'bg-sky-200/30': (newValue == fm?.values?.[name]) }
+                        "truncate hover:bg-slate-200 min-h-10 flex items-center px-3 cursor-pointer",
+                        { 'bg-slate-100': (newValue == fm?.values?.[name]) }
                       )}
                       onClick={() => {
                         if (fm?.values?.[name] != newValue) changeAttr(refInput.current, 'value', newValue);
