@@ -45,7 +45,7 @@ export interface typeDataTable {
   confirmDeletedRows?: Array<Record<string, any>>;
 }
 
-export default function Table({
+export default function TableOld2({
   prototypeTable,
   actions,
   stateDataTable,
@@ -57,15 +57,16 @@ export default function Table({
   onDelete,
   onClickRow,
   showAdvanceSearch,
+  noAdvanceFilter,
   noHeader,
   noNumber,
+  noSearch,
   noPerPage,
   noPaginate,
   noSelectRow,
-  type,
-  classNameTopElement,
-  topElements,
-  classNameListFilter,
+  leftElement,
+  rightElement,
+  type
 }: {
   prototypeTable: Array<typePrototypeTable>;
   actions?: Array<'delete' | {
@@ -91,10 +92,9 @@ export default function Table({
   noPerPage?: boolean;
   noPaginate?: boolean;
   noSelectRow?: boolean;
+  leftElement?: ReactNode;
+  rightElement?: ReactNode;
   type?: 'carded-section' | 'carded' | 'striped';
-  classNameTopElement?: string;
-  topElements?: Array<ReactNode | { filter?: { show?: boolean; className?: string }, search?: { show?: boolean; className?: string }, className?: string }>;
-  classNameListFilter?: string;
 }) {
   const { ScreenWidth } = useContextGlobal();
   const refTimerAdvanceSearch = useRef<NodeJS.Timeout[]>([]);
@@ -201,56 +201,53 @@ export default function Table({
    */
   return (
     <>
-      <div className='bg-white pb-4'>
-        <div className={cn("flex max-lg:flex-col gap-2", classNameTopElement)}>
-          {topElements?.map((topElement: any, indexTopElement) => {
-            if (isValidElement(topElement)) return (<Fragment key={indexTopElement}>{topElement}</Fragment>);
-            if (topElement?.filter?.show || topElement?.search?.show) return (
-              <div key={indexTopElement} className={cn('flex relative', topElement?.className)}>
-                {Boolean(topElement?.search?.show) && (
-                  <Search
-                    onSubmit={handleSearch}
-                    className={cn({ 'rounded-r-none': topElement?.filter?.show }, topElement?.search?.className)}
-                  />
-                )}
-                {Boolean(topElement?.filter?.show) && (
-                  <AdvanceFilter
+      <div className='bg-white'>
+        <div className="flex max-xl:flex-col gap-4 pb-4">
+          <div className=''>{leftElement}</div>
+          <div className='lg:ml-auto'>
+            <div className=' flex max-lg:flex-col gap-2'>
+              <Fragment>{rightElement}</Fragment>
+              {(!noSearch || !noAdvanceFilter) && (
+                <div className='grow flex relative'>
+                  {!noSearch && (<Search className={`${!noAdvanceFilter ? 'rounded-r-none' : ''} h-10`} onSubmit={handleSearch} />)}
+                  {!noAdvanceFilter && (<AdvanceFilter
                     fmParams={fmParams}
                     prototypeTable={prototypeTable}
+                    noSearch={noSearch}
                     fmFilters={fmFilters}
                     setLabelFilters={setLabelFilters}
-                    className={cn({ 'rounded-l-none': topElement?.search?.show }, topElement?.filter?.className)}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <div className={cn('flex gap-2 mt-2', classNameListFilter)}>
-          {(fmParams.values?.filters as any[])?.map((filter, indexFilter) => {
-            if (!(filter[0] && filter[1])) return null;
-            return (
-              <div
-                key={indexFilter}
-                className={cn(
-                  'border rounded-full flex items-center gap-2 text-sm cursor-pointer hover:bg-primary/10 hover:text-primary',
-                  '[&:has(.btn-delete:hover)]:text-red-500 [&:has(.btn-delete:hover)]:border-transparent [&:has(.btn-delete:hover)]:bg-red-50'
-                )}
-              >
-                <div
-                  className='pl-4 py-1.5 rounded-l-full'
-                  onClick={() => { fmFilters.setValue('filters', fmParams.values?.filters ?? []); fmFilters.setShow(true); }}
-                ><span className='capitalize'>{LabelFilters[indexFilter]}</span> {filter[1]} {filter[2]}</div>
-                <XIcon
-                  className='mt-[1px] hover:text-red-500 h-full mr-2 cursor-pointer text-sm btn-delete'
-                  onClick={() => {
-                    fmParams.setValue('filters', (prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter));
-                    setLabelFilters((prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter));
-                  }}
-                />
-              </div>
-            )
-          })}
+                  />)}
+                </div>
+              )}
+            </div>
+            <div className='flex sm:justify-end gap-2 mt-2'>
+              {(fmParams.values?.filters as any[])?.map((filter, indexFilter) => {
+                if (!(filter[0] && filter[1])) return null;
+                return (
+                  <div
+                    key={indexFilter}
+                    className={cn(
+                      'border rounded-full flex items-center gap-2 text-sm cursor-pointer hover:bg-primary/10 hover:text-primary',
+                      '[&:has(.btn-delete:hover)]:text-red-500 [&:has(.btn-delete:hover)]:border-transparent [&:has(.btn-delete:hover)]:bg-red-50'
+                    )}
+                  >
+                    <div
+                      className='pl-4 py-1.5 rounded-l-full'
+                      onClick={() => { fmFilters.setValue('filters', fmParams.values?.filters ?? []); fmFilters.setShow(true); }}
+                    ><span className='capitalize'>{LabelFilters[indexFilter]}</span> {filter[1]} {filter[2]}</div>
+                    <XIcon
+                      className='mt-[1px] hover:text-red-500 h-full mr-2 cursor-pointer text-sm btn-delete'
+                      onClick={() => {
+                        fmParams.setValue('filters', (prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter));
+                        setLabelFilters((prev: any[]) => prev.filter((_, indexRmFilter) => indexRmFilter != indexFilter));
+                      }}
+                    />
+                  </div>
+                )
+              })}
+              <div className='sm:h-8 -mr-2 opacity-0' />
+            </div>
+          </div>
         </div>
       </div>
       <div className={cn(`overflow-auto max-sm:border-t pb-16 w-full`, { 'section-table': type == 'carded-section' }, className)}>
@@ -265,7 +262,7 @@ export default function Table({
                   </th>
                 )}
                 {!noNumber && <th className={`w-0`}>No.</th>}
-                {prototypeTable?.map((col, indexCol) => (col.hide ? null : <th key={indexCol} className={col.className} style={col.style}>{col.label}</th>))}
+                {prototypeTable?.map((col, indexCol) => (<th key={indexCol} className={col.className} style={col.style}>{col.label}</th>))}
               </tr>
             )}
             {(showAdvanceSearch && ScreenWidth > 640) && (
@@ -274,7 +271,6 @@ export default function Table({
                 {!noNumber && <th key="noNumber" />}
                 {prototypeTable?.map((col, indexCol) => {
                   const asConf = col.advanceSearch ?? {};
-                  if (col.hide) return null;
                   if (asConf?.name == "") return <th key={indexCol} />;
                   const fieldName = asConf?.name ?? `as_${typeof col.name == "string" ? col.name : col.label}`;
                   function onChangeAdvanceSearch(event: ChangeEvent<HTMLInputElement>) {
@@ -295,7 +291,7 @@ export default function Table({
           <tbody>
             {((!dataPaginateds?.length) || (DataTable?.statusCode == 202)) ? (
               <tr className='empty-row'>
-                <td colSpan={(prototypeTable?.filter((col) => !col.hide)?.length ?? 0) + (noNumber ? 1 : 2)} className="text-center text-gray-500 py-[4rem]">
+                <td colSpan={(prototypeTable?.length ?? 0) + (noNumber ? 1 : 2)} className="text-center text-gray-500 py-[4rem]">
                   {(DataTable?.statusCode == 202) ? 'Loading...' : 'Data Kosong'}
                 </td>
               </tr>
@@ -382,7 +378,7 @@ export default function Table({
 
                     {/* number and data row */}
                     {!noNumber && (<td>{((fmParams?.values?.page || 1) - 1) * (fmParams?.values?.per_page || 10) + rowNumber}</td>)}
-                    {prototypeTable?.map((col, indexCol) => (col?.hide ? null : <td key={indexCol}>{getDataCell(dataRow, col?.name)}</td>))}
+                    {prototypeTable?.map(({ name }, indexCol) => (<td key={indexCol}>{getDataCell(dataRow, name)}</td>))}
                   </tr>
                 );
               })
@@ -488,15 +484,18 @@ export default function Table({
 
 
 
-function AdvanceFilter({ prototypeTable, fmParams, fmFilters, className, setLabelFilters }: {
+function AdvanceFilter({ prototypeTable, fmParams, fmFilters, noSearch, setLabelFilters }: {
   prototypeTable: Array<typePrototypeTable>;
   fmParams: ReturnType<typeof useFormManager>;
   fmFilters: ReturnType<typeof useFormManager>;
-  className?: string;
+  noSearch?: boolean;
   setLabelFilters: Dispatch<SetStateAction<Array<any>>>;
 }) {
   return (<>
-    <div className={`btn-flat bg-primary text-contras-primary px-4 h-10 ${className}`} onClick={() => fmFilters.setShow(true)}>
+    <div
+      className={`btn-flat bg-primary text-contras-primary px-4 h-10 ${!noSearch ? 'rounded-l-none' : ''}`}
+      onClick={() => fmFilters.setShow(true)}
+    >
       <FadersIcon weight='fill' className='text-base rotate-90' />
       <span>Filter</span>
     </div>
@@ -506,7 +505,7 @@ function AdvanceFilter({ prototypeTable, fmParams, fmFilters, className, setLabe
         fmFilters.setValue('filters', fmParams.values.filters ?? [])
         fmFilters.setShow(false)
       }}
-      className='top-12 sm:min-w-md max-w-xl p-4 z-[5] dropdown-filter'
+      className='top-12 right-0 sm:min-w-md max-w-xl p-4 z-[5]'
     >
       <div>
         <div className='text-sm font-semibold'>Filter Table</div>

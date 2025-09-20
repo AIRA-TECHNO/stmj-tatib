@@ -75,7 +75,7 @@ export default function Page() {
                     ] : []) as typePrototypeTable[]
                   ]}
                   leftElement={<div>
-                    <Button onClick={() => fmDetail.setShow(true, false, true)} className='btn-sm btn-auto-floating'>
+                    <Button onClick={() => fmDetail.setShow(true, false, true)} className='btn-auto-floating'>
                       <PlusIcon weight='bold' className='text-sm' />
                       <span>pelanggaran baru</span>
                     </Button>

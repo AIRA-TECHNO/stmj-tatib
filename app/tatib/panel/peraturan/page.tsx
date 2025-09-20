@@ -1,17 +1,17 @@
 'use client'
 
 import HeaderApp from '@/externals/layouts/HeaderApp'
-import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
 import { useState } from 'react'
-import { DownloadSimpleIcon, FileArrowUpIcon, PencilSimpleIcon, PlusIcon, UploadSimpleIcon } from '@phosphor-icons/react'
-import { api, downloadFile, useFormManager } from '@/externals/utils/frontend'
+import { DownloadSimpleIcon, PlusIcon, UploadSimpleIcon } from '@phosphor-icons/react'
+import { api, downloadFile, onSubmitNormal, useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
 import Modal from '@/externals/components/popups/Modal'
 import Form from '@/externals/components/Form'
 import { toast } from 'react-toastify'
 import InputFileDropZone from '@/externals/components/inputs/InputFile/InputFileDropZone'
+import Button from '@/externals/components/Button'
 
 export default function Page() {
   const { ScreenWidth } = useContextGlobal();
@@ -20,6 +20,22 @@ export default function Page() {
   const fmDetail = useFormManager();
   const fmExport = useFormManager();
   const fmImport = useFormManager();
+
+
+
+  /**
+   * Function handler
+   */
+  function onExport(isMaster?: boolean) {
+    fmExport.setStatusCode(202);
+    api({
+      url: '/tatib/api/rule-school/excel/export',
+      objParams: { ...(fmParams.values), ...(fmExport.values), isMaster }
+    }).then(async (res) => {
+      fmExport.setStatusCode(res.status);
+      if (res.status == 200) downloadFile(await res.blob(), `Peraturan Sekolah.xlsx`);
+    });
+  }
 
 
 
@@ -34,11 +50,7 @@ export default function Page() {
           {
             icon: <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
             label: 'Export Excel',
-            onClick: () => {
-              api({ url: '/tatib/api/rule-school/excel/export' }).then(async (res) => {
-                downloadFile(await res.blob(), `Peraturan Sekolah.xlsx`);
-              });
-            }
+            onClick: () => fmExport.setShow(true)
           },
           {
             icon: <UploadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
@@ -53,7 +65,6 @@ export default function Page() {
       ]} />
       <section className="sm:mt-2 max-w-7xl">
         <div className="card">
-          <InputFileDropZone name='Coba Component Input File Drop Zone' />
           <div className='card-body sm:py-4'>
             <Table
               url='/tatib/api/rule-school'
@@ -77,17 +88,18 @@ export default function Page() {
                     )
                   }
                 },
-                ...(ScreenWidth >= 640 ? [
-                  { label: "poin", name: "point" },
-                  { label: "sanksi", name: "punishment" },
-                ] : [])
+                { label: "poin", name: "point", hide: ScreenWidth < 640 },
+                { label: "sanksi", name: "punishment", hide: ScreenWidth < 640 }
               ]}
-              leftElement={<div>
-                <Button onClick={() => fmDetail.setShow(true, false, true)} className='btn-sm btn-auto-floating'>
-                  <PlusIcon weight='bold' className='text-sm' />
-                  <span>peraturan baru</span>
-                </Button>
-              </div>}
+              topElements={[
+                (<div className='lg:order-2 lg:ml-auto'>
+                  <div onClick={() => fmDetail.setShow(true, false, true)} className='btn btn-auto-floating'>
+                    <PlusIcon weight='bold' className='text-sm' />
+                    <span>peraturan baru</span>
+                  </div>
+                </div>),
+                { filter: { show: true }, search: { show: true }, className: 'lg:order-1' }, // [&_.dropdown-filter]:right-0
+              ]}
             />
           </div>
         </div>
@@ -114,17 +126,37 @@ export default function Page() {
         </Modal>
       </section>
       <Modal fm={fmImport} btnClose noSubmit className='whitespace-normal max-w-xl'>
-        <div className='px-4 py-4'>
+        <form className='p-4' onSubmit={(e) => onSubmitNormal(e, fmImport, {
+          url: '/tatib/api/rule-school/excel/import', afterSubmit: (data) => {
+            toast.success(data.message);
+            fmDetail.setShow(false);
+          }
+        })}>
           <InputFileDropZone
-            fm={fmImport}
-            name='file'
+            fm={fmImport} name='file' accept=".xlsx, .xls, .csv"
             className='sm:p-0 border-none sm:shadow-none'
             label={<>
               <div className='mb-1'>Import Peraturan Sekolah</div>
-              <div className='text-sm font-normal text-gray-800'>File harus sesuai dengan format excel berikut master jadwal pelajaran.xlsx</div>
+              <div className='text-sm font-normal text-gray-800'>
+                <span>File harus sesuai dengan format excel berikut</span>
+                <a className='native-link ml-1' onClick={() => onExport(true)}>master import peraturan.xlsx</a>
+              </div>
             </>}
           />
-          {!!fmImport.values?.file && (<div className='btn w-full mt-6 rounded-lg h-[2.75rem]'>Simpan</div>)}
+          {!!fmImport.values?.file && (<div className='btn btn-lg w-full mt-6'>Kirim</div>)}
+        </form>
+      </Modal>
+      <Modal fm={fmExport} btnClose noSubmit className='whitespace-normal max-w-xl'>
+        <div className='p-4'>
+          <div>
+            <div className='text-lg font-semibold mb-1'>Export Peraturan Sekolah</div>
+            <div className='text-sm font-normal text-gray-800'>
+              Filter table yang aktif saat ini akan otomatis diterapkan.
+              {/* Gunakan filter dibawah ini jika perlu penyesuaian filter lanjutan */}
+              {/* Jika perlu filter data lebih lanjut, anda bisa sesuaikan dari filter tambahan dibawah ini */}
+            </div>
+          </div>
+          <Button className='btn btn-lg w-full mt-6' onClick={() => onExport()} isLoading={fmExport.statusCode == 202}>Export Excel</Button>
         </div>
       </Modal>
     </>

@@ -221,7 +221,7 @@ export default function Table({
                   {!noSearch && (<Search className={`${!noAdvanceFilter ? 'rounded-r-none' : ''} h-10`} onSubmit={handleSearch} />)}
                   {!noAdvanceFilter && (<>
                     <div
-                      className={`btn-flat btn-sm bg-primary text-contras-primary px-4 h-10 ${!noSearch ? 'rounded-l-none' : ''}`}
+                      className={`btn-flat bg-primary text-contras-primary px-4 h-10 ${!noSearch ? 'rounded-l-none' : ''}`}
                       onClick={() => fmFilters.setIsShow(true)}
                     ><FadersIcon weight='fill' className='text-base rotate-90' /><span>Filter</span></div>
                     <Dropdown
@@ -311,7 +311,7 @@ export default function Table({
                               <td colSpan={4}>
                                 <div className='w-full flex justify-end items-center gap-2'>
                                   <div
-                                    className='btn-flat btn-sm bg-gray-100'
+                                    className='btn-flat bg-gray-100'
                                     onClick={() => {
                                       fmFilters.setValue('filters', fmParams.values.filters ?? [])
                                       fmFilters.setIsShow(false)

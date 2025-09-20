@@ -10,7 +10,7 @@
 .btn {
   @apply inline-flex items-center justify-center cursor-pointer gap-1 px-4;
   @apply rounded-md capitalize whitespace-nowrap tracking-wide;
-  @apply h-9 text-xs font-semibold;
+  @apply h-10 text-xs font-semibold;
 }
 
 .btn-outline,
@@ -32,6 +32,10 @@ button:disabled {
   background-color: rgba(0, 0, 0, 0.2);
   border-color: transparent;
   cursor: not-allowed;
+}
+
+.btn-lg {
+  @apply rounded-lg h-[2.75rem];
 }
 
 

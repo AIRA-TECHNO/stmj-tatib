@@ -106,7 +106,7 @@ export default function Page() {
                   // noAdvanceFilter={true}
                   // noSearch
                   leftElement={<div>
-                    <Button href='/tatib/panel/portofolio/form' className='btn-sm btn-auto-floating'>
+                    <Button href='/tatib/panel/portofolio/form' className='btn-auto-floating'>
                       <PlusIcon weight='bold' className='text-sm' />
                       <span>Tambah Data</span>
                     </Button>

@@ -23,7 +23,7 @@ export default function Page() {
           <div className='text-center pt-2 pb-8'>
             <div className='text-lg font-medium'>Ahmad Nasir</div>
             <div className='text-sm'>91201399249329</div>
-            <div className='btn btn-sm bg-red-500 mt-6' onClick={() => setIsShowConfirmLogout(true)}>
+            <div className='btn bg-red-500 mt-6' onClick={() => setIsShowConfirmLogout(true)}>
               <PowerIcon weight='bold' className='text-base' />
               <span>Logout</span>
             </div>

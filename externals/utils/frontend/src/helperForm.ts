@@ -1,9 +1,11 @@
-import { Dispatch, RefObject, SetStateAction, useCallback, useRef, useState } from "react";
+import { Dispatch, FormEvent, RefObject, SetStateAction, useCallback, useRef, useState } from "react";
 import { TAnySchema } from "@sinclair/typebox";
 import { customErrorMessages, customMessage, objectExtender, unProxy } from "../../general";
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import ajvErrors from 'ajv-errors';
+import { api } from "./api";
+import { toast } from "react-toastify";
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv);
 ajvErrors(ajv);
@@ -57,10 +59,6 @@ export function useFormManager<T extends Record<string, any>>() {
 
   return {
     values,
-    // setValues: (newValues: T | ((prevValue: T) => T), reset?: boolean) => {
-    //   setValues(newValues);
-    //   if (reset && typeof newValues != 'function') defaultValue.current = newValues;
-    // },
     setValues: (newValues: T | ((prevValue: T) => T), reset?: boolean) => {
       setValues((prev) => {
         let implementedValues = newValues as T;
@@ -115,9 +113,7 @@ export function validateForm({
       }
     }
     if (JSON.stringify(newInvalids) != JSON.stringify(invalids)) setInvalids(newInvalids);
-  } else if (Object.keys(invalids).length) {
-    setInvalids({})
-  }
+  } else if (Object.keys(invalids).length) setInvalids({});
   return newInvalids;
 }
 
@@ -128,9 +124,7 @@ export function validateForm({
  */
 export function validateInput(fm: ReturnType<typeof useFormManager>, fieldName: string) {
   if (fm.values[fieldName] == undefined) {
-    if (fm.invalids[fieldName]) {
-      fm.setInvalids(({ ...prev }) => { delete prev?.[fieldName]; return prev; });
-    }
+    if (fm.invalids[fieldName]) fm.setInvalids(({ ...prev }) => { delete prev?.[fieldName]; return prev; });
     return;
   }
   const validator = ajv.compile(customMessage(fm.validations.current[fieldName]));
@@ -151,8 +145,7 @@ export function validateInput(fm: ReturnType<typeof useFormManager>, fieldName: 
  * triger change input
  */
 export function changeAttr(target: any, attribute: string, value: any) {
-  Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, attribute)
-    ?.set?.call(target, value);
+  Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, attribute)?.set?.call?.(target, value);
   target.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
@@ -173,4 +166,35 @@ export function onInvalid(invalids: Array<{ schema: Record<string, any>, path: s
     result[invalid.path.split('/').filter(Boolean).join('.')] = errorMessages
   }
   return result;
+}
+
+
+
+/**
+ * Handle submit normal form
+ */
+export interface typeActionApi {
+  url: string;
+  primaryKeyValue?: string | number;
+  methodSubmit?: string;
+  preSubmit?: (data: Record<string, any>) => any;
+  afterSubmit?: (json: Record<string, any>) => any;
+}
+export function onSubmitNormal(event: FormEvent<HTMLFormElement>, fm: ReturnType<typeof useFormManager>, actionApi: typeActionApi) {
+  fm?.setStatusCode(202);
+  const formData = new FormData(event.target as HTMLFormElement);
+  api({
+    url: [actionApi?.url, actionApi.primaryKeyValue].filter(Boolean).join('/'),
+    method: actionApi?.methodSubmit ?? (actionApi.primaryKeyValue ? 'PUT' : 'POST'),
+    body: actionApi.preSubmit ? actionApi.preSubmit(formData) : formData
+  }).then(async (res) => {
+    fm?.setStatusCode(res.status);
+    if (res.status == 200) {
+      actionApi.afterSubmit?.(await res.json());
+    } else {
+      const { invalids, message } = (await res.json());
+      toast.error(message);
+      fm?.setInvalids((prev) => ({ ...prev, ...onInvalid(invalids) }));
+    }
+  });
 }

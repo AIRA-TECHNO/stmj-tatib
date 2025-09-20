@@ -15,7 +15,7 @@ export default function Search({
 	const refSearch = useRef<HTMLInputElement>(null);
 	const refDelay = useRef<NodeJS.Timeout>(null);
 	return (
-		<div className={`flex items-center grow`}>
+		<div className={`flex items-center max-sm:grow`}>
 			<input
 				ref={refSearch}
 				className={cn(

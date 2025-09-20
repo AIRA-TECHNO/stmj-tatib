@@ -73,7 +73,7 @@ export default function InputFileDropZone({
    */
   const isFile = fm.values[name] instanceof File;
   return (
-    <div className={cn("input-group rounded-xl sm:border sm:shadow sm:p-4 sm:pb-6", { "input-group-invalid": fm.invalids?.[name]?.length }, className)}>
+    <div className={cn("input-group rounded-xl sm:border sm:shadow sm:p-4 sm:pb-6", className)}>
       {!noLabel && (
         <div className="text-lg font-semibold mb-6" onClick={() => refInput.current?.click()}>
           {label ?? name} {isRequired(validation) && <span className="text-rose-600">*</span>}
@@ -137,7 +137,7 @@ export default function InputFileDropZone({
           </div>
         </div>
       ) : (
-        <div className="rounded-xl border flex items-center px-2 sm:px-4 py-4 gap-2 sm:gap-3">
+        <div className={cn("rounded-xl border flex items-center px-2 sm:px-4 py-4 gap-2 sm:gap-3", { "border-danger bg-danger/5": fm.invalids?.[name]?.length })}>
           <FileTextIcon className='text-6xl text-gray-500' />
           <div>
             <div className="text-sm truncate max-w-[14rem]">{fm.values[name]?.name ?? fm.values[name]}</div>

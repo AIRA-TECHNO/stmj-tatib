@@ -1,10 +1,10 @@
 'use client'
 
-import { DetailedHTMLProps, ElementType, FormEvent, FormEventHandler, Fragment, HTMLAttributes, HTMLInputTypeAttribute, ReactNode, isValidElement, useEffect, useState } from 'react'
+import { DetailedHTMLProps, ElementType, FormEventHandler, Fragment, HTMLAttributes, HTMLInputTypeAttribute, ReactNode, isValidElement, useEffect, useState } from 'react'
 import Button from './Button'
 import Input, { typeInputProps } from './inputs/Input'
 import { useContextGlobal } from '../contexts/ContextGlobal'
-import { api, cn, onInvalid, onSubmitNormal, typeActionApi, useFormManager, validateForm } from '../utils/frontend'
+import { api, cn, onInvalid, useFormManager, validateForm } from '../utils/frontend'
 import { toast } from 'react-toastify'
 import { typeSelectProps } from './inputs/Select'
 import Confirm from './popups/Confirm'
@@ -26,8 +26,13 @@ interface typeFormProps {
   noFooter?: boolean;
   noSubmit?: boolean;
   onSubmit?: FormEventHandler<HTMLFormElement>;
-  actionApi?: typeActionApi & {
+  actionApi?: {
+    url: string;
+    primaryKeyValue?: string | number;
+    methodSubmit?: string;
+    preSubmit?: (data: Record<string, any>) => any;
     afterLoad?: (data: Response) => any;
+    afterSubmit?: (json: Record<string, any>) => any;
     afterDelete?: (json: Record<string, any>) => any;
     onDelete?: () => any;
   },
@@ -54,7 +59,7 @@ export default function Form({
   /**
    * Function handler
    */
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: FormEventHandler<any> = (event) => {
     event.preventDefault();
 
     // Recheck invalid field
@@ -63,7 +68,24 @@ export default function Form({
     // On submit
     if (!Object.keys(invalids).length) {
       if (onSubmit) onSubmit(event);
-      if (actionApi?.url) onSubmitNormal(event, fm, actionApi);
+      if (actionApi?.url) {
+        fm?.setStatusCode(202);
+        const formData = new FormData(event.target as HTMLFormElement);
+        api({
+          url: [actionApi?.url, actionApi.primaryKeyValue].filter(Boolean).join('/'),
+          method: actionApi?.methodSubmit ?? (actionApi.primaryKeyValue ? 'PUT' : 'POST'),
+          body: actionApi.preSubmit ? actionApi.preSubmit(formData) : formData
+        }).then(async (res) => {
+          fm?.setStatusCode(res.status);
+          if (res.status == 200) {
+            actionApi.afterSubmit?.(await res.json());
+          } else {
+            const { invalids, message } = (await res.json());
+            toast.error(message);
+            fm?.setInvalids((prev) => ({ ...prev, ...onInvalid(invalids) }));
+          }
+        });
+      }
     }
   }
 
@@ -107,7 +129,10 @@ export default function Form({
    */
   const Wrapper: ElementType = noSubmit ? 'div' : 'form';
   return (
-    <Wrapper onSubmit={handleSubmit as any} encType={encType} id={id} className={cn('grid grid-cols-12 gap-x-4 pb-4', className)}>
+    <Wrapper
+      onSubmit={handleSubmit} encType={encType}
+      id={id} className={cn('grid grid-cols-12 gap-x-4 pb-4', className)}
+    >
       <button className='hidden' ref={fm.btnSubmit as any} type='submit'></button>
       {(fields as typeFormInputProps[]).map((field, indexField) => {
         if (isValidElement(field)) {
@@ -115,7 +140,10 @@ export default function Form({
         } else {
           const { parentProps, ...fieldProps } = field;
           return (
-            <div key={indexField} {...parentProps} className={cn('col-span-12', parentProps?.className)}>
+            <div
+              key={indexField} {...parentProps}
+              className={cn('col-span-12', parentProps?.className)}
+            >
               <Input {...fieldProps} fm={fm} readOnly={fm.disable || fm.readOnly || fieldProps?.readOnly} />
             </div>
           );
@@ -123,7 +151,13 @@ export default function Form({
       })}
       {!noFooter && (!noSubmit || footerElement) && (
         <div className='col-span-full flex gap-2 mt-8 pt-4 border-t'>
-          {!(noSubmit || fm.disable) && (<Button id={id ? `btn-submit-${id}` : undefined} children='Simpan' isLoading={fm?.statusCode == 202} />)}
+          {!(noSubmit || fm.disable) && (
+            <Button
+              id={id ? `btn-submit-${id}` : undefined}
+              children='Simpan'
+              isLoading={fm?.statusCode == 202}
+            />
+          )}
           {footerElement}
         </div>
       )}
