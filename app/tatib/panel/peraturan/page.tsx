@@ -143,7 +143,7 @@ export default function Page() {
               </div>
             </>}
           />
-          {!!fmImport.values?.file && (<div className='btn btn-lg w-full mt-6'>Kirim</div>)}
+          {!!fmImport.values?.file && (<Button className='btn-lg w-full mt-6' isLoading={fmImport.statusCode == 202}>Kirim</Button>)}
         </form>
       </Modal>
       <Modal fm={fmExport} btnClose noSubmit className='whitespace-normal max-w-xl'>

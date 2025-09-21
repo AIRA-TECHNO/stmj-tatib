@@ -133,7 +133,7 @@ export default function Table({
         if (!noReload) loadDataTable();
       });
     } else if (url) {
-      api({ method: 'DELETE', url: `${url}/${DataTable.selectedRows?.map((sr) => sr[primaryKey])?.join(',')}`, }).then(async (res) => {
+      api({ method: 'DELETE', url, body: { ids: DataTable.selectedRows?.map((sr) => sr[primaryKey])?.join(',') } }).then(async (res) => {
         if (res.status == 200) {
           setDataTable((prev) => ({ ...(prev ?? {}), confirmDeletedRows: [] }));
           loadDataTable();

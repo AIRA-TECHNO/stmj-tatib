@@ -75,9 +75,7 @@ export default function InputFileDropZone({
   return (
     <div className={cn("input-group rounded-xl sm:border sm:shadow sm:p-4 sm:pb-6", className)}>
       {!noLabel && (
-        <div className="text-lg font-semibold mb-6" onClick={() => refInput.current?.click()}>
-          {label ?? name} {isRequired(validation) && <span className="text-rose-600">*</span>}
-        </div>
+        <div className="text-lg font-semibold mb-6">{label ?? name} {isRequired(validation) && <span className="text-rose-600">*</span>}</div>
       )}
 
       <input

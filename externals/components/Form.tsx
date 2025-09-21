@@ -70,7 +70,7 @@ export default function Form({
   const handleDelete = () => {
     if (actionApi?.onDelete) actionApi.onDelete();
     else if (actionApi?.url) {
-      api({ method: 'DELETE', url: `${actionApi.url}/${actionApi.primaryKeyValue ?? ''}`, }).then(async (res) => {
+      api({ method: 'DELETE', url: actionApi.url, body: { ids: actionApi.primaryKeyValue } }).then(async (res) => {
         if (res.status == 200) {
           fm.setConfirmDelete(null);
           fm.setValues({}, true);

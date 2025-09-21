@@ -181,6 +181,7 @@ export interface typeActionApi {
   afterSubmit?: (json: Record<string, any>) => any;
 }
 export function onSubmitNormal(event: FormEvent<HTMLFormElement>, fm: ReturnType<typeof useFormManager>, actionApi: typeActionApi) {
+  event.preventDefault();
   fm?.setStatusCode(202);
   const formData = new FormData(event.target as HTMLFormElement);
   api({
@@ -194,7 +195,7 @@ export function onSubmitNormal(event: FormEvent<HTMLFormElement>, fm: ReturnType
     } else {
       const { invalids, message } = (await res.json());
       toast.error(message);
-      fm?.setInvalids((prev) => ({ ...prev, ...onInvalid(invalids) }));
+      if (invalids) fm?.setInvalids((prev) => ({ ...prev, ...onInvalid(invalids) }));
     }
   });
 }

@@ -4,38 +4,30 @@ type Operator = '=' | '!=' | '<' | '<=' | '>' | '>=' | 'LIKE' | 'NOT LIKE' | 'IN
 type Condition = [string, Operator, any]
 type FilterGroup = (Condition | 'OR' | FilterGroup)[]
 
-function applyFilters(qb: AnyQueryBuilder, filters: FilterGroup, dateCols?: string[], isOr = false) {
+function applyFilters(qb: AnyQueryBuilder, filters: FilterGroup, isOr?: boolean) {
   if (Array.isArray(filters[0])) {
     qb.where((subQb) => {
       filters.forEach((filter, indexFilter) => {
         if (!Array.isArray(filter)) return;
         const prevFilterItem = filters[indexFilter - 1] ?? '';
         applyFilters(
-          subQb, filter, dateCols,
-          (typeof prevFilterItem == 'string' && String(prevFilterItem).toUpperCase() == "OR")
+          subQb, filter as FilterGroup,
+          Boolean(
+            typeof prevFilterItem == 'string' &&
+            String(prevFilterItem).toUpperCase() == "OR"
+          )
         )
       });
     });
   } else {
-    const [col, operator, value] = filters as Condition;
-    if (dateCols?.includes(col)) {
-      const date = new Date(value);
-      const dayStart = new Date(date.setHours(0, 0, 0, 0));
-      const dayEnd = new Date(date.setHours(24, 0, 0, 0));
-      qb[isOr ? 'orWhere' : 'where']((subQb) => subQb.where(col, '>=', dayStart).andWhere(col, '<', dayEnd));
-    } else {
-      qb[isOr ? 'orWhere' : 'where'](col, operator, value);
-    }
+    qb[isOr ? 'orWhere' : 'where'](...(filters as Condition));
   }
 }
 
 export async function paginator(
   qb: Builder<any> | QueryBuilder<any>,
   searchParams: URLSearchParams,
-  options?: {
-    searchableCols?: Array<Raw | string>;
-    dateCols?: Array<string>;
-  }
+  searchableFields?: Array<Raw | string>
 ) {
   // Init var
   let filters = searchParams.getAll('filters');
@@ -57,15 +49,15 @@ export async function paginator(
     }
     if (filterParseds.flatMap((fp) => fp).length) {
       qb.where((subQb: AnyQueryBuilder) => {
-        filterParseds.forEach((filters) => applyFilters(subQb, filters as FilterGroup, options?.dateCols))
+        filterParseds.forEach((filters) => applyFilters(subQb, filters as FilterGroup))
       });
     }
   }
 
   // Search
-  if (search && options?.searchableCols) {
+  if (search && searchableFields) {
     qb.where((subQb: AnyQueryBuilder) => {
-      for (const searchableField of (options?.searchableCols ?? [])) {
+      for (const searchableField of searchableFields) {
         subQb.orWhere(searchableField, 'ilike', `%${search}%`)
       }
     })
