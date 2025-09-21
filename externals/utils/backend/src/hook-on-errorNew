@@ -1,0 +1,42 @@
+import { ErrorHandler } from "elysia";
+import { HTTPException } from "./http-exception";
+
+export const HookOnError: ErrorHandler = ({ error, code, set }) => {
+  if (code == "VALIDATION") {
+    // console.log([
+    //   error.all, x
+    //   error.cause,
+    //   error.code,
+    //   error.customError,
+    //   error.expected,
+    //   error.message, x
+    //   error.model,
+    //   error.name,
+    //   error.stack,
+    //   error.status,
+    //   error.type,
+    //   error.validator,
+    //   error.value,
+    //   error.valueError, x
+    // ]);
+    if (error.type == 'body') {
+      const invalids = error.all;
+      if (invalids[0].summary == "Expected object") return { message: "Body request tidak boleh kosong!" };
+      return {
+        message: "Invalid request!",
+        invalids
+      }
+    }
+
+
+
+    // Expected result
+    // {
+    //   "fieldName": ['invalid messages']
+    // }
+
+  } else if (error instanceof HTTPException) {
+    set.status = error.status;
+    return { error: error.message, ...(error.data ?? {}) };
+  }
+}

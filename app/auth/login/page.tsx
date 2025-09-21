@@ -18,7 +18,7 @@ export default function Page() {
    */
   function onSubmitLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    api({ path: '/login', method: 'POST', body: fm?.values ?? {} }).then(async (res) => {
+    api({ url: '/auth/api/login', method: 'POST', body: fm?.values ?? {} }).then(async (res) => {
       if (res.status == 200) {
         const { token } = (await res.json()).data
         const cookieConfigs: any = { expires: 7 }
@@ -30,8 +30,8 @@ export default function Page() {
         window.location.href = '/'
         // window.history.back();
       } else if (res.status == 422) {
-        const { errors } = (await res.json());
-        fm?.setInvalids((prev) => ({ ...prev, ...onInvalid(errors) }));
+        const { invalids } = (await res.json());
+        if (invalids) fm?.setInvalids((prev) => ({ ...prev, ...onInvalid(invalids) }));
       }
     });
   }
@@ -47,8 +47,8 @@ export default function Page() {
           <Image
             src={'/public/images/main-logo.png'}
             alt='logo-app'
-            width={100}
-            height={0}
+            width={150}
+            height={150}
             style={{ height: 'auto', width: '3.5rem' }}
             className='mb-[1.25rem]'
           />
@@ -64,8 +64,8 @@ export default function Page() {
               </div>
               <Button
                 // className='btn-outline aspect-square px-2 text-sm mt-[1.5rem] bg-primary text-contras-primary disabled:border-gray-200 disabled:bg-white disabled:text-gray-300'
-                className={`aspect-square h-[2.25rem] px-2 ${fm?.invalids?.password?.length ? 'mb-6' : ''}`}
-                children={<ArrowRightIcon weight={'light'} />}
+                className={`aspect-square px-0 ${fm?.invalids?.password?.length ? 'mb-6' : ''}`}
+                children={<ArrowRightIcon className='text-base' />}
               />
             </div>
           </form>

@@ -6,15 +6,16 @@ import { sutando } from "sutando";
 const AuthController = new Elysia();
 
 const authSchema = t.Object({
-  username: t.String(),
-  password: t.String()
+  username: t.String({ minLength: 2 }),
+  password: t.String({ minLength: 1 }),
+  amado: t.Object({ pala: t.String({ minLength: 1 }), opt: t.String() })
 })
 
-AuthController.group('/auth', (app) => {
+AuthController.group('', (app) => {
   app.post('/login', async ({ body, set }) => {
     const { username, password } = body;
 
-    const user = await sutando.table('view_data_users')
+    const user = await sutando.connection('datainduk').table('view_data_users')
       .select('id', 'username', 'password')
       .where({ username })
       .first()
@@ -36,37 +37,7 @@ AuthController.group('/auth', (app) => {
     const token = sign(user, secretKey, { algorithm })
 
     return { message: 'Login berhasil!', token, user }
-  }, { body: authSchema })
-
-  app.get('/test', async ({ headers, set }) => {
-    // Check exist token
-    const authHeader = headers.authorization
-    if (!authHeader) {
-      set.status = 401
-      return { message: 'No token provided' }
-    }
-
-    // Check type token
-    const [tokenType, tokenValue] = authHeader.split(' ')[1];
-    if (tokenType !== 'Bearer' || !tokenValue) {
-      set.status = 401;
-      return ({ message: "Auth header authorization must a bearer token!" });
-    }
-
-    // Check valid token
-    const secretKey = process.env.JWT_SECRET || 'secretKey';
-    const decoded: any = verify(tokenValue, secretKey);
-    if (!decoded?.id) {
-      set.status = 401;
-      return ({ message: "Token invalid!" });
-    }
-
-    // Response
-    return {
-      message: 'You are authorized',
-      userId: decoded.userId
-    }
-  })
+  }, { body: (authSchema) })
 
   return app
 })
