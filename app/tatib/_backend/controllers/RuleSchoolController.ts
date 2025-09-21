@@ -63,7 +63,7 @@ RuleSchoolController.group('/rule-school', (app) => {
 
 
   app.post('/excel/import', async ({ body, set }) => {
-    const { workbook, tempPath } = await uploadAndLoadExcel(body.file as File)
+    const { workbook, tempPath } = await uploadAndLoadExcel(body.file as File, '/import-rule-schools')
 
     const worksheet = workbook.getWorksheet(1);
     if (!worksheet) {

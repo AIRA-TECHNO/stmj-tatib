@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Workbook, Worksheet } from "exceljs";
-import fs from "fs";
+import FileManager from "./file-manager";
 
 interface structureResultExcelToJson {
   sheetName: string,
@@ -75,13 +75,13 @@ export function basicStyleCellExcel(Cell: any, options?: typeOptionBasicStyle) {
 }
 
 
-export async function uploadAndLoadExcel(file: File, pathFolder = 'uploads') {
+export async function uploadAndLoadExcel(file: File, pathFolder = 'excels') {
   const buffer = await file.arrayBuffer();
   const fileName = `${dayjs().format('YYYYMMDDHHmmss')}-${file.name}`;
   const tempPath = `${pathFolder}/${fileName}`;
-  fs.writeFileSync(tempPath, Buffer.from(buffer));
+  FileManager.write(Buffer.from(buffer), tempPath);
   const workbook = new Workbook();
-  await workbook.xlsx.readFile(tempPath);
+  await workbook.xlsx.readFile(`storage/${tempPath}`);
   return { workbook, tempPath, fileName };
 }
 
