@@ -1,13 +1,10 @@
 todo:
-- auth
 - RBAC
 
 
 
 
 blocker:
-- custom message hanya berlaku di FE
-- BE pakai translasi message dengan nomor type error saja
 
 
 

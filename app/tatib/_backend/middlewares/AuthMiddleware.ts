@@ -4,7 +4,7 @@ import ViewDataUser from "../models/ViewDataUser";
 import { sutando } from "sutando";
 
 
-export const LoadUserAuthedMiddleware = new Elysia()
+export const LoadUserAuthed = new Elysia()
   .derive({ as: 'global' }, async ({ headers }) => {
     // Init var
     let auth: { user: ViewDataUser | null; message: string | null; } = { user: null, message: null };
@@ -22,7 +22,7 @@ export const LoadUserAuthedMiddleware = new Elysia()
       } else {
 
         // Decode token
-        const secretKey = process.env.JWT_SECRET_KEY ?? "randomKey";
+        const secretKey = process.env.JWT_SECRET_KEY || "secretKey";
         const tokenDecoded: any = verify(authToken, secretKey, (error: VerifyErrors | null, decoded?: string | JwtPayload) => (
           error || decoded
         ));
@@ -32,7 +32,7 @@ export const LoadUserAuthedMiddleware = new Elysia()
           auth.message = 'Invalid token value!';
         } else {
           // Get user by
-          const user = await sutando.table('view_data_users').select().where('id', tokenDecoded.id).first()
+          const user = await sutando.connection('datainduk').table('view_data_users').select().where('id', tokenDecoded.id).first()
 
           // Set exist user
           if (user) {
@@ -50,9 +50,9 @@ export const LoadUserAuthedMiddleware = new Elysia()
 
 
 
-export const AuthMiddleware = (new Elysia()).use(LoadUserAuthedMiddleware).onBeforeHandle(({ auth, set }) => {
+export const guardedUserAuthed = ({ auth, set }: any) => {
   if (!auth.user) {
-    set.status = 401;
-    return auth;
+    set.status = 401
+    return auth
   }
-})
+}

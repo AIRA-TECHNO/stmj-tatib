@@ -1,9 +1,7 @@
 import { Elysia, t } from "elysia";
-import { customMessage } from "@/externals/utils/general";
 import StudentAchievement from "../models/StudentAchievement";
-import { AuthMiddleware } from "../middlewares/AuthMiddleware";
-
-const StudentAchievementController = new Elysia().use(AuthMiddleware);
+import { paginator } from "@/externals/utils/backend";
+import { guardedUserAuthed, LoadUserAuthed } from "../middlewares/AuthMiddleware";
 
 
 
@@ -14,52 +12,49 @@ const validationSchema = t.Object({
 
 
 
-StudentAchievementController.group('/student-achievement', (app) => {
-  app.get('/', async ({ query }) => {
-    const { page, per_page, search } = query;
-    const qb = StudentAchievement.query();
-    if (search) {
-      qb.where('achievement', 'ilike', `%${search}%`);
-    }
-    const { data, ...paginate } = (await qb.paginate(Number(page ?? 1), Number(per_page ?? 10))).toJSON();
-    return { data, paginate };
-  });
+const StudentAchievementController = new Elysia()
+  .use(LoadUserAuthed)
+  .group('/student-achievement', (group) => (group.guard({ beforeHandle: guardedUserAuthed }, (app) => {
+    app.get('/', async ({ request }) => {
+      const qb = StudentAchievement.query();
+      return await paginator(qb.table('rule_schools'), new URL(request.url).searchParams, { searchableCols: ['achievement'], dateCols: ['created_at'] });
+    });
 
 
 
-  app.get('/:id', async ({ params }) => {
-    const { id } = params;
-    const data = await StudentAchievement.query().findOrFail(id);
-    return { data };
-  });
+    app.get('/:id', async ({ params }) => {
+      const { id } = params;
+      const data = await StudentAchievement.query().findOrFail(id);
+      return { data };
+    });
 
 
 
-  app.post('/', async ({ body }) => {
-    const data = await StudentAchievement.query().create(body);
-    return { data, message: 'Berhasil menyimpan data!' };
-  }, { body: customMessage(validationSchema) });
+    app.post('/', async ({ body }) => {
+      const data = await StudentAchievement.query().create(body);
+      return { data, message: 'Berhasil menyimpan data!' };
+    }, { body: validationSchema });
 
 
 
-  app.put("/:id", async ({ params, body }) => {
-    const data = await StudentAchievement.query().findOrFail(params.id);
-    await data.update(body);
-    return { data, message: 'Berhasil menyimpan data!' };
-  }, { body: customMessage(validationSchema) });
+    app.put("/:id", async ({ params, body }) => {
+      const data = await StudentAchievement.query().findOrFail(params.id);
+      await data.update(body);
+      return { data, message: 'Berhasil menyimpan data!' };
+    }, { body: validationSchema });
 
 
 
-  app.delete('/:id', async ({ params }) => {
-    const data = await StudentAchievement.query().findOrFail(params.id);
-    await data.delete();
-    return { message: 'Berhasil menghapus data!' };
-  });
+    app.delete('/:id', async ({ params }) => {
+      const data = await StudentAchievement.query().findOrFail(params.id);
+      await data.delete();
+      return { message: 'Berhasil menghapus data!' };
+    });
 
 
 
-  return app;
-})
+    return app;
+  })))
 
 
 

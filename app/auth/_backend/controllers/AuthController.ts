@@ -3,14 +3,16 @@ import bcrypt from "bcryptjs"
 import { Algorithm, sign } from "jsonwebtoken"
 import { sutando } from "sutando";
 
-const AuthController = new Elysia();
+
 
 const authSchema = t.Object({
   username: t.String({ minLength: 2 }),
   password: t.String({ minLength: 1 }),
 })
 
-AuthController.group('', (app) => {
+
+
+const AuthController = new Elysia().group('', (app) => {
   app.post('/login', async ({ body, set }) => {
     const { username, password } = body;
 
@@ -31,14 +33,18 @@ AuthController.group('', (app) => {
     }
 
     delete user.password;
-    const secretKey = process.env.JWT_SECRET || 'secretKey'
+    const secretKey = process.env.JWT_SECRET_KEY || 'secretKey'
     const algorithm = (process.env.JWT_ALGORITHM || 'HS256') as Algorithm;
     const token = sign(user, secretKey, { algorithm })
 
     return { message: 'Login berhasil!', token, user }
   }, { body: (authSchema) })
 
+
+
   return app
 })
+
+
 
 export default AuthController

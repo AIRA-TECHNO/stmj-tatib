@@ -40,7 +40,7 @@ export async function paginator(
   // Init var
   let filters = searchParams.getAll('filters');
   let page = Number(searchParams.get('page'));
-  let per_page = Number(searchParams.get('per_page'));
+  let perPage = Number(searchParams.get('per_page') ?? 50);
   let search = searchParams.get('search');
   let sortings = searchParams.getAll('sortings');
 
@@ -91,7 +91,6 @@ export async function paginator(
   }
 
   // Return non pagination
-  let perPage = Number(per_page);
   if (isNaN(perPage)) perPage = 50;
   if (perPage < 1) {
     const data = await qb.get();
