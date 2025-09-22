@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia"
 import bcrypt from "bcryptjs"
-import { Algorithm, sign, verify } from "jsonwebtoken"
+import { Algorithm, sign } from "jsonwebtoken"
 import { sutando } from "sutando";
 
 const AuthController = new Elysia();
@@ -8,7 +8,6 @@ const AuthController = new Elysia();
 const authSchema = t.Object({
   username: t.String({ minLength: 2 }),
   password: t.String({ minLength: 1 }),
-  amado: t.Object({ pala: t.String({ minLength: 1 }), opt: t.String() })
 })
 
 AuthController.group('', (app) => {
@@ -22,13 +21,13 @@ AuthController.group('', (app) => {
 
     if (!user) {
       set.status = 422
-      return { message: 'Login failed. Email not found.' }
+      return { invalids: { username: ['Username tidak terdaftar!'] } }
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
       set.status = 422
-      return { message: 'Login failed. Wrong password.' }
+      return { invalids: { password: ['Password salah!'] } }
     }
 
     delete user.password;

@@ -6,6 +6,8 @@ todo:
 
 
 blocker:
+- custom message hanya berlaku di FE
+- BE pakai translasi message dengan nomor type error saja
 
 
 
@@ -21,3 +23,4 @@ minor:
 - ornament UI left area
 - handle right click row table (show shorthand action)
 - adjust color success, warning, danger
+
