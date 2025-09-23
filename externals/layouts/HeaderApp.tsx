@@ -17,6 +17,7 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
     label?: ReactNode;
     href?: string | UrlObject;
     onClick?: (event: MouseEvent) => any;
+    hide?: boolean;
   }> | ReactNode;
   className?: string;
 }) {
@@ -92,7 +93,7 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
               `max-sm:absolute max-sm:border max-sm:divide-y max-sm:shadow max-sm:w-[11rem] max-sm:-mt-3 max-sm:opacity-0 max-sm:z-[-1]`
             )}>
               {(rightElements as any[]).map((rightElement, indexRightElement) => (
-                isValidElement(rightElement) ? <Fragment key={indexRightElement}>{rightElement}</Fragment> : (
+                isValidElement(rightElement) ? <Fragment key={indexRightElement}>{rightElement}</Fragment> : (rightElement?.hide ? null : (
                   <Button
                     key={indexRightElement}
                     varian={`btn-flat`}
@@ -100,7 +101,7 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
                     onClick={rightElement.onClick}
                     href={rightElement.href}
                   >{rightElement.icon} {rightElement.label}</Button>
-                )
+                ))
               ))}
             </div>
           </>)}

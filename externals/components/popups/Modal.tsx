@@ -144,7 +144,7 @@ export default function Modal({ children, show, toHide, justHidden, className, t
                     <div>Batal</div>
                   </Button>
                 )}
-                {!noSubmit && (
+                {(!noSubmit && !noEdit) && (
                   <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/5 hover:text-success' onClick={() => fm.btnSubmit.current?.click()}>
                     <FloppyDiskIcon weight='bold' className='text-base' />
                     <div>Simpan</div>

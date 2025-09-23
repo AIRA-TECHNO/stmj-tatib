@@ -1,10 +1,27 @@
 'use client'
 
 import "@/styles/globals.css";
-import { useEffect, useState } from "react";
-import Error from "next/error";
+import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ContextGlobal } from "@/externals/contexts/ContextGlobal";
+
+
+
+declare global {
+  type typeMenuApps = Array<{
+    href?: string;
+    label?: string;
+    icon?: ReactNode;
+    backroundColor?: string;
+    checkIsActive?: (pathNames: string[]) => boolean;
+    featureCodes?: string[];
+    essentialPaths?: string[];
+    groupMenu?: string;
+    others?: any;
+  }>;
+}
+
+
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const prefix = usePathname().split('/')[0]
@@ -19,7 +36,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
    */
   useEffect(() => {
     if (!["signin", "/_error"].includes(prefix) && !UserAuthed.id) {
-      let newUserAuthed: typeUserAuthed = {};
+      let newUserAuthed: typeUserAuthed = { id: 1 };
       setUserAuthed(newUserAuthed)
     }
   }, [prefix]);
@@ -47,7 +64,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         StatusCode, setStatusCode,
         ScreenWidth, setScreenWidth
       }}
-      children={![200, 202, 422].includes(StatusCode) ? (<Error statusCode={StatusCode} />) : (children)}
+      children={children}
     />
   );
 }

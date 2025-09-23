@@ -21,26 +21,14 @@
 
 export function checkAccess(
   rules: string[],
-  roles?: Array<{
-    id?: string;
-    code?: string;
-    name?: string;
-    app_id?: string;
-    app_name?: string;
-    app_code?: string;
-    accesses?: Array<{
-      id?: string;
-      feature?: string;
-      access?: string;
-      role_id?: string;
-    }>
-  }>
+  roles?: typeUserAuthed['roles']
 ) {
-  if (!roles?.filter(Boolean)?.length) return true;
-  for (const rule of (rules ?? [])) {
+  if (!rules?.filter(Boolean)?.length) return true;
+  for (const rule of rules) {
+    if (!rule) continue;
     const [ruleFeature, ruleAccess] = rule.split('>=');
-    for (const role of roles) {
-      if (role.accesses) {
+    for (const role of (roles ?? [])) {
+      if (role?.accesses) {
         for (const { feature, access } of role.accesses) {
           if (feature == ruleFeature && Number(access) >= Number(ruleAccess)) {
             return true;

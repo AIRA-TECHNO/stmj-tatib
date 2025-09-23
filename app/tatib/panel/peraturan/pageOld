@@ -12,27 +12,14 @@ import Form from '@/externals/components/Form'
 import { toast } from 'react-toastify'
 import InputFileDropZone from '@/externals/components/inputs/InputFile/InputFileDropZone'
 import Button from '@/externals/components/Button'
-import { usePathname } from 'next/navigation'
-import menuApp from '../../menuApp'
-import { checkAccess } from '@/externals/utils/general'
-import Loading from '@/externals/components/Loading'
 
 export default function Page() {
-  const { ScreenWidth, UserAuthed } = useContextGlobal();
-  const pathName = usePathname();
+  const { ScreenWidth } = useContextGlobal();
   const [DataTable, setDataTable] = useState<typeDataTable>({});
   const fmParams = useFormManager();
   const fmDetail = useFormManager();
   const fmExport = useFormManager();
   const fmImport = useFormManager();
-
-
-
-  /**
-   * Default RBAC
-   */
-  const featureCodes = menuApp.find((ma) => ma.href == pathName)?.featureCodes ?? [];
-  const isFullAccess = checkAccess(featureCodes.filter(Boolean).map((fc) => `${fc}>=2`), UserAuthed.roles);
 
 
 
@@ -55,7 +42,6 @@ export default function Page() {
   /**
    * Render JSX
    */
-  if (!UserAuthed?.id) return (<Loading />);
   return (
     <>
       <HeaderApp
@@ -69,8 +55,7 @@ export default function Page() {
           {
             icon: <UploadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
             label: 'Import Excel',
-            onClick: () => fmImport.setShow(true),
-            hide: !isFullAccess
+            onClick: () => fmImport.setShow(true)
           },
         ]}
       />
@@ -84,7 +69,7 @@ export default function Page() {
             <Table
               url='/tatib/api/rule-school'
               stateDataTable={[DataTable, setDataTable]}
-              actions={isFullAccess ? ['delete'] : []}
+              actions={['delete']}
               fmParams={fmParams}
               onClickRow={(dataRow) => {
                 fmDetail.setValues(dataRow, true);
@@ -107,18 +92,18 @@ export default function Page() {
                 { label: "sanksi", name: "punishment", hide: ScreenWidth < 640 }
               ]}
               topElements={[
-                ...(isFullAccess ? [(<div className='lg:order-2 lg:ml-auto'>
+                (<div className='lg:order-2 lg:ml-auto'>
                   <div onClick={() => fmDetail.setShow(true, false, true)} className='btn btn-auto-floating'>
                     <PlusIcon weight='bold' className='text-sm' />
                     <span>peraturan baru</span>
                   </div>
-                </div>)] : []),
+                </div>),
                 { filter: { show: true }, search: { show: true }, className: 'lg:order-1' }, // [&_.dropdown-filter]:right-0
               ]}
             />
           </div>
         </div>
-        <Modal fm={fmDetail} noEdit={!isFullAccess} noDelete={!isFullAccess} title={<div className='mr-auto capitalize'>detail peraturan</div>}>
+        <Modal fm={fmDetail} title={<div className='mr-auto capitalize'>detail peraturan</div>}>
           <div className='px-4 pb-4'>
             <Form
               actionApi={{

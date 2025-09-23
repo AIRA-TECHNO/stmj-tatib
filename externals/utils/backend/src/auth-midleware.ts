@@ -2,35 +2,40 @@ import { Elysia } from "elysia";
 import { JwtPayload, VerifyErrors, verify } from "jsonwebtoken";
 import { sutando } from "sutando";
 
+declare global {
+  
+  interface typeUserAuthed {
+    id?: number;
+    username?: string;
+    password?: string;
+    profile_type?: string;
+    created_at?: number;
+    updated_at?: number;
+    name?: string;
+    relation_id?: number;
+    uuid?: string;
+    roles?: Array<{
+      id?: string;
+      code?: string;
+      name?: string;
+      app_id?: string;
+      app_name?: string;
+      app_code?: string;
+      accesses?: Array<{
+        id?: string;
+        feature?: string;
+        access?: string;
+        role_id?: string;
+      }>
+    }>
+  }
+}
+
 export const LoadUserAuthed = new Elysia()
   .derive({ as: 'global' }, async ({ headers }) => {
     // Init var
     let auth: {
-      user: {
-        id?: number;
-        username?: string;
-        password?: string;
-        profile_type?: string;
-        created_at?: number;
-        updated_at?: number;
-        name?: string;
-        relation_id?: number;
-        uuid?: string;
-        roles?: Array<{
-          id?: string;
-          code?: string;
-          name?: string;
-          app_id?: string;
-          app_name?: string;
-          app_code?: string;
-          accesses?: Array<{
-            id?: string;
-            feature?: string;
-            access?: string;
-            role_id?: string;
-          }>
-        }>
-      } | null; message: string | null;
+      user: typeUserAuthed | null; message: string | null;
     } = { user: null, message: null };
     const TOKEN_SSO_SIMBAH = headers.authorization;
 

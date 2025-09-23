@@ -3,13 +3,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { checkAccess } from '../utils/general';
+import { useContextGlobal } from '../contexts/ContextGlobal';
 
 export default function NavBar({ forcedShow, menuApps }: {
   forcedShow?: boolean;
   menuApps: typeMenuApps;
 }) {
   const pathNames = usePathname().split('/');
+  const { UserAuthed } = useContextGlobal();
 
+  const registeredGroupMenus: string[] = [];
   return (
     <>
       {Boolean(forcedShow) && <div className='h-[5rem]' />}
@@ -21,18 +25,25 @@ export default function NavBar({ forcedShow, menuApps }: {
       >
         <div className={'flex items-center h-[3.5rem] sm:h-[4rem] max-w-9xl mx-auto sm:px-6'}>
           <div className={`flex items-center justify-evenly max-sm:grow sm:gap-8 overflow-auto`}>
-            {menuApps.map((menuApp, indexMenuApp) => (
-              (menuApp.isHeaderItem) ? <Link
-                key={indexMenuApp}
-                href={menuApp.href ?? ''}
-                className={`sm:border-b-4 sm:mt-2 text-center ${menuApp?.checkIsActive?.(pathNames) ? 'font-bold border-secondary/80 max-sm:text-primary' : 'border-transparent hover:border-secondary/80'}`}
-              >
-                <div className={`sm:hidden inline-block px-2 my-1 rounded-full ${menuApp?.checkIsActive?.(pathNames) ? 'bg-primary/20 ' : ''}`}>
-                  <div className='-my-'>{menuApp.icon}</div>
-                </div>
-                <div className='text-2xs sm:text-base max-sm:mt-[-0.4rem] font-roboto'>{menuApp.label}</div>
-              </Link> : null
-            ))}
+            {menuApps.map((menuApp, indexMenuApp) => {
+              if (
+                !menuApp.href ||
+                (menuApp.groupMenu && registeredGroupMenus.includes(menuApp.groupMenu)) ||
+                !checkAccess((menuApp.featureCodes ?? []).filter(Boolean).map((fc) => `${fc}>=1`), UserAuthed?.roles)
+              ) return null;
+              if (menuApp.groupMenu) registeredGroupMenus.push(menuApp.groupMenu);
+              return (
+                <Link
+                  key={indexMenuApp} href={menuApp.href}
+                  className={`sm:border-b-4 sm:mt-2 text-center ${menuApp?.checkIsActive?.(pathNames) ? 'font-bold border-secondary/80 max-sm:text-primary' : 'border-transparent hover:border-secondary/80'}`}
+                >
+                  <div className={`sm:hidden inline-block px-2 my-1 rounded-full ${menuApp?.checkIsActive?.(pathNames) ? 'bg-primary/20 ' : ''}`}>
+                    <div className='-my-'>{menuApp.icon}</div>
+                  </div>
+                  <div className='text-2xs sm:text-base max-sm:mt-[-0.4rem] font-roboto'>{menuApp.label}</div>
+                </Link>
+              );
+            })}
           </div>
           <div className='hidden lg:flex items-center ml-auto '>
             <div className='flex items-center gap-3'>

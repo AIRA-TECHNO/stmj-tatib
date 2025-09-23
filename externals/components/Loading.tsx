@@ -1,11 +1,13 @@
 'use client'
 import { SpinnerIcon } from '@phosphor-icons/react'
 import React, { CSSProperties } from 'react'
+import { cn } from '../utils/frontend'
 
-export default function Loading({ style }: { style?: CSSProperties }) {
+export default function Loading({ style, className }: { style?: CSSProperties, className?: string }) {
     return (
-        <div className='w-full h-[15rem] flex items-center justify-center text-2xl' style={style}>
-            <SpinnerIcon className='animate-spin' />
+        <div className={cn(`h-screen flex items-center justify-center text-slate-800`, className)} style={style}>
+            <SpinnerIcon className='animate-spin text-2xl' />
+            <div className='ml-1 tracking-wider'>Loading...</div>
         </div>
     )
 }

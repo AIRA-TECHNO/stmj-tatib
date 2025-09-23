@@ -258,7 +258,7 @@ export default function Table({
           <thead>
             {!(noHeader ?? ScreenWidth <= 640) && (
               <tr>
-                {(!noSelectRow && actions?.length) && (
+                {Boolean(!noSelectRow && actions?.length) && (
                   <th className={`w-0 prevent-show`}>
                     <input type="checkbox" checked={Boolean(DataTable.selectedRows?.length && DataTable.selectedRows?.length == dataPaginateds?.length)}
                       onChange={(event) => setDataTable((prev) => ({ ...(prev), selectedRows: event.target.checked ? (dataPaginateds ?? []) : [] }))} />
@@ -270,7 +270,7 @@ export default function Table({
             )}
             {(showAdvanceSearch && ScreenWidth > 640) && (
               <tr>
-                {(!noSelectRow && actions?.length) && <th key="onSelectRows" />}
+                {Boolean(!noSelectRow && actions?.length) && <th key="onSelectRows" />}
                 {!noNumber && <th key="noNumber" />}
                 {prototypeTable?.map((col, indexCol) => {
                   const asConf = col.advanceSearch ?? {};
@@ -364,7 +364,7 @@ export default function Table({
                     }}
                   >
                     {/* checkbox select row */}
-                    {(!noSelectRow && actions?.length) && (
+                    {Boolean(!noSelectRow && actions?.length) && (
                       <td className={`max-sm:hidden prevent-show`}>
                         <input
                           type="checkbox"
