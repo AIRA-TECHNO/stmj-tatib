@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import StudentAchievement from "../models/StudentAchievement";
 import { paginator } from "@/externals/utils/backend";
-import { guardedUserAuthed, LoadUserAuthed } from "../middlewares/AuthMiddleware";
+import { guardedUserAuthed, LoadUserAuthed } from "@/externals/utils/backend/src/auth-midleware";
 
 
 

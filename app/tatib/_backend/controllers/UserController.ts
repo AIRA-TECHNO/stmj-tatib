@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import { sutando } from "sutando";
-import { guardedUserAuthed, LoadUserAuthed } from "../middlewares/AuthMiddleware";
+import { guardedUserAuthed, LoadUserAuthed } from "@/externals/utils/backend/src/auth-midleware";
 import { paginator } from "@/externals/utils/backend";
 
 

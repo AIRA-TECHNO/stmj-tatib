@@ -4,7 +4,7 @@ import StudentViolation from "../models/StudentViolation";
 import { sutando } from "sutando";
 import { paginator } from "@/externals/utils/backend";
 import RuleSchool from "../models/RuleSchool";
-import { guardedUserAuthed, LoadUserAuthed } from "../middlewares/AuthMiddleware";
+import { guardedUserAuthed, LoadUserAuthed } from "@/externals/utils/backend/src/auth-midleware";
 
 
 

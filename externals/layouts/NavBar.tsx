@@ -1,12 +1,12 @@
 'use client'
 
-import menuApps from '@/app/menuApps';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function NavBar({ forcedShow }: {
+export default function NavBar({ forcedShow, menuApps }: {
   forcedShow?: boolean;
+  menuApps: typeMenuApps;
 }) {
   const pathNames = usePathname().split('/');
 

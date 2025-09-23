@@ -4,8 +4,11 @@ import Link from 'next/link'
 import React from 'react'
 
 
+export type typeBreadcumbItems = Array<{ url: string, label: string }>
 
-export default function BreadcrumbSlash({ items }: { items: typeBreadcumbProps }) {
+
+
+export default function BreadcrumbSlash({ items }: { items: typeBreadcumbItems }) {
 
   return (
     <div className='capitalize font-roboto'>

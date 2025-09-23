@@ -21,6 +21,7 @@ sutando.addConnection(config.connections.datainduk, 'datainduk');
 /**
  * Instance server
  */
+(globalThis as any).appCode = 'tatib';
 const server = new Elysia({ prefix: '/tatib/api', });
 
 

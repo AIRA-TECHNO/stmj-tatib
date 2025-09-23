@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import React from 'react'
 import { CaretRightIcon } from '@phosphor-icons/react';
+import { typeBreadcumbItems } from './BreadcrumbSlash';
 
 
 
-export default function BreadcrumbCarded({ items }: { items: typeBreadcumbProps }) {
+export default function BreadcrumbCarded({ items }: { items: typeBreadcumbItems }) {
 
   return (
     <section className='mt-4'>

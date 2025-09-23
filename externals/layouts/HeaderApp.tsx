@@ -8,9 +8,10 @@ import { usePathname } from 'next/navigation';
 import React, { Fragment, isValidElement, ReactNode, useRef } from 'react'
 import { UrlObject } from 'url';
 import Button from '../components/Button';
+import { typeBreadcumbItems } from '../components/breadcumbs/BreadcrumbSlash';
 
 export default function HeaderApp({ breadcumbs, rightElements, className }: {
-  breadcumbs?: typeBreadcumbProps;
+  breadcumbs?: typeBreadcumbItems;
   rightElements?: Array<ReactNode | {
     icon?: ReactNode;
     label?: ReactNode;

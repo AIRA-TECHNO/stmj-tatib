@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import React from 'react'
 import { CaretRightIcon } from '@phosphor-icons/react';
+import { typeBreadcumbItems } from './BreadcrumbSlash';
 
 
 
-export default function BreadcrumbLine({ items }: { items: typeBreadcumbProps }) {
+export default function BreadcrumbLine({ items }: { items: typeBreadcumbItems }) {
 
   return (
     <div className='border-t'>

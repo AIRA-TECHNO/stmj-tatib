@@ -11,7 +11,7 @@ export default function GradeaPanel({
   children, sidebarItems, sidebarLess, sidebarHideOnCollapse
 }: {
   children?: ReactNode;
-  sidebarItems?: typeMenuApps;
+  sidebarItems: typeMenuApps;
   sidebarLess?: boolean;
   sidebarHideOnCollapse?: boolean;
 }) {

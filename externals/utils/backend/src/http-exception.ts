@@ -10,5 +10,6 @@ export class HTTPException extends Error {
 }
 
 export function abort(status?: number, message?: string, data?: Record<string, any>) {
+  if (status == 403 && !message) message = 'Maaf anda tidak memiliki hak akses fitur ini!';
   throw new HTTPException(status, message, data);
 }

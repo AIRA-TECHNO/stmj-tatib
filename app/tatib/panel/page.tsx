@@ -11,7 +11,7 @@ import { useState } from 'react';
 import Modal from '@/externals/components/popups/Modal';
 import Search from '@/externals/components/Search';
 import IconMenu from './_partials/IconMenu';
-import menuApps from '@/app/menuApps';
+import menuApp from '../menuApp';
 
 
 export default function Home() {
@@ -76,7 +76,7 @@ export default function Home() {
               "grid gap-y-6",
               "grid-cols-3 min-[400px]:grid-cols-4 min-[480px]:grid-cols-5 min-[560px]:grid-cols-6"
             )}>
-              {menuApps.map((menu, indexMenu) => {
+              {menuApp.map((menu, indexMenu) => {
                 if (
                   (indexMenu < 3) ||
                   (indexMenu == 3 && ScreenWidth >= 400) ||
@@ -86,7 +86,7 @@ export default function Home() {
                   return (<IconMenu key={indexMenu} {...menu} />);
                 }
               })}
-              {menuApps.map((menu, indexMenu) => {
+              {menuApp.map((menu, indexMenu) => {
                 if (
                   (indexMenu < 2) ||
                   (indexMenu == 2 && ScreenWidth >= 400) ||
@@ -113,7 +113,7 @@ export default function Home() {
           "grid gap-y-6 px-2 pt-6",
           "grid-cols-3 min-[400px]:grid-cols-4 min-[480px]:grid-cols-5 min-[560px]:grid-cols-6"
         )}>
-          {menuApps.map((menu, indexMenu) => (<IconMenu key={indexMenu} {...menu} />))}
+          {menuApp.map((menu, indexMenu) => (<IconMenu key={indexMenu} {...menu} />))}
         </div>
       </Modal>
       {/* <section className="mt-16">

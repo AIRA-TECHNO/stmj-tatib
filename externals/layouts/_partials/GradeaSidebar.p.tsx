@@ -6,7 +6,6 @@ import { cn, useFormManager } from '@/externals/utils/frontend';
 import Link from 'next/link';
 import Search from '@/externals/components/Search';
 // import RadioSwitch from '@/externals/components/inputs/RadioSwitch';
-import menuApps from '@/app/menuApps';
 import { usePathname } from 'next/navigation';
 import '@/externals/styles/src/panel_headerless.css'
 import Dropdown from '@/externals/components/popups/Dropdown';
@@ -14,8 +13,8 @@ import Image from 'next/image';
 
 
 
-export default function GradeaSidebar({ sidebarItems = menuApps, hideOnCollapse }: {
-  sidebarItems?: typeMenuApps;
+export default function GradeaSidebar({ sidebarItems, hideOnCollapse }: {
+  sidebarItems: typeMenuApps;
   hideOnCollapse?: boolean;
 }) {
   const pathName = usePathname();

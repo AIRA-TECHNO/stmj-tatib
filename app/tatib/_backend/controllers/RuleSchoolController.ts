@@ -1,8 +1,8 @@
 import { Elysia, t } from "elysia";
-import { stringToArray } from "@/externals/utils/general";
-import { basicStyleCellExcel, typeProtoSheet, uploadAndLoadExcel } from "@/externals/utils/backend";
+import { checkAccess, stringToArray } from "@/externals/utils/general";
+import { abort, basicStyleCellExcel, typeProtoSheet, uploadAndLoadExcel } from "@/externals/utils/backend";
 import RuleSchool from "../models/RuleSchool";
-import { guardedUserAuthed, LoadUserAuthed } from "../middlewares/AuthMiddleware";
+import { guardedUserAuthed, LoadUserAuthed } from "@/externals/utils/backend/src/auth-midleware";
 import { paginator } from "@/externals/utils/backend";
 import ExcelJS from 'exceljs';
 import { sutando } from "sutando";
@@ -15,6 +15,7 @@ const validationSchema = t.Object({
   point: t.Integer(),
   punishment: t.String(),
 });
+const keyFeature = ''
 
 
 
@@ -28,7 +29,11 @@ async function getRuleSchool(searchParams: URLSearchParams) {
 const RuleSchoolController = new Elysia()
   .use(LoadUserAuthed)
   .group('/rule-school', (group) => (group.guard({ beforeHandle: guardedUserAuthed }, (app) => {
-    app.get('/', async ({ request }) => await getRuleSchool(new URL(request.url).searchParams));
+    app.get('/', async ({ request }) => await getRuleSchool(new URL(request.url).searchParams), {
+      beforeHandle: ({ auth }) => {
+        // if (!checkAccess([`${keyFeature}>=1`], auth.user?.roles)) return abort(403);
+      }
+    });
 
 
 
@@ -36,6 +41,10 @@ const RuleSchoolController = new Elysia()
       const { id } = params;
       const data = await RuleSchool.query().findOrFail(id);
       return { data };
+    }, {
+      beforeHandle: ({ auth }) => {
+        // if (!checkAccess([`${keyFeature}>=1`], auth.user?.roles)) return abort(403);
+      }
     });
 
 
@@ -43,7 +52,12 @@ const RuleSchoolController = new Elysia()
     app.post('/', async ({ body }) => {
       const data = await RuleSchool.query().create(body);
       return { data, message: 'Berhasil menyimpan data!' };
-    }, { body: validationSchema });
+    }, {
+      body: validationSchema,
+      beforeHandle: ({ auth }) => {
+        // if (!checkAccess([`${keyFeature}>=2`], auth.user?.roles)) return abort(403);
+      }
+    });
 
 
 
@@ -51,14 +65,24 @@ const RuleSchoolController = new Elysia()
       const data = await RuleSchool.query().findOrFail(params.id);
       await data.update(body);
       return { data, message: 'Berhasil menyimpan data!' };
-    }, { body: validationSchema });
+    }, {
+      body: validationSchema,
+      beforeHandle: ({ auth }) => {
+        // if (!checkAccess([`${keyFeature}>=2`], auth.user?.roles)) return abort(403);
+      }
+    });
 
 
 
     app.delete('/', async ({ body }) => {
       await RuleSchool.query().whereIn('id', stringToArray(body.ids)).delete();
       return { message: 'Berhasil menghapus data!' };
-    }, { body: t.Object({ ids: t.Any() }) });
+    }, {
+      body: t.Object({ ids: t.Any() }),
+      beforeHandle: ({ auth }) => {
+        // if (!checkAccess([`${keyFeature}>=2`], auth.user?.roles)) return abort(403);
+      }
+    });
 
 
 
@@ -87,7 +111,10 @@ const RuleSchoolController = new Elysia()
 
       return { message: 'Berhasil mengimport data!' };
     }, {
-      body: (t.Object({ file: t.File({ mime: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] }) }))
+      body: (t.Object({ file: t.File({ mime: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] }) })),
+      beforeHandle: ({ auth }) => {
+        // if (!checkAccess([`${keyFeature}>=2`], auth.user?.roles)) return abort(403);
+      }
     });
 
 
@@ -125,6 +152,10 @@ const RuleSchoolController = new Elysia()
       });
 
       return await workbook.xlsx.writeBuffer();
+    }, {
+      beforeHandle: ({ auth }) => {
+        // if (!checkAccess([`${keyFeature}>=1`], auth.user?.roles)) return abort(403);
+      }
     });
 
 
