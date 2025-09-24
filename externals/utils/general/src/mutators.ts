@@ -165,7 +165,7 @@ export const unProxy = (proxyObj: any): any => {
 export const getRandomItem = (array: Array<any>) => (array[Math.floor(Math.random() * array.length)]);
 
 export const stringToArray = (text: string, convertItem?: (item: any) => any, allowDuplicate?: boolean) => {
-  let array = text.split(',');
+  let array = String(text).split(',');
   if (convertItem) array = array.map(convertItem);
   return (allowDuplicate ? array : [...new Set<any>(array)]).filter(Boolean);
 }

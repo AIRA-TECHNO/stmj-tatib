@@ -63,12 +63,12 @@ export default function Page() {
         rightElements={[
           {
             icon: <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
-            label: 'Export Excel',
+            label: 'export excel',
             onClick: () => fmExport.setShow(true)
           },
           {
             icon: <UploadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
-            label: 'Import Excel',
+            label: 'import excel',
             onClick: () => fmImport.setShow(true),
             hide: !isFullAccess
           },
@@ -118,11 +118,11 @@ export default function Page() {
             />
           </div>
         </div>
-        <Modal fm={fmDetail} noEdit={!isFullAccess} noDelete={!isFullAccess} title={<div className='mr-auto capitalize'>detail peraturan</div>}>
+        <Modal fm={fmDetail} noEdit={!isFullAccess} noDelete={!isFullAccess} title={<div className='mr-auto capitalize'>{fmDetail.values?.id ? 'detail' : 'tambah'} peraturan</div>}>
           <div className='px-4 pb-4'>
             <Form
               actionApi={{
-                url: '/tatib/api/rule-school', afterSubmit: (data) => {
+                url: '/tatib/api/rule-school', afterDelete: DataTable.loadDataTable, afterSubmit: (data) => {
                   toast.success(data.message);
                   DataTable.loadDataTable?.();
                   fmDetail.setValues(data?.data, true);
@@ -151,7 +151,7 @@ export default function Page() {
             fm={fmImport} name='file' accept=".xlsx, .xls, .csv"
             className='sm:p-0 border-none sm:shadow-none'
             label={<>
-              <div className='mb-1'>Import Peraturan Sekolah</div>
+              <div className='mb-1'>import peraturan sekolah</div>
               <div className='text-sm font-normal text-gray-800'>
                 <span>File harus sesuai dengan format excel berikut</span>
                 <a className='native-link ml-1' onClick={() => onExport(true)}>master import peraturan.xlsx</a>
@@ -164,14 +164,14 @@ export default function Page() {
       <Modal fm={fmExport} btnClose noSubmit className='whitespace-normal max-w-xl'>
         <div className='p-4'>
           <div>
-            <div className='text-lg font-semibold mb-1'>Export Peraturan Sekolah</div>
+            <div className='text-lg font-semibold mb-1'>export peraturan sekolah</div>
             <div className='text-sm font-normal text-gray-800'>
               Filter table yang aktif saat ini akan otomatis diterapkan.
               {/* Gunakan filter dibawah ini jika perlu penyesuaian filter lanjutan */}
               {/* Jika perlu filter data lebih lanjut, anda bisa sesuaikan dari filter tambahan dibawah ini */}
             </div>
           </div>
-          <Button className='btn btn-lg w-full mt-6' onClick={() => onExport()} isLoading={fmExport.statusCode == 202}>Export Excel</Button>
+          <Button className='btn btn-lg w-full mt-6' onClick={() => onExport()} isLoading={fmExport.statusCode == 202}>export excel</Button>
         </div>
       </Modal>
     </>

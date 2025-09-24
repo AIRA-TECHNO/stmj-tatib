@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import Achievement from "../models/Achievement";
 import { paginator } from "@/externals/utils/backend";
 import { guardedUserAuthed, LoadUserAuthed } from "@/externals/utils/backend/src/auth-midleware";
+import { stringToArray } from "@/externals/utils/general";
 
 
 
@@ -17,7 +18,7 @@ const AchievementController = new Elysia()
   .group('/achievement', (group) => (group.guard({ beforeHandle: guardedUserAuthed }, (app) => {
     app.get('/', async ({ request }) => {
       const qb = Achievement.query();
-      return await paginator(qb.table('rule_schools'), new URL(request.url).searchParams, { searchableCols: ['achievement'], dateCols: ['created_at'] });
+      return await paginator(qb, new URL(request.url).searchParams, { searchableCols: ['achievement'], dateCols: ['created_at'] });
     });
 
 
@@ -45,10 +46,14 @@ const AchievementController = new Elysia()
 
 
 
-    app.delete('/:id', async ({ params }) => {
-      const data = await Achievement.query().findOrFail(params.id);
-      await data.delete();
+    app.delete('/', async ({ body }) => {
+      await Achievement.query().whereIn('id', stringToArray(body.ids)).delete();
       return { message: 'Berhasil menghapus data!' };
+    }, {
+      body: t.Object({ ids: t.Any() }),
+      beforeHandle: ({ auth }) => {
+        // if (!checkAccess([`${keyFeature}>=2`], auth.user?.roles)) return abort(403);
+      }
     });
 
 

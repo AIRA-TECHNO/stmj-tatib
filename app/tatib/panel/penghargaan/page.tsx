@@ -1,157 +1,157 @@
 'use client'
 
 import HeaderApp from '@/externals/layouts/HeaderApp'
-import Button from '@/externals/components/Button'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
-import { useEffect, useState } from 'react'
-import Select from '@/externals/components/inputs/Select'
-import { DownloadSimpleIcon, PlusIcon, TrashIcon } from '@phosphor-icons/react'
-import { cn } from '@/externals/utils/frontend'
+import { useState } from 'react'
+import { DownloadSimpleIcon, PlusIcon } from '@phosphor-icons/react'
+import { api, downloadFile, useFormManager } from '@/externals/utils/frontend'
 import SubMenuNav from '@/externals/components/SubMenuNav'
+import Modal from '@/externals/components/popups/Modal'
+import Form from '@/externals/components/Form'
+import { toast } from 'react-toastify'
+import Button from '@/externals/components/Button'
+import { usePathname } from 'next/navigation'
+import menuApp from '../../menuApp'
+import { checkAccess, formatIndoDate } from '@/externals/utils/general'
+import Loading from '@/externals/components/Loading'
 
 export default function Page() {
-  const { ScreenWidth } = useContextGlobal();
-  const [DataTables, setDataTables] = useState<typeDataTable>({});
-  const [SelectedRows, setSelectedRows] = useState<any>([]);
+  const { ScreenWidth, UserAuthed } = useContextGlobal();
+  const pathName = usePathname();
+  const [DataTable, setDataTable] = useState<typeDataTable>({});
+  const fmParams = useFormManager();
+  const fmDetail = useFormManager();
+  const fmExport = useFormManager();
 
 
 
   /**
-   * Use effect
+   * Default RBAC
    */
-  useEffect(() => {
-    setDataTables({
-      data: [
-        { id: 1, name: "Yuda Ismail", nisn: 20222, school_name: "SMKN 1 Solo" },
-        { id: 2, name: "Yudi Akbar", nisn: 20223, school_name: "SMKN 1 Sambit" },
-        { id: 3, name: "Yanti Rahayu", nisn: 20224, school_name: "SMKN 1 Jenangan" },
-        { id: 4, name: "Rizky Maulana", nisn: 20225, school_name: "SMKN 2 Madiun" },
-        { id: 5, name: "Siti Nurhaliza", nisn: 20226, school_name: "SMKN 1 Ponorogo" },
-        { id: 6, name: "Dwi Ananda", nisn: 20227, school_name: "SMKN 3 Magetan" },
-        { id: 7, name: "Agus Prasetyo", nisn: 20228, school_name: "SMKN 1 Balong" },
-        { id: 8, name: "Intan Permata", nisn: 20229, school_name: "SMKN 1 Slahung" },
-        { id: 9, name: "Fajar Nugroho", nisn: 20230, school_name: "SMKN 1 Kauman" },
-        { id: 10, name: "Nia Ramadhani", nisn: 20231, school_name: "SMKN 1 Bungkal" },
-        { id: 11, name: "Andi Setiawan", nisn: 20232, school_name: "SMKN 2 Ponorogo" },
-        { id: 12, name: "Lia Marlina", nisn: 20233, school_name: "SMKN 1 Jetis" },
-        { id: 13, name: "Bayu Saputra", nisn: 20234, school_name: "SMKN 1 Badegan" },
-        { id: 14, name: "Salsa Amelia", nisn: 20235, school_name: "SMKN 1 Ngadirojo" },
-        { id: 15, name: "Rian Hidayat", nisn: 20236, school_name: "SMKN 1 Sooko" },
-        { id: 16, name: "Wulan Sari", nisn: 20237, school_name: "SMKN 1 Pulung" },
-        { id: 17, name: "Teguh Ariyanto", nisn: 20238, school_name: "SMKN 2 Sambit" },
-        { id: 18, name: "Maya Fitriani", nisn: 20239, school_name: "SMKN 1 Mlarak" },
-        { id: 19, name: "Ilham Fauzi", nisn: 20240, school_name: "SMKN 1 Siman" },
-        { id: 20, name: "Nadya Ayu", nisn: 20241, school_name: "SMKN 1 Sawoo" },
-      ],
-      paginate: { per_page: 5 }
+  const featureCodes = menuApp.find((ma) => ma.href == pathName)?.featureCodes ?? [];
+  const isFullAccess = checkAccess(featureCodes.filter(Boolean).map((fc) => `${fc}>=2`), UserAuthed.roles);
+
+
+
+  /**
+   * Function handler
+   */
+  function onExport(isMaster?: boolean) {
+    fmExport.setStatusCode(202);
+    api({
+      url: '/tatib/api/student-achievement/excel/export',
+      objParams: { ...(fmParams.values), ...(fmExport.values), isMaster }
+    }).then(async (res) => {
+      fmExport.setStatusCode(res.status);
+      if (res.status == 200) downloadFile(await res.blob(), `Penghargaan Siswa.xlsx`);
     });
-  }, []);
+  }
 
 
 
   /**
    * Render JSX
    */
+  if (!UserAuthed?.id) return (<Loading />);
   return (
     <>
       <HeaderApp
-        className='sm:mt-2'
-        rightElement={[
-          <div className='flex' key="1">
-            <Button varian={`btn-flat`} className='max-sm:text-xs font-semibold hover:text-primary'>
-              <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />
-              <span>Export</span>
-              <span className='max-sm:hidden'>Excel</span>
-            </Button>
-          </div>,
+        className='border-none'
+        rightElements={[
+          {
+            icon: <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
+            label: 'Export Excel',
+            onClick: () => fmExport.setShow(true)
+          }
         ]}
       />
       <SubMenuNav navigations={[
-        { label: 'Pelanggaran', isActive: true }, { label: 'Peraturan' }
+        { label: 'penghargaan', link: '/tatib/panel/penghargaan', isActive: true },
+        { label: 'jenis penghargaan', link: '/tatib/panel/jenis-penghargaan' }
       ]} />
-      <section className="sm:pt-4">
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-full xl:col-span-8">
-            <div className="card border">
-              <div className='card-body sm:py-6'>
-                <Table
-                  stateSelectedRows={[SelectedRows, setSelectedRows]}
-                  // showAdvanceSearch={true}
-                  actions={() => (["edit", "delete"])}
-                  noNumber
-                  prototypeTable={[
-                    {
-                      title: "nama", keyData: (data) => {
-                        if (ScreenWidth >= 640) return data.name;
-                        return (
-                          <div className='py-1'>
-                            <div className='text-base font-semibold'>{data.name}</div>
-                            <div className='text-sm font-semibold text-gray-500'>{data.nisn}</div>
-                            <div className='mt-2 text-sm'>{data.school_name}</div>
-                          </div>
-                        )
-                      }
-                    },
-                    ...(ScreenWidth >= 640 ? [
-                      { title: "NISN", keyData: "nisn" },
-                      {
-                        title: "sekolah",
-                        keyData: "school_name",
-                        advanceFilter: { name: '' }
-                      },
-                    ] : [])
-                  ]}
-                  stateDataTable={[DataTables, setDataTables]}
-                  // noAdvanceFilter={true}
-                  // noSearch
-                  leftElement={<div>
-                    <Button href='/tatib/panel/portofolio/form' className='btn-auto-floating'>
-                      <PlusIcon weight='bold' className='text-sm' />
-                      <span>Tambah Data</span>
-                    </Button>
-                    <div className={cn('card border mt-2 text-xs font-semibold p-0.5 opacity-0 transition-all ease-out duration-200 w-0', { 'opacity-100 w-auto': SelectedRows?.length })}>
-                      <div className='flex items-center'>
-                        <div className='text-sm pl-3 pr-2'>{SelectedRows.length} item terpilih : </div>
-                        <div className='flex items-center'>
-                          <div
-                            className='flex items-center gap-1 py-1.5 px-4 rounded-md text-red-600 cursor-pointer hover:bg-red-500 hover:text-white'
-                            onClick={() => setSelectedRows([])}
-                          >
-                            <TrashIcon weight="bold" />
-                            <span>Hapus</span>
-                          </div>
-                        </div>
+      <section className="sm:mt-2 max-w-7xl">
+        <div className="card">
+          <div className='card-body sm:py-4'>
+            <Table
+              url='/tatib/api/student-achievement'
+              stateDataTable={[DataTable, setDataTable]}
+              actions={isFullAccess ? ['delete'] : []}
+              fmParams={fmParams}
+              onClickRow={(dataRow) => {
+                fmDetail.setValues(dataRow, true);
+                fmDetail.setShow(true, true);
+              }}
+              prototypeTable={[
+                {
+                  label: "nama", name: (data) => {
+                    if (ScreenWidth >= 640) return data.name;
+                    return (
+                      <div>
+                        <div className='text-base font-semibold'>{data.name}</div>
+                        <div className='text-sm font-semibold text-gray-500'>{data.nisn}</div>
+                        <div className='mt-2 text-sm'>{data.class_full_name}</div>
                       </div>
-                    </div>
-                  </div>}
-                  rightElement={<div className='sm:flex items-center gap-2 text-sm [&_.input-form]:h-10 [&_.input-form]:border-primary/70'>
-                    <div className='min-w-[10rem] '>
-                      <Select
-                        noLabel={true}
-                        placeholder="Filter Tahun Ajaran"
-                        options={["2021-2022", "2022-2023"]}
-                      />
-                    </div>
-                  </div>}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="col-span-full xl:col-span-4">
-            <div className="card border">
-              <div className="card-header">
-                <div className="card-title">Chart Siswa Dengan Jumlah pelanggaran/Leaderboard</div>
-                {/* <div className="card-title">Chart Peraturan Dengan Jumlah pelanggaran</div> */} {/* <-- ini ditaruh pada menu peraturan */}
-              </div>
-              <div className="card-body">
-                <div>okok</div>
-              </div>
-              <div className="card-footer"></div>
-            </div>
+                    )
+                  }
+                },
+                { label: "kelas", name: "class_full_name", hide: ScreenWidth < 640 },
+                { label: "penghargaan", name: (data) => (<>{data?.achievement} <span className='text-danger text-xs font-semibold'>{`(-${data?.point})`}</span></>), hide: ScreenWidth < 640 },
+                { label: "tanggal", name: (data) => formatIndoDate(data.date), hide: ScreenWidth < 640 }
+              ]}
+              topElements={[
+                ...(isFullAccess ? [(<div className='lg:order-2 lg:ml-auto'>
+                  <div onClick={() => fmDetail.setShow(true, false, true)} className='btn btn-auto-floating'>
+                    <PlusIcon weight='bold' className='text-sm' />
+                    <span>tulis penghargaan siswa</span>
+                  </div>
+                </div>)] : []),
+                { filter: { show: true }, search: { show: true }, className: 'lg:order-1' },
+              ]}
+            />
           </div>
         </div>
+        <Modal fm={fmDetail} noEdit={!isFullAccess} noDelete={!isFullAccess} title={<div className='mr-auto capitalize'>{fmDetail.values?.id ? 'detail' : 'tambah'} penghargaan siswa</div>}>
+          <div className='px-4 pb-4'>
+            <Form
+              actionApi={{
+                url: '/tatib/api/student-achievement', afterDelete: DataTable.loadDataTable, afterSubmit: (data) => {
+                  toast.success(data.message);
+                  DataTable.loadDataTable?.();
+                  fmDetail.setValues(data?.data, true);
+                  fmDetail.setReadOnly(true);
+                }
+              }}
+              fm={fmDetail}
+              fields={[
+                {
+                  label: 'siswa', name: 'student_x_user_id', type: 'select',
+                  optionFromApi: { url: '/auth/api/user', render: (options) => (options || []).map((opt) => ({ label: opt.name, value: opt.id })) },
+                },
+                {
+                  label: 'jenis penghargaan', name: 'achievement_id', type: 'select',
+                  optionFromApi: { url: '/tatib/api/achievement', render: (options) => (options || []).map((opt) => ({ label: opt.achievement ?? '', value: opt.id ?? '' })) },
+                  parentProps: { className: 'lg:col-span-7' }
+                },
+                { label: "tanggal", name: "date", type: 'date', parentProps: { className: 'lg:col-span-5' } },
+                { label: "keterangan", name: "note", type: 'textarea' },
+              ]}
+              noFooter
+            />
+          </div>
+        </Modal>
       </section>
+      <Modal fm={fmExport} btnClose noSubmit className='whitespace-normal max-w-xl'>
+        <div className='p-4'>
+          <div>
+            <div className='text-lg font-semibold mb-1'>export penghargaan siswa</div>
+            <div className='text-sm font-normal text-gray-800'>
+              Filter table yang aktif saat ini akan otomatis diterapkan.
+            </div>
+          </div>
+          <Button className='btn btn-lg w-full mt-6' onClick={() => onExport()} isLoading={fmExport.statusCode == 202}>export excel</Button>
+        </div>
+      </Modal>
     </>
   )
 }

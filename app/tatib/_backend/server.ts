@@ -2,7 +2,6 @@ import { Elysia } from 'elysia'
 import { HookOnError } from '@/externals/utils/backend';
 import config from "../../../sutando.config";
 import { sutando } from 'sutando';
-import UserController from './controllers/UserController';
 import RuleSchoolController from './controllers/RuleSchoolController';
 import StudentViolationController from './controllers/StudentViolationController';
 import AchievementController from './controllers/AchievementController';
@@ -36,7 +35,6 @@ server.onError(HookOnError as any)
 /**
  * Register routes
  */
-server.use(UserController);
 server.use(RuleSchoolController);
 server.use(StudentViolationController);
 server.use(AchievementController);

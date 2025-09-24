@@ -3,6 +3,7 @@ import { HookOnError } from '@/externals/utils/backend';
 import config from "../../../sutando.config";
 import { sutando } from 'sutando';
 import AuthController from './controllers/AuthController';
+import UserController from './controllers/UserController';
 
 
 
@@ -31,5 +32,7 @@ server.onError(HookOnError as any)
  * Register routes
  */
 server.use(AuthController);
+server.use(UserController);
+
 
 export default server

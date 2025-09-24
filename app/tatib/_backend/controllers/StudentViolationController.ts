@@ -59,7 +59,6 @@ const StudentViolationController = new Elysia()
       const ruleSchool = await RuleSchool.query().findOrFail(body.rule_school_id);
       await data.update({
         ...body,
-        author_x_user_id: auth.user?.id ?? null,
         rule: ruleSchool.rule,
         point: ruleSchool.point
       });
@@ -68,9 +67,11 @@ const StudentViolationController = new Elysia()
 
 
 
-    app.delete('/:ids', async ({ params }) => {
-      await StudentViolation.query().whereIn('id', stringToArray(params.ids)).delete();
+    app.delete('/', async ({ body }) => {
+      await StudentViolation.query().whereIn('id', stringToArray(body.ids)).delete();
       return { message: 'Berhasil menghapus data!' };
+    }, {
+      body: t.Object({ ids: t.Any() }),
     });
 
 
