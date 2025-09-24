@@ -44,7 +44,7 @@ export default function Page() {
       objParams: { ...(fmParams.values), ...(fmExport.values), isMaster }
     }).then(async (res) => {
       fmExport.setStatusCode(res.status);
-      if (res.status == 200) downloadFile(await res.blob(), `Penghargaan Siswa.xlsx`);
+      if (res.status == 200) downloadFile(await res.blob(), `penghargaan siswa.xlsx`);
     });
   }
 
@@ -85,19 +85,20 @@ export default function Page() {
               prototypeTable={[
                 {
                   label: "nama", name: (data) => {
-                    if (ScreenWidth >= 640) return data.name;
+                    if (ScreenWidth >= 640) return (<span>{data.name}</span>);
                     return (
                       <div>
                         <div className='text-base font-semibold'>{data.name}</div>
-                        <div className='text-sm font-semibold text-gray-500'>{data.nisn}</div>
-                        <div className='mt-2 text-sm'>{data.class_full_name}</div>
+                        <div className='text-sm font-semibold text-gray-500'>{data.achievement}</div>
+                        <div className='mt-2 text-sm'>{data.rule} <span className='text-danger text-xs font-semibold'>{`(-${data?.point})`}</span></div>
+                        <div className='mt-2 text-sm'>{formatIndoDate(data.date)}</div>
                       </div>
                     )
                   }
                 },
                 { label: "kelas", name: "class_full_name", hide: ScreenWidth < 640 },
-                { label: "penghargaan", name: (data) => (<>{data?.achievement} <span className='text-danger text-xs font-semibold'>{`(-${data?.point})`}</span></>), hide: ScreenWidth < 640 },
-                { label: "tanggal", name: (data) => formatIndoDate(data.date), hide: ScreenWidth < 640 }
+                { label: "penghargaan", name: (data) => (<span>{data?.achievement} <span className='text-danger text-xs font-semibold'>{`(-${data?.point})`}</span></span>), hide: ScreenWidth < 640 },
+                { label: "tanggal", name: (data) => (<span>{formatIndoDate(data.date)}</span>), hide: ScreenWidth < 640 }
               ]}
               topElements={[
                 ...(isFullAccess ? [(<div className='lg:order-2 lg:ml-auto'>
@@ -126,7 +127,7 @@ export default function Page() {
               fields={[
                 {
                   label: 'siswa', name: 'student_x_user_id', type: 'select',
-                  optionFromApi: { url: '/auth/api/user', render: (options) => (options || []).map((opt) => ({ label: opt.name, value: opt.id })) },
+                  optionFromApi: { url: `/auth/api/user?filters=["vdu.profile_type","=","Siswa"]`, render: (options) => (options || []).map((opt) => ({ label: opt.name, value: opt.id })) },
                 },
                 {
                   label: 'jenis penghargaan', name: 'achievement_id', type: 'select',

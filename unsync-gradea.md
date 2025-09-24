@@ -1,8 +1,8 @@
 todo:
+- halaman portofolio siswa: responsive content-table, response file pdf from BE, preview & download pdf at FE
+- landing page
 - API excel all
 - RBAC BE all 
-- landing page
-- halaman portofolio siswa
 
 
 

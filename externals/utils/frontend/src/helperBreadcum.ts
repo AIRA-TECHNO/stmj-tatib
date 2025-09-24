@@ -27,7 +27,7 @@ export function pathToBreadcumbItems(pathName: string) {
     }
     return {
       url,
-      label: label.replace('-', ' ')
+      label: label.replaceAll('-', ' ')
     }
   }).filter((prevPath) => (prevPath.label));
 }

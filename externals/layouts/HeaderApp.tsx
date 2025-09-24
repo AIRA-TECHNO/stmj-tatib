@@ -50,8 +50,8 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
           className='absolute z-[-1] right-[1rem] w-[500px] xl:w-[700px] max-lg:hidden'
         />
       </div>
-      <div className={"grid sm:flex grid-cols-3 items-center text-nowrap px-4 sm:px-6 pt-2 pb-1 sm:pt-4 sm:pb-2"}>
-        <div className='col-span-2 grid grid-cols-2 sm:flex items-center gap-2'>
+      <div className={"grid sm:flex grid-cols-12 items-center text-nowrap px-4 sm:px-6 pt-2 pb-1 sm:pt-4 sm:pb-2"}>
+        <div className='col-span-11 grid grid-cols-11 sm:flex items-center gap-2'>
           {Boolean(prevItem) && (
             <Link href={prevItem?.url} className={(!breadcumbs && (breadcumbItems?.length ?? 0) <= 2) ? 'sm:hidden' : ''}>
               <div className='header-icon-square max-sm:ml-[-.5rem]'>
@@ -59,7 +59,7 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
               </div>
             </Link>
           )}
-          <div className='capitalize font-roboto sm:ml-1'>
+          <div className='capitalize font-roboto sm:ml-1 col-span-10'>
             <div className="hidden sm:flex items-center text-sm mb-1">
               {breadcumbItems?.map((breadcumbItem, indexBreadcumbItem) => (
                 <div key={indexBreadcumbItem}>
@@ -74,7 +74,9 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
                 </div>
               ))}
             </div>
-            <div className={'capitalize font-bold text-xl sm:text-3xl tracking-wide max-sm:text-center'}>{lastItem?.label ?? 'home'}</div>
+            <div
+              className={`capitalize font-bold tracking-wide max-sm:text-center truncate ${String(lastItem?.label ?? '').length > 16 ? 'text-lg sm:text-2xl' : 'text-xl sm:text-3xl'}`}
+            >{lastItem?.label ?? 'home'}</div>
           </div>
         </div>
         <div className='ml-auto lg:ml-12'>

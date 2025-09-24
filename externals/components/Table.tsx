@@ -152,7 +152,7 @@ export default function Table({
     if ((fmParams?.values?.page ?? 1) != newPage) fmParams?.setValues((prev: typeDataTable) => ({ ...prev, page: newPage }));
   }
 
-  const getDataCell = (dataRow: Record<string, any>, name: any) => (typeof (name) == 'function' ? name(dataRow) : dataRow[name]);
+  const getDataCell = (dataRow: Record<string, any>, name: any) => (typeof (name) == 'function' ? name(dataRow) : <span>{dataRow[name]}</span>);
 
 
 
@@ -360,7 +360,7 @@ export default function Table({
                       setTimeout(() => {
                         if (onClickRow && ScreenWidth >= 640 && !(event.target as any).closest('.prevent-show') &&
                           !window?.getSelection()?.toString()?.trim()?.length) onClickRow(dataRow);
-                      }, 0);
+                      }, 100);
                     }}
                   >
                     {/* checkbox select row */}
@@ -381,8 +381,12 @@ export default function Table({
                     )}
 
                     {/* number and data row */}
-                    {!noNumber && (<td>{((fmParams?.values?.page || 1) - 1) * (fmParams?.values?.per_page || 10) + rowNumber}</td>)}
-                    {prototypeTable?.map((col, indexCol) => (col?.hide ? null : <td key={indexCol}>{getDataCell(dataRow, col?.name)}</td>))}
+                    {!noNumber && (<td><span className='cursor-text'>{((fmParams?.values?.page || 1) - 1) * (fmParams?.values?.per_page || 10) + rowNumber}</span></td>)}
+                    {prototypeTable?.map((col, indexCol) => (col?.hide ? null : <td
+                      key={indexCol}
+                      className='[&>span]:cursor-text'
+                      onMouseEnter={(e: any) => { if (!e.target.title) e.target.title = e.target.innerText; }}
+                    >{getDataCell(dataRow, col?.name)}</td>))}
                   </tr>
                 );
               })

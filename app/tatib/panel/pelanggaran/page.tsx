@@ -44,7 +44,7 @@ export default function Page() {
       objParams: { ...(fmParams.values), ...(fmExport.values), isMaster }
     }).then(async (res) => {
       fmExport.setStatusCode(res.status);
-      if (res.status == 200) downloadFile(await res.blob(), `Pelanggaran Siswa.xlsx`);
+      if (res.status == 200) downloadFile(await res.blob(), `pelanggaran siswa.xlsx`);
     });
   }
 
@@ -85,7 +85,7 @@ export default function Page() {
               prototypeTable={[
                 {
                   label: "siswa", name: (data) => {
-                    if (ScreenWidth >= 640) return data.name;
+                    if (ScreenWidth >= 640) return (<span>{data.name}</span>);
                     return (
                       <div>
                         <div className='text-base font-semibold'>{data.name}</div>
@@ -97,8 +97,8 @@ export default function Page() {
                   }
                 },
                 { label: "kelas", name: "class_full_name", hide: ScreenWidth < 640 },
-                { label: "pelanggaran", name: (data) => (<>{data?.rule} <span className='text-danger text-xs font-semibold'>{`(-${data?.point})`}</span></>), hide: ScreenWidth < 640 },
-                { label: "tanggal", name: (data) => formatIndoDate(data.date), hide: ScreenWidth < 640 }
+                { label: "pelanggaran", name: (data) => (<span>{data?.rule} <span className='text-danger text-xs font-semibold'>{`(-${data?.point})`}</span></span>), hide: ScreenWidth < 640 },
+                { label: "tanggal", name: (data) => (<span>{formatIndoDate(data.date)}</span>), hide: ScreenWidth < 640 }
               ]}
               topElements={[
                 ...(isFullAccess ? [(<div className='lg:order-2 lg:ml-auto'>
@@ -127,7 +127,7 @@ export default function Page() {
               fields={[
                 {
                   label: 'siswa', name: 'student_x_user_id', type: 'select',
-                  optionFromApi: { url: '/auth/api/user', render: (options) => (options || []).map((opt) => ({ label: opt.name ?? '', value: opt.id ?? '' })) },
+                  optionFromApi: { url: `/auth/api/user?filters=["vdu.profile_type","=","Siswa"]`, render: (options) => (options || []).map((opt) => ({ label: opt.name ?? '', value: opt.id ?? '' })) },
                 },
                 {
                   label: 'peraturan yang dilanggar', name: 'rule_school_id', type: 'select',

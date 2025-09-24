@@ -93,7 +93,7 @@ export default function Page() {
               prototypeTable={[
                 {
                   label: "peraturan", name: (data) => {
-                    if (ScreenWidth >= 640) return data.rule;
+                    if (ScreenWidth >= 640) return <span>{data.rule}</span>;
                     return (
                       <div>
                         <div className='text-base font-semibold'>{data.rule}</div>

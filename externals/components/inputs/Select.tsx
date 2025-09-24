@@ -89,7 +89,8 @@ export default function Select({
         }
 
         // Unset selected option if data not found
-        if (!newOptions.find((opt) => ((opt?.value ?? opt) == selectedOption))) {
+        if (!newOptions.find((opt) => ((opt?.value ?? opt) == selectedOption)) && refInput.current) {
+          refInput.current.value = selectedOption;
           changeAttr(refInput.current, 'value', '');
         }
       }

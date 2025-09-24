@@ -86,6 +86,7 @@ export function useFormManager<T extends Record<string, any>>() {
  * triger change input
  */
 export function changeAttr(target: any, attribute: string, value: any) {
+  if (!target) return null;
   Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, attribute)?.set?.call?.(target, value);
   target.dispatchEvent(new Event('change', { bubbles: true }));
 }
