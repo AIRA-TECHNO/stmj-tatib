@@ -80,7 +80,7 @@ export default function Page() {
       ]} />
       <section className="sm:mt-2 max-w-7xl">
         <div className="card">
-          <div className='card-body sm:py-4'>
+          <div className='card-body py-4'>
             <Table
               url='/tatib/api/achievement'
               stateDataTable={[DataTable, setDataTable]}
@@ -92,12 +92,11 @@ export default function Page() {
               }}
               prototypeTable={[
                 {
-                  label: "penghargaan", name: (data) => {
+                  label: "penghargaan", classNameTd: 'px-1 py-4', name: (data) => {
                     if (ScreenWidth >= 640) return (<span>{data.achievement}</span>);
                     return (
-                      <div>
-                        <div className='text-base font-semibold'>{data.achievement}</div>
-                        <div className='text-sm font-semibold text-gray-500'>{data.point}</div>
+                      <div className='max-w-[calc(100vw-3rem)] [&>*]:truncate'>
+                        <div className='text-base font-medium'>{data.achievement} <span className='text-success text-xs font-semibold'>({data.point})</span></div>
                       </div>
                     )
                   }

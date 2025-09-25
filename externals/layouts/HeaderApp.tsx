@@ -29,12 +29,15 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
 
   function onClickOutSide(event: MouseEvent) {
     if (!refDropDown.current?.contains(event.target as Node)) {
-      setTimeout(() => {
-        if (refDropDown.current) {
-          refDropDown.current.style.removeProperty('z-index');
-          refDropDown.current.style.removeProperty('opacity');
-        }
-      }, 300);
+      if (refDropDown.current) {
+        refDropDown.current.style.removeProperty('opacity');
+        setTimeout(() => {
+          if (refDropDown.current) {
+            refDropDown.current.style.height = '0';
+            refDropDown.current.style.width = '0';
+          }
+        }, 100);
+      }
       document.removeEventListener('click', onClickOutSide);
     }
   }
@@ -84,16 +87,17 @@ export default function HeaderApp({ breadcumbs, rightElements, className }: {
             <div
               className='sm:hidden header-icon-square max-sm:mr-[-.75rem]'
               onClick={() => {
-                if (!(refDropDown.current && refDropDown.current.style.zIndex != 'unset')) return;
+                if (!refDropDown.current || Number(refDropDown.current.style.opacity)) return;
                 refDropDown.current.style.opacity = '100%';
-                refDropDown.current.style.zIndex = 'unset';
+                refDropDown.current.style.removeProperty('height');
+                refDropDown.current.style.removeProperty('width');
                 document.addEventListener('click', onClickOutSide);
               }}
             ><DotsThreeOutlineVerticalIcon weight='fill' className='text-lg' /></div>
             <div ref={refDropDown} className={cn(
-              `right-4 sm:flex items-center gap-2 bg-white rounded-md transition-opacity`,
-              `max-sm:absolute max-sm:border max-sm:divide-y max-sm:shadow max-sm:w-[11rem] max-sm:-mt-3 max-sm:opacity-0 max-sm:z-[-1]`
-            )}>
+              `right-4 sm:flex items-center gap-2 bg-white rounded-md transition-opacity overflow-hidden`,
+              `max-sm:absolute max-sm:border max-sm:divide-y max-sm:shadow max-sm:w-[11rem] max-sm:-mt-3 max-sm:opacity-0`
+            )} style={{ height: '0', width: '0' }}>
               {(rightElements as any[]).map((rightElement, indexRightElement) => (
                 isValidElement(rightElement) ? <Fragment key={indexRightElement}>{rightElement}</Fragment> : (rightElement?.hide ? null : (
                   <Button

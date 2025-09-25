@@ -100,8 +100,8 @@ export const LoadUserAuthed = new Elysia()
 
 
 export const guardedUserAuthed = ({ auth, set }: any) => {
-  if (!auth.user) {
-    set.status = 401
-    return auth
-  }
+  // if (!auth.user) {
+  //   set.status = 401
+  //   return auth
+  // }
 }

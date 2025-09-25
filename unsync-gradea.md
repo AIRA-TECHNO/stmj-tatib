@@ -1,5 +1,5 @@
 todo:
-- halaman portofolio siswa: responsive content-table, response file pdf from BE, preview & download pdf at FE
+- halaman portofolio siswa: response file pdf from BE, preview & download pdf at FE
 - landing page
 - API excel all
 - RBAC BE all 
@@ -8,6 +8,7 @@ todo:
 
 
 blocker:
+- bug dropdown excel mobile
 
 
 

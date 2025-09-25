@@ -15,8 +15,8 @@ import Link from 'next/link';
 export interface typePrototypeTable {
   label: ReactNode;
   name: string | ((dataRow: Record<string, any>, indexDataRow?: any) => ReactNode);
-  className?: string;
-  style?: CSSProperties;
+  classNameTh?: string;
+  classNameTd?: string;
   advanceSearch?: { name?: string; };
   advanceFilter?: {
     name?: string;
@@ -202,7 +202,7 @@ export default function Table({
   return (
     <>
       <div className='bg-white pb-4'>
-        <div className={cn("flex max-lg:flex-col gap-2", classNameTopElement)}>
+        <div className={cn("flex max-lg:flex-col", classNameTopElement)}>
           {topElements?.map((topElement: any, indexTopElement) => {
             if (isValidElement(topElement)) return (<Fragment key={indexTopElement}>{topElement}</Fragment>);
             if (topElement?.filter?.show || topElement?.search?.show) return (
@@ -265,7 +265,7 @@ export default function Table({
                   </th>
                 )}
                 {!noNumber && <th className={`w-0`}>No.</th>}
-                {prototypeTable?.map((col, indexCol) => (col.hide ? null : <th key={indexCol} className={col.className} style={col.style}>{col.label}</th>))}
+                {prototypeTable?.map((col, indexCol) => (col.hide ? null : <th key={indexCol} className={col.classNameTh}>{col.label}</th>))}
               </tr>
             )}
             {(showAdvanceSearch && ScreenWidth > 640) && (
@@ -384,7 +384,7 @@ export default function Table({
                     {!noNumber && (<td><span className='cursor-text'>{((fmParams?.values?.page || 1) - 1) * (fmParams?.values?.per_page || 10) + rowNumber}</span></td>)}
                     {prototypeTable?.map((col, indexCol) => (col?.hide ? null : <td
                       key={indexCol}
-                      className='[&>span]:cursor-text'
+                      className={cn('[&>span]:cursor-text', col.classNameTd)}
                       onMouseEnter={(e: any) => { if (!e.target.title) e.target.title = e.target.innerText; }}
                     >{getDataCell(dataRow, col?.name)}</td>))}
                   </tr>

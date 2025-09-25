@@ -6,6 +6,7 @@ import RuleSchoolController from './controllers/RuleSchoolController';
 import StudentViolationController from './controllers/StudentViolationController';
 import AchievementController from './controllers/AchievementController';
 import StudentAchievementController from './controllers/StudentAchievementController';
+import PortofolioNonAcademicController from './controllers/PortofolioNonAcademicController';
 
 
 
@@ -39,6 +40,7 @@ server.use(RuleSchoolController);
 server.use(StudentViolationController);
 server.use(AchievementController);
 server.use(StudentAchievementController);
+server.use(PortofolioNonAcademicController);
 
 
 // // Testing sutando => (GET) http://localhost:3000/api/test-env

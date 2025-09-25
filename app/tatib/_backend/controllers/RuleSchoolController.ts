@@ -15,7 +15,6 @@ const validationSchema = t.Object({
   point: t.Integer(),
   punishment: t.String(),
 });
-const keyFeature = ''
 
 
 

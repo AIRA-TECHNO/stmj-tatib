@@ -53,7 +53,6 @@ export default function Page() {
   return (
     <>
       <HeaderApp
-        className='border-none'
         rightElements={[
           {
             icon: <DownloadSimpleIcon weight='bold' className='text-base mb-[1px]' />,
@@ -64,24 +63,19 @@ export default function Page() {
       />
       <section className="sm:mt-[5rem] max-w-7xl">
         <div className="card">
-          <div className='card-body sm:py-4'>
+          <div className='card-body py-4'>
             <Table
               url={`/auth/api/user?filters=["vdu.profile_type","=","Siswa"]&with_class=true`}
               stateDataTable={[DataTable, setDataTable]}
               fmParams={fmParams}
               prototypeTable={[
                 {
-                  label: "siswa", name: (data) => {
+                  label: "siswa", classNameTd: 'px-1', name: (data) => {
                     if (ScreenWidth >= 640) return data.name;
                     return (
-                      <div className='flex'>
-                        <div className='grow'>
-                          <div className='text-base font-semibold'>{data.name}</div>
-                          <div className='text-sm font-semibold text-gray-500'>{data.class_full_name}</div>
-                        </div>
-                        <div className='btn rounded-full aspect-square'>
-                          <DownloadSimpleIcon />
-                        </div>
+                      <div className='max-w-[calc(100vw-3rem)] [&>*]:truncate'>
+                        <div className='font-semibold'>{data.name}</div>
+                        <div className='text-xs mt-0.5 font-medium text-gray-500'>{data.class_full_name}</div>
                       </div>
                     )
                   }
