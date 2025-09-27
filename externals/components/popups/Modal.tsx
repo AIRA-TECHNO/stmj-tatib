@@ -123,41 +123,43 @@ export default function Modal({ children, show, toHide, justHidden, className, t
             isDragging.current = true;
           }}>
             {title}
-            <div className="flex items-center ml-auto">
-              {!!fm && (fm.readOnly ? (<>
-                {!noEdit && (
-                  <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/5' onClick={() => fm.setReadOnly(false)}>
-                    <NotePencilIcon weight='bold' className='text-base' />
-                    <div className="max-sm:hidden">Edit</div>
-                  </Button>
+            {Boolean(!!fm || btnClose) && (
+              <div className="flex items-center ml-auto">
+                {!!fm && (fm.readOnly ? (<>
+                  {!noEdit && (
+                    <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/10' onClick={() => fm.setReadOnly(false)}>
+                      <NotePencilIcon weight='bold' className='text-base' />
+                      <div className="max-sm:hidden">Edit</div>
+                    </Button>
+                  )}
+                  {!noDelete && (
+                    <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/10 hover:text-danger' onClick={() => fm.setConfirmDelete([fm.values])}>
+                      <TrashSimpleIcon weight='bold' className='text-base' />
+                      <div className="max-sm:hidden">Hapus</div>
+                    </Button>
+                  )}
+                </>) : (<>
+                  {fm.values.id && (
+                    <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/10 hover:text-danger' onClick={() => fm.setReadOnly(true)}>
+                      <XIcon weight='bold' className='text-base' />
+                      <div>Batal</div>
+                    </Button>
+                  )}
+                  {(!noSubmit && !noEdit) && (
+                    <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/10 hover:text-success' onClick={() => fm.btnSubmit.current?.click()}>
+                      <FloppyDiskIcon weight='bold' className='text-base' />
+                      <div>Simpan</div>
+                    </Button>
+                  )}
+                </>))}
+                {Boolean(fm?.readOnly || btnClose) && (
+                  <div
+                    className="h-[1.75rem] aspect-square rounded-full flex cursor-pointer bg-primary/10 hover:bg-primary/20 ml-2 sm:ml-3"
+                    onClick={onHide}
+                  ><XIcon weight="bold" className="text-base sm:text-lg m-auto" /></div>
                 )}
-                {!noDelete && (
-                  <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/5 hover:text-danger' onClick={() => fm.setConfirmDelete([fm.values])}>
-                    <TrashSimpleIcon weight='bold' className='text-base' />
-                    <div className="max-sm:hidden">Hapus</div>
-                  </Button>
-                )}
-              </>) : (<>
-                {fm.values.id && (
-                  <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/5 hover:text-danger' onClick={() => fm.setReadOnly(true)}>
-                    <XIcon weight='bold' className='text-base' />
-                    <div>Batal</div>
-                  </Button>
-                )}
-                {(!noSubmit && !noEdit) && (
-                  <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 hover:bg-black/5 hover:text-success' onClick={() => fm.btnSubmit.current?.click()}>
-                    <FloppyDiskIcon weight='bold' className='text-base' />
-                    <div>Simpan</div>
-                  </Button>
-                )}
-              </>))}
-              {Boolean(fm?.readOnly || btnClose) && (
-                <div
-                  className="h-[1.75rem] aspect-square rounded-full flex cursor-pointer bg-primary/10 hover:bg-primary/20 ml-2 sm:ml-3"
-                  onClick={onHide}
-                ><XIcon weight="bold" className="text-base sm:text-lg m-auto" /></div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
         <div className={fm ? "bg-white sm:m-4 rounded-lg" : ""}>{children}</div>

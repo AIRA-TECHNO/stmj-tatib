@@ -3,8 +3,8 @@
 import HeaderApp from '@/externals/layouts/HeaderApp'
 import Table, { typeDataTable } from '@/externals/components/Table'
 import { useContextGlobal } from '@/externals/contexts/ContextGlobal'
-import { useState } from 'react'
-import { DownloadSimpleIcon, PlusIcon } from '@phosphor-icons/react'
+import { useRef, useState } from 'react'
+import { DownloadSimpleIcon, FilePdfIcon } from '@phosphor-icons/react'
 import { api, downloadFile, useFormManager } from '@/externals/utils/frontend'
 import Modal from '@/externals/components/popups/Modal'
 import Button from '@/externals/components/Button'
@@ -12,11 +12,14 @@ import { usePathname } from 'next/navigation'
 import menuApp from '../../menuApp'
 import { checkAccess } from '@/externals/utils/general'
 import Loading from '@/externals/components/Loading'
+import Select from '@/externals/components/inputs/Select'
 
 export default function Page() {
   const { ScreenWidth, UserAuthed } = useContextGlobal();
   const pathName = usePathname();
+  const refIframePdf = useRef<HTMLIFrameElement>(null);
   const [DataTable, setDataTable] = useState<typeDataTable>({});
+  const fmDetail = useFormManager();
   const fmParams = useFormManager();
   const fmExport = useFormManager();
 
@@ -44,6 +47,33 @@ export default function Page() {
     });
   }
 
+  function loadRapor(dataRow: any, print?: boolean) {
+    fmDetail.setStatusCode(202);
+    api({
+      url: `/tatib/api/portofolio-non-academic/pdf/download`,
+      objParams: {
+        user_ids: dataRow.id,
+        class_ids: dataRow.class_id,
+        semester: dataRow.semester,
+        just_html: !print ? true : undefined
+      }
+    }).then(async (res) => {
+      fmDetail.setStatusCode(res.status);
+      if (res.status == 200) {
+        const htmlBlob = new Blob([await res.blob()], { type: 'text/html' });
+        if (!print) {
+          const blobUrl = URL.createObjectURL(htmlBlob);
+          if (refIframePdf.current) {
+            refIframePdf.current.src = blobUrl;
+            refIframePdf.current.onload = () => URL.revokeObjectURL(blobUrl);
+          }
+        } else {
+          downloadFile(htmlBlob, 'Portofolio Non Akademik.pdf');
+        }
+      }
+    });
+  }
+
 
 
   /**
@@ -68,6 +98,13 @@ export default function Page() {
               url={`/auth/api/user?filters=["vdu.profile_type","=","Siswa"]&with_class=true`}
               stateDataTable={[DataTable, setDataTable]}
               fmParams={fmParams}
+              onClickRow={(dataRow) => {
+                if (dataRow.id) {
+                  fmDetail.setValues({ ...dataRow, semester: 1 });
+                  fmDetail.setShow(true, true);
+                  loadRapor({ ...dataRow, semester: 1 });
+                }
+              }}
               prototypeTable={[
                 {
                   label: "siswa", classNameTd: 'px-1', name: (data) => {
@@ -81,13 +118,6 @@ export default function Page() {
                   }
                 },
                 { label: "kelas", name: "class_full_name", hide: ScreenWidth < 640 },
-                {
-                  label: "action",
-                  name: () => {
-                    return 'Download PDF'
-                  },
-                  hide: ScreenWidth < 640
-                },
               ]}
               topElements={[{ search: { show: true } }]}
             />
@@ -103,6 +133,26 @@ export default function Page() {
             {/* Form filter disisni */}
           </div>
           <Button className='btn btn-lg w-full mt-6' onClick={() => onExport()} isLoading={fmExport.statusCode == 202}>export pdf</Button>
+        </div>
+      </Modal>
+      <Modal fm={fmDetail} btnClose noEdit={true} noDelete={true} title={
+        <div className='font-normal text-sm flex grow'>
+          <Select
+            fm={fmDetail} name='semester' noLabel noSearch noUnset
+            options={[{ label: 'Semester Ganjil', value: 1 }, { label: 'Semester Genap', value: 2 }]}
+            onChange={(event) => loadRapor({ ...(fmDetail.values), semester: event.target.value })}
+          />
+          <div className='ml-auto'>
+            <Button varian='btn-flat' className='rounded-md h-[1.75rem] px-2 bg-black/5 hover:bg-black/10'
+              onClick={() => loadRapor({ ...(fmDetail.values), semester: 1 }, true)}>
+              <FilePdfIcon weight='bold' className='text-base' />
+              <div>Download</div>
+            </Button>
+          </div>
+        </div>
+      }>
+        <div className='p-4'>
+          {fmDetail.statusCode == 202 ? (<Loading className='h-full' />) : (<iframe ref={refIframePdf} width="100%" height="600" />)}
         </div>
       </Modal>
     </>

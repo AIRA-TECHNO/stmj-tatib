@@ -1,5 +1,5 @@
 todo:
-- halaman portofolio siswa: response file pdf from BE, preview & download pdf at FE
+- halaman portofolio siswa: filter, bulk download
 - landing page
 - API excel all
 - RBAC BE all 
@@ -20,6 +20,7 @@ major:
 
 
 minor:
+- global context data current school year. include detect current semester from backend
 - UI footer
 - ornament UI left area
 - handle right click row table (show shorthand action)

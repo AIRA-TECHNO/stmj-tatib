@@ -13,8 +13,9 @@ import PortofolioNonAcademicController from './controllers/PortofolioNonAcademic
 /**
  * Init DB connection
  */
-sutando.addConnection(config.connections.tatib, 'tatib');
 sutando.addConnection(config.connections.datainduk, 'datainduk');
+sutando.addConnection(config.connections.tatib, 'tatib');
+sutando.addConnection(config.connections.absensi, 'absensi');
 
 
 

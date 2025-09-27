@@ -78,14 +78,12 @@ const UserController = new Elysia()
       }
 
       let searchableCols = [
-        "vdu.id",
         "vdu.username",
         "vdu.profile_type",
         "vdu.name",
-        "vdu.relation_id",
         "vdu.uuid",
       ];
-      if (with_class || class_ids || school_years) searchableCols = searchableCols.concat(['vsc.class_full_name', 'vsc.class_id']);
+      if (with_class || class_ids || school_years) searchableCols = searchableCols.concat(['vsc.class_full_name']);
 
       return await paginator(qb, new URL(request.url).searchParams, { searchableCols });
     });

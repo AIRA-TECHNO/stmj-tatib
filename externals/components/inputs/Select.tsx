@@ -132,7 +132,7 @@ export default function Select({
     }
 
     // get selected option
-    const selectedOption = CurrentOptions?.find((opt) => ((opt?.value ?? opt) == fm?.values?.[name]))
+    const selectedOption = CurrentOptions?.find((opt) => ((opt?.value ?? opt) == newValue))
 
     if (newValue && !selectedOption) {
       loadOptions(newValue)

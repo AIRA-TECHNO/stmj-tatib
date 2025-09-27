@@ -104,7 +104,7 @@ export default function Page() {
                 { label: "poin", name: "point", hide: ScreenWidth < 640 },
               ]}
               topElements={[
-                ...(isFullAccess ? [(<div className='lg:order-2 lg:ml-auto'>
+                ...(isFullAccess ? [(<div key='btn-add' className='lg:order-2 lg:ml-auto'>
                   <div onClick={() => fmDetail.setShow(true, false, true)} className='btn btn-auto-floating'>
                     <PlusIcon weight='bold' className='text-sm' />
                     <span>jenis penghargaan baru</span>

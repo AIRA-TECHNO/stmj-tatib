@@ -11,6 +11,7 @@ import Dropdown from './popups/Dropdown';
 import InputText from './inputs/InputText';
 import Input, { typeInputType } from './inputs/Input';
 import Link from 'next/link';
+import Loading from './Loading';
 
 export interface typePrototypeTable {
   label: ReactNode;
@@ -296,7 +297,7 @@ export default function Table({
             {((!dataPaginateds?.length) || (DataTable?.statusCode == 202)) ? (
               <tr className='empty-row'>
                 <td colSpan={(prototypeTable?.filter((col) => !col.hide)?.length ?? 0) + (noNumber ? 1 : 2)} className="text-center text-gray-500 py-[4rem]">
-                  {(DataTable?.statusCode == 202) ? 'Loading...' : 'Data Kosong'}
+                  {(DataTable?.statusCode == 202) ? <Loading className='h-full' /> : 'Data Kosong'}
                 </td>
               </tr>
             ) : (

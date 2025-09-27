@@ -21,6 +21,16 @@ const connections = {
       database: process.env.TATIB_DB_DATABASE,
     },
   },
+  absensi: {
+    client: 'pg',
+    connection: {
+      host: process.env.ABSENSI_DB_HOST,
+      port: Number(process.env.ABSENSI_DB_PORT),
+      user: process.env.ABSENSI_DB_USERNAME,
+      password: process.env.ABSENSI_DB_PASSWORD,
+      database: process.env.ABSENSI_DB_DATABASE,
+    },
+  },
 };
 
 module.exports = {
